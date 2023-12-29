@@ -1,0 +1,210 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Java 更多&quot;特性&quot; | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="不仅仅是语言特性SPIJava SPI（Service Provider Interface）是一种机制，它允许在运行时动态地替换接口的实现。这种机制允许开发人员编写一组接口，然后由不同的实现提供者提供不同的实现。SPI机制是Java标准库中的一部分，可以用于扩展Java应用程序的功能，而无需修改代码。SPI机制通过类加载器机制实现，它允许应用程序在运行时动态地加载和卸载实现。在Java中，SPI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 更多&quot;特性&quot;">
+<meta property="og:url" content="http://quanw20.gitee.io/2023/06/02/Java-%E6%9B%B4%E5%A4%9A-%E7%89%B9%E6%80%A7/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="不仅仅是语言特性SPIJava SPI（Service Provider Interface）是一种机制，它允许在运行时动态地替换接口的实现。这种机制允许开发人员编写一组接口，然后由不同的实现提供者提供不同的实现。SPI机制是Java标准库中的一部分，可以用于扩展Java应用程序的功能，而无需修改代码。SPI机制通过类加载器机制实现，它允许应用程序在运行时动态地加载和卸载实现。在Java中，SPI">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://quanw20.gitee.io/images/maomi.png">
+<meta property="article:published_time" content="2023-06-02T13:35:50.000Z">
+<meta property="article:modified_time" content="2023-06-04T08:17:53.556Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://quanw20.gitee.io/images/maomi.png"><link rel="shortcut icon" href="/images/favicon-16x16.ico"><link rel="canonical" href="http://quanw20.gitee.io/2023/06/02/Java-%E6%9B%B4%E5%A4%9A-%E7%89%B9%E6%80%A7/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Java 更多"特性"',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-06-04 16:17:53'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/maomi.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">76</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">42</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/p1.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="QUANWEI"><span class="site-name">QUANWEI</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Java 更多&quot;特性&quot;</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-06-02T13:35:50.000Z" title="发表于 2023-06-02 21:35:50">2023-06-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-06-04T08:17:53.556Z" title="更新于 2023-06-04 16:17:53">2023-06-04</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Java 更多&quot;特性&quot;"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="不仅仅是语言特性"><a href="#不仅仅是语言特性" class="headerlink" title="不仅仅是语言特性"></a>不仅仅是语言特性</h1><h2 id="SPI"><a href="#SPI" class="headerlink" title="SPI"></a>SPI</h2><p>Java SPI（Service Provider Interface）是一种机制，它允许在运行时动态地替换接口的实现。这种机制允许开发人员编写一组接口，然后由不同的实现提供者提供不同的实现。SPI机制是Java标准库中的一部分，可以用于扩展Java应用程序的功能，而无需修改代码。SPI机制通过类加载器机制实现，它允许应用程序在运行时动态地加载和卸载实现。在Java中，SPI机制主要用于服务发现、插件机制等场景。</p>
+<p>一个常见的例子是Java数据库连接（JDBC）。JDBC是一种标准的API，它定义了一组接口，用于访问各种不同类型的数据库。然而，不同的数据库供应商会提供不同的JDBC驱动程序来实现这些接口。在Java中，可以使用SPI机制来动态地加载和使用这些不同的JDBC驱动程序，而不需要在代码中显式地指定使用哪个驱动程序。这样，应用程序就可以在运行时根据需要选择不同的数据库驱动程序，而不需要修改代码。</p>
+<h2 id="Java-Agent"><a href="#Java-Agent" class="headerlink" title="Java Agent"></a>Java Agent</h2><p>Java Agent是一种Java应用程序，它可以在运行时监控和修改Java应用程序的行为。Java Agent通常被用于性能分析、调试、安全审计等方面。Java Agent通过Java Instrumentation API来实现对Java应用程序的监控和修改。Java Agent可以在应用程序启动时通过JVM参数指定，并且可以在运行时动态加载和卸载。Java Agent可以访问应用程序的类、方法、字段等元数据信息，并且可以在运行时修改这些信息。Java Agent还可以在应用程序运行时插入自定义的代码逻辑，以实现各种功能。</p>
+<h2 id="ASM"><a href="#ASM" class="headerlink" title="ASM"></a>ASM</h2><p>Java ASM（Java字节码操作框架）是一个轻量级的Java字节码操作框架，它可以用于生成、转换和分析Java字节码。ASM提供了一组API，可以让开发人员直接操作Java字节码，而不需要了解Java虚拟机的细节和复杂性。</p>
+<p>使用ASM，开发人员可以：</p>
+<ol>
+<li><p>直接生成Java字节码，而不需要编写Java源代码。</p>
+</li>
+<li><p>对现有的Java字节码进行修改和优化，以提高性能。</p>
+</li>
+<li><p>分析Java字节码，以获得有关类、方法和字段的信息。</p>
+</li>
+</ol>
+<p>ASM具有轻量级、高性能和灵活性等特点，已经成为许多Java框架和工具的基础，例如Spring、Hibernate和JUnit等。</p>
+<h2 id="字节码"><a href="#字节码" class="headerlink" title="字节码"></a>字节码</h2><p>Java字节码是Java源代码编译后生成的中间代码，它可以在Java虚拟机上运行。Java字节码是一种基于栈的指令集，每个指令都有一个操作码和零个或多个操作数。Java字节码包含了类、接口、方法、字段等信息，以及方法的实现代码。</p>
+<p>Java字节码的格式是固定的，由多个字节组成，其中包含了常量池、类信息、方法信息、字段信息、指令等内容。Java字节码可以通过反编译工具转换为可读性更高的Java源代码，但是反编译后的代码可能不完全等同于原始的Java源代码。</p>
+<p>Java字节码的优点是跨平台性强，因为Java虚拟机可以在不同的操作系统和硬件平台上运行。此外，Java字节码还可以进行动态修改和生成，这使得Java程序可以在运行时动态地加载和卸载类、修改类的行为等。</p>
+<h2 id="JVM语言"><a href="#JVM语言" class="headerlink" title="JVM语言"></a>JVM语言</h2><p>JVM语言是指可以在Java虚拟机（JVM）上运行的编程语言。由于JVM提供了跨平台的能力，因此许多编程语言都选择了基于JVM开发，以便在不同的操作系统和硬件平台上运行。</p>
+<p>以下是一些常见的JVM语言：</p>
+<ol>
+<li><p>Java：Java是最流行的JVM语言之一，它是由Sun Microsystems（现在是Oracle）开发的面向对象编程语言。Java具有简单、可移植、安全等特点，广泛应用于企业级应用程序、Web应用程序、移动应用程序等领域。</p>
+</li>
+<li><p>Kotlin：Kotlin是一种静态类型的编程语言，由JetBrains开发。Kotlin具有与Java兼容、表达式更简洁、空安全等特点，被认为是Java的替代品。</p>
+</li>
+<li><p>Scala：Scala是一种多范式编程语言，由Martin Odersky等人开发。Scala结合了面向对象编程和函数式编程的特点，具有高度的可扩展性和灵活性。</p>
+</li>
+<li><p>Groovy：Groovy是一种动态类型的编程语言，由James Strachan等人开发。Groovy具有与Java兼容、脚本化编程、元编程等特点，被广泛应用于构建Web应用程序、测试框架等领域。</p>
+</li>
+<li><p>Clojure：Clojure是一种函数式编程语言，由Rich Hickey开发。Clojure具有简洁、可扩展、并发编程等特点，被广泛应用于大数据处理、Web应用程序等领域。</p>
+</li>
+</ol>
+<p>这些JVM语言都可以通过编译器将源代码编译成Java字节码，然后在JVM上运行。</p>
+<h2 id="JNI"><a href="#JNI" class="headerlink" title="JNI"></a><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/guides/jni/">JNI</a></h2><p>Java Native Interface (JNI) 是 Java 语言提供的一种机制，用于在 Java 程序中调用本地（Native）方法。它允许 Java 应用程序通过 JNI 接口调用 C&#x2F;C++ 等本地语言编写的函数库，并且可以将 Java 对象传递给本地代码进行处理。</p>
+<p>JNI 提供了一组 API，使得 Java 程序可以与本地代码进行交互。Java 程序员可以使用 JNI 定义本地方法，然后通过 Java 虚拟机加载本地库并调用本地方法。本地库可以是动态链接库（.dll 或 .so 文件），也可以是静态链接库（.lib 或 .a 文件）。</p>
+<p>JNI 的主要用途是在 Java 程序中调用本地代码，从而扩展 Java 语言的功能：</p>
+<pre><code>调用本地库：Java 程序可以通过 JNI 接口调用 C/C++ 等本地语言编写的函数库，从而实现更高效、更底层的操作。
+
+提高性能：JNI 可以用于实现图像处理、音频处理、网络通信等需要高性能的应用程序，从而提高程序的执行效率。
+
+跨平台开发：JNI 可以使得 Java 程序与本地代码进行交互，从而实现跨平台开发，例如在 Windows 和 Linux 平台上运行相同的 Java 应用程序。
+
+访问硬件设备：JNI 可以用于访问硬件设备，例如打印机、摄像头、传感器等，从而实现更底层的控制和操作。
+</code></pre>
+<h2 id="JNA"><a href="#JNA" class="headerlink" title="JNA"></a><a href="">JNA</a></h2><p>JNA（Java Native Access）是一个开源的 Java 库，它提供了一种简单的方式来调用本地代码。与 JNI 不同，JNA 不需要编写任何本地代码或头文件，而是使用 Java 接口描述本地函数，并通过 JNA 库自动映射到本地库中的函数。</p>
+<p>JNA 的主要优点是简化了与本地代码的交互过程，使得 Java 程序员可以更容易地调用本地库中的函数。同时，JNA 还提供了一些高级特性，例如结构体、回调函数等，使得 Java 程序员可以更方便地处理复杂的数据类型和逻辑。</p>
+<p>JNA 的使用非常简单，只需要定义一个 Java 接口来描述本地函数，然后通过 JNA 库加载本地库并调用本地函数即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.sun.jna.Library;</span><br><span class="line"><span class="keyword">import</span> com.sun.jna.Native;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">MyLibrary</span> <span class="keyword">extends</span> <span class="title class_">Library</span> &#123;</span><br><span class="line">    <span class="type">MyLibrary</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> (MyLibrary) Native.loadLibrary(<span class="string">&quot;mylib&quot;</span>, MyLibrary.class);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> MyLibrary.INSTANCE.add(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">        System.out.println(result); <span class="comment">// 输出 3</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://quanw20.gitee.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://quanw20.gitee.io/2023/06/02/Java-%E6%9B%B4%E5%A4%9A-%E7%89%B9%E6%80%A7/">http://quanw20.gitee.io/2023/06/02/Java-%E6%9B%B4%E5%A4%9A-%E7%89%B9%E6%80%A7/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://quanw20.gitee.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Java/">Java</a></div><div class="post_share"><div class="social-share" data-image="/images/maomi.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/06/04/React-%E4%B8%AD%E7%9A%84hook/" title="React 中的 hook"><img class="cover" src="/2023/06/04/React-%E4%B8%AD%E7%9A%84hook/2023-06-04-17-08-49.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">React 中的 hook</div></div></a></div><div class="next-post pull-right"><a href="/2023/06/02/Java-%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7/" title="Java 语言特性"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Java 语言特性</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/01/28/Java-%E5%9F%BA%E7%A1%80/" title="Java 基础"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-28</div><div class="title">Java 基础</div></div></a></div><div><a href="/2023/04/15/Java-%E5%A4%9A%E7%BA%BF%E7%A8%8B/" title="Java 多线程"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-15</div><div class="title">Java 多线程</div></div></a></div><div><a href="/2023/05/28/Java-%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A1%86%E6%9E%B6/" title="Java 数据库框架"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-28</div><div class="title">Java 数据库框架</div></div></a></div><div><a href="/2023/06/02/Java-%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7/" title="Java 语言特性"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-06-02</div><div class="title">Java 语言特性</div></div></a></div><div><a href="/2023/05/28/Java%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E4%B8%8B%E8%BD%BD/" title="Java实现文件上传下载"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-28</div><div class="title">Java实现文件上传下载</div></div></a></div><div><a href="/2023/05/18/Netty-%E6%A1%86%E6%9E%B6%E5%85%A5%E9%97%A8/" title="Netty 框架入门"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-18</div><div class="title">Netty 框架入门</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Quanwei</div><div class="author-info__description">幸得识卿桃花面，从此阡陌多暖春 </div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">76</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">42</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%8D%E4%BB%85%E4%BB%85%E6%98%AF%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7"><span class="toc-number">1.</span> <span class="toc-text">不仅仅是语言特性</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SPI"><span class="toc-number">1.1.</span> <span class="toc-text">SPI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-Agent"><span class="toc-number">1.2.</span> <span class="toc-text">Java Agent</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ASM"><span class="toc-number">1.3.</span> <span class="toc-text">ASM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E8%8A%82%E7%A0%81"><span class="toc-number">1.4.</span> <span class="toc-text">字节码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM%E8%AF%AD%E8%A8%80"><span class="toc-number">1.5.</span> <span class="toc-text">JVM语言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JNI"><span class="toc-number">1.6.</span> <span class="toc-text">JNI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JNA"><span class="toc-number">1.7.</span> <span class="toc-text">JNA</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Neo4j/" title="Neo4j">Neo4j</a><time datetime="2023-12-28T13:48:35.000Z" title="发表于 2023-12-28 21:48:35">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Git-FQA/" title="Git FQA">Git FQA</a><time datetime="2023-12-28T13:35:43.000Z" title="发表于 2023-12-28 21:35:43">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/26/Fast-API/" title="Fast API">Fast API</a><time datetime="2023-12-26T02:07:14.000Z" title="发表于 2023-12-26 10:07:14">2023-12-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/15/%E5%9F%BA%E4%BA%8E%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%8C%BB%E8%8D%AF%E9%97%AE%E7%AD%94%E7%A0%94%E7%A9%B6/" title="基于大语言模型的医药问答研究">基于大语言模型的医药问答研究</a><time datetime="2023-12-15T04:45:25.000Z" title="发表于 2023-12-15 12:45:25">2023-12-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/07/Love-Story-App/" title="Love Story App">Love Story App</a><time datetime="2023-12-07T02:42:14.000Z" title="发表于 2023-12-07 10:42:14">2023-12-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2023 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="I,LOVE,YOU,TANG,QUANWEI" data-fontsize="20px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

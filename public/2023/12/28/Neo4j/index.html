@@ -1,0 +1,251 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Neo4j | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Neo4jNeo4j 是一个高性能的NoSQL图形数据库，它使用图形结构来存储数据，并支持通过Cypher查询语言进行数据查询。 Neo4j特别适合处理复杂的关系数据，如社交网络、推荐系统、知识图谱等。 它提供了一种灵活且强大的数据模型，可以轻松地表示实体和它们之间的关系。 主要特点 图形数据模型：Neo4j使用节点（Node）、关系（Relationship）和属性（Property）来表示数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Neo4j">
+<meta property="og:url" content="http://quanw20.gitee.io/2023/12/28/Neo4j/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="Neo4jNeo4j 是一个高性能的NoSQL图形数据库，它使用图形结构来存储数据，并支持通过Cypher查询语言进行数据查询。 Neo4j特别适合处理复杂的关系数据，如社交网络、推荐系统、知识图谱等。 它提供了一种灵活且强大的数据模型，可以轻松地表示实体和它们之间的关系。 主要特点 图形数据模型：Neo4j使用节点（Node）、关系（Relationship）和属性（Property）来表示数据">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://quanw20.gitee.io/images/maomi.png">
+<meta property="article:published_time" content="2023-12-28T13:48:35.000Z">
+<meta property="article:modified_time" content="2023-12-28T14:04:10.315Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="Neo4j">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://quanw20.gitee.io/images/maomi.png"><link rel="shortcut icon" href="/images/favicon-16x16.ico"><link rel="canonical" href="http://quanw20.gitee.io/2023/12/28/Neo4j/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Neo4j',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-12-28 22:04:10'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/maomi.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">76</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">42</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/p1.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="QUANWEI"><span class="site-name">QUANWEI</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Neo4j</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-12-28T13:48:35.000Z" title="发表于 2023-12-28 21:48:35">2023-12-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-12-28T14:04:10.315Z" title="更新于 2023-12-28 22:04:10">2023-12-28</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Neo4j"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Neo4j"><a href="#Neo4j" class="headerlink" title="Neo4j"></a>Neo4j</h1><p>Neo4j 是一个高性能的NoSQL图形数据库，它使用图形结构来存储数据，<br>并支持通过Cypher查询语言进行数据查询。</p>
+<p>Neo4j特别适合处理复杂的关系数据，如社交网络、推荐系统、知识图谱等。</p>
+<p>它提供了一种灵活且强大的数据模型，可以轻松地表示实体和它们之间的关系。</p>
+<h3 id="主要特点"><a href="#主要特点" class="headerlink" title="主要特点"></a>主要特点</h3><ol>
+<li><strong>图形数据模型</strong>：Neo4j使用<code>节点（Node）</code>、<code>关系（Relationship）</code>和<code>属性（Property）</code>来表示数据，这种模型非常适合表示实体之间的关系。</li>
+<li><strong>Cypher查询语言</strong>：Cypher是一种声明式查询语言，用于在Neo4j中检索数据。它易于学习，并且支持强大的模式匹配。</li>
+<li><strong>高性能</strong>：Neo4j能够提供快速的数据读写操作，支持大规模的数据集和复杂的查询。</li>
+<li><strong>可扩展性</strong>：Neo4j支持水平扩展，可以通过增加更多的服务器来提高性能和存储能力。</li>
+<li><strong>集成和连接器</strong>：Neo4j提供了多种连接器，可以轻松地与其他系统和数据库集成。</li>
+<li><strong>开发者友好</strong>：Neo4j有丰富的文档、社区支持和开发工具，如Neo4j Bloom、Neo4j Browser等。</li>
+</ol>
+<h3 id="安装和设置"><a href="#安装和设置" class="headerlink" title="安装和设置"></a>安装和设置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker volume create neo4j_data</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line">    --name neo4j \</span><br><span class="line">    --restart always \</span><br><span class="line">    --publish=7474:7474 --publish=7687:7687 \</span><br><span class="line">    --<span class="built_in">env</span> NEO4J_AUTH=neo4j/your_password \</span><br><span class="line">    --volume=neo4j_data:/data \</span><br><span class="line">    neo4j:5.15.0</span><br></pre></td></tr></table></figure>
+
+<h3 id="数据库操作示例"><a href="#数据库操作示例" class="headerlink" title="数据库操作示例"></a>数据库操作示例</h3><ol>
+<li><strong>创建数据库</strong>：在Neo4j Browser中，执行以下命令创建一个新的数据库。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE mydatabase;</span><br></pre></td></tr></table></figure></li>
+<li><strong>切换数据库</strong>：切换到刚刚创建的数据库。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">USE DATABASE mydatabase;</span><br></pre></td></tr></table></figure></li>
+<li><strong>创建节点和关系</strong>：使用Cypher创建节点和关系。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE (n:Person &#123;name: <span class="string">&#x27;Alice&#x27;</span>&#125;)-[:KNOWS]-&gt;(m:Person &#123;name: <span class="string">&#x27;Bob&#x27;</span>&#125;);</span><br></pre></td></tr></table></figure></li>
+<li><strong>查询数据</strong>：使用Cypher查询数据。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person)-[:KNOWS]-&gt;(friend:Person) WHERE p.name = <span class="string">&#x27;Alice&#x27;</span> RETURN friend.name;</span><br></pre></td></tr></table></figure></li>
+<li><strong>关闭数据库</strong>：在完成操作后，关闭数据库连接。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP DATABASE mydatabase;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="学习资源"><a href="#学习资源" class="headerlink" title="学习资源"></a>学习资源</h3><ul>
+<li><strong>官方文档</strong>：Neo4j的官方文档（<a target="_blank" rel="noopener" href="https://neo4j.com/docs/%EF%BC%89%E6%8F%90%E4%BE%9B%E4%BA%86%E8%AF%A6%E7%BB%86%E7%9A%84%E6%8C%87%E5%8D%97%E5%92%8C%E6%95%99%E7%A8%8B%EF%BC%8C%E5%8F%AF%E4%BB%A5%E5%B8%AE%E5%8A%A9%E4%BD%A0%E6%9B%B4%E5%A5%BD%E5%9C%B0%E4%BA%86%E8%A7%A3%E5%92%8C%E4%BD%BF%E7%94%A8%E8%BF%99%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%BA%93%E3%80%82">https://neo4j.com/docs/）提供了详细的指南和教程，可以帮助你更好地了解和使用这个数据库。</a></li>
+</ul>
+<h3 id="图数据模型"><a href="#图数据模型" class="headerlink" title="图数据模型"></a>图数据模型</h3><h3 id="节点（Node）"><a href="#节点（Node）" class="headerlink" title="节点（Node）"></a>节点（Node）</h3><p>节点是图形数据模型中的基本实体，它代表一个特定的对象或概念。</p>
+<p>在Neo4j中，节点通常由一个唯一的标识符（ID）和一个或多个标签（Label）组成。</p>
+<p>标签用于分类节点，并且可以包含关键字和描述性信息。</p>
+<p>例如，在一个社交网络中，每个用户可以是一个节点，节点可能有“Person”标签。</p>
+<h3 id="关系（Relationship）"><a href="#关系（Relationship）" class="headerlink" title="关系（Relationship）"></a>关系（Relationship）</h3><p>关系表示节点之间的连接。</p>
+<p>在Neo4j中，关系由两个节点之间的有向边（Edge）表示，并且可以有方向（箭头表示）。</p>
+<p>关系也可以有标签，用于描述两个节点之间的特定关系。</p>
+<p>例如，在社交网络中，用户之间的“朋友”关系可以用一个有向边表示，从一个人指向另一个人。</p>
+<h3 id="属性（Property）"><a href="#属性（Property）" class="headerlink" title="属性（Property）"></a>属性（Property）</h3><p>属性是附加在节点或关系上的键值对，用于存储节点的额外信息。</p>
+<p>属性可以用于存储任何类型的数据，如字符串、数字、日期等。</p>
+<p>例如，一个用户的节点可能有“姓名”、“年龄”和“电子邮件”等属性。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>假设我们正在构建一个社交网络的图形数据库，其中包含用户和他们之间的朋友关系。以下是这个网络的一些图形数据模型元素：</p>
+<ul>
+<li><strong>节点</strong>：<ul>
+<li>用户1（ID: 1，标签： Person，属性： 姓名： Alice，年龄： 30）</li>
+<li>用户2（ID: 2，标签： Person，属性： 姓名： Bob，年龄： 25）</li>
+</ul>
+</li>
+<li><strong>关系</strong>：<ul>
+<li>用户1与用户2之间的“朋友”关系（从用户1指向用户2）</li>
+</ul>
+</li>
+<li><strong>属性</strong>：<ul>
+<li>用户1的属性：姓名： Alice，年龄： 30</li>
+<li>用户2的属性：姓名： Bob，年龄： 25</li>
+</ul>
+</li>
+</ul>
+<h4 id="创建节点和关系"><a href="#创建节点和关系" class="headerlink" title="创建节点和关系"></a>创建节点和关系</h4><p>首先，我们需要创建两个节点（用户1和用户2）以及它们之间的“朋友”关系。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE (user1:Person &#123;name: <span class="string">&#x27;Alice&#x27;</span>, age: 30&#125;)-[:FRIEND]-&gt;(user2:Person &#123;name: <span class="string">&#x27;Bob&#x27;</span>, age: 25&#125;);</span><br></pre></td></tr></table></figure>
+<p>这个Cypher命令创建了一个从用户1到用户2的“朋友”关系，并给两个用户节点添加了姓名和年龄属性。</p>
+<h4 id="查询节点和关系"><a href="#查询节点和关系" class="headerlink" title="查询节点和关系"></a>查询节点和关系</h4><p>一旦节点和关系被创建，我们就可以使用Cypher来查询它们。例如，我们可以查询Alice的所有朋友：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (a:Person)-[:FRIEND]-&gt;(friend:Person) WHERE a.name = <span class="string">&#x27;Alice&#x27;</span> RETURN friend.name;</span><br></pre></td></tr></table></figure>
+<p>这个查询将返回所有与Alice有“朋友”关系的用户名称。</p>
+<h4 id="查询节点的属性"><a href="#查询节点的属性" class="headerlink" title="查询节点的属性"></a>查询节点的属性</h4><p>我们也可以查询节点的属性。例如，查询Alice的年龄：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (a:Person) WHERE a.name = <span class="string">&#x27;Alice&#x27;</span> RETURN a.age;</span><br></pre></td></tr></table></figure>
+<p>这个查询将返回Alice的年龄。</p>
+<h4 id="查询关系的属性"><a href="#查询关系的属性" class="headerlink" title="查询关系的属性"></a>查询关系的属性</h4><p>如果关系有属性，我们也可以查询它们。例如，如果我们给“朋友”关系添加了一个属性“since”，表示两个用户成为朋友的时间：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (a:Person)-[r:FRIEND]-&gt;(friend:Person) WHERE a.name = <span class="string">&#x27;Alice&#x27;</span> RETURN r.since;</span><br></pre></td></tr></table></figure>
+<p>这个查询将返回Alice和她的朋友之间的“since”属性值。</p>
+<h4 id="更新节点和关系的属性"><a href="#更新节点和关系的属性" class="headerlink" title="更新节点和关系的属性"></a>更新节点和关系的属性</h4><p>如果我们想要更新节点的属性，可以使用<code>SET</code>关键字。例如，更新Alice的年龄：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (a:Person) WHERE a.name = <span class="string">&#x27;Alice&#x27;</span> SET a.age = 31;</span><br></pre></td></tr></table></figure>
+<p>这个命令将Alice的年龄更新为31岁。</p>
+<h2 id="Cypher"><a href="#Cypher" class="headerlink" title="Cypher"></a>Cypher</h2><p>Cypher 是 Neo4j 图形数据库的查询语言，它是一种声明式、事务性的查询语言，专门用于在图形数据库中检索数据。</p>
+<p>Cypher 的语法类似于 SQL，但是它被设计用来利用图形数据的结构化查询，特别是针对节点、关系和属性的操作。</p>
+<h3 id="Cypher-基础语法"><a href="#Cypher-基础语法" class="headerlink" title="Cypher 基础语法"></a>Cypher 基础语法</h3><ul>
+<li><strong>点（Node）</strong>：使用圆括号 <code>()</code> 来表示节点，可以包含标签和属性。</li>
+<li><strong>关系（Relationship）</strong>：使用中划线 <code>--</code> 或 <code>---</code> 来表示节点之间的关系，可以包含关系类型和方向。</li>
+<li><strong>属性（Property）</strong>：使用冒号 <code>:</code> 来表示节点或关系的属性。</li>
+<li><strong>WHERE 子句</strong>：用于过滤查询结果，类似于 SQL 中的 WHERE 子句。</li>
+<li><strong>RETURN 子句</strong>：用于返回查询结果中感兴趣的列，类似于 SQL 中的 SELECT 子句。</li>
+<li><strong>ORDER BY 子句</strong>：用于对查询结果进行排序。</li>
+<li><strong>LIMIT&#x2F;OFFSET 子句</strong>：用于限制查询结果的行数或跳过特定的行数。</li>
+</ul>
+<h3 id="示例查询"><a href="#示例查询" class="headerlink" title="示例查询"></a>示例查询</h3><p>以下是一些基本的 Cypher 查询示例：</p>
+<ol>
+<li><strong>查找所有具有特定标签的节点</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (n) WHERE n:Person RETURN n.name;</span><br></pre></td></tr></table></figure></li>
+<li><strong>查找两个节点之间的特定关系</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person)-[:FRIEND]-&gt;(friend:Person) WHERE p.name = &#x27;Alice&#x27; RETURN friend.name;</span><br></pre></td></tr></table></figure></li>
+<li><strong>查找节点的所有邻居</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person)-[:FRIEND]-&gt;(friend) RETURN p.name, friend.name;</span><br></pre></td></tr></table></figure></li>
+<li><strong>更新节点的属性</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person) WHERE p.name = &#x27;Alice&#x27; SET p.age = 31;</span><br></pre></td></tr></table></figure></li>
+<li><strong>删除节点和关系</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MATCH (p:Person) WHERE p.name = &#x27;Alice&#x27; DELETE p;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://quanw20.gitee.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://quanw20.gitee.io/2023/12/28/Neo4j/">http://quanw20.gitee.io/2023/12/28/Neo4j/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://quanw20.gitee.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Neo4j/">Neo4j</a></div><div class="post_share"><div class="social-share" data-image="/images/maomi.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/12/28/Git-FQA/" title="Git FQA"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Git FQA</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Quanwei</div><div class="author-info__description">幸得识卿桃花面，从此阡陌多暖春 </div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">76</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">42</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Neo4j"><span class="toc-number">1.</span> <span class="toc-text">Neo4j</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E7%89%B9%E7%82%B9"><span class="toc-number">1.0.1.</span> <span class="toc-text">主要特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%92%8C%E8%AE%BE%E7%BD%AE"><span class="toc-number">1.0.2.</span> <span class="toc-text">安装和设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.0.3.</span> <span class="toc-text">数据库操作示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90"><span class="toc-number">1.0.4.</span> <span class="toc-text">学习资源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.0.5.</span> <span class="toc-text">图数据模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E7%82%B9%EF%BC%88Node%EF%BC%89"><span class="toc-number">1.0.6.</span> <span class="toc-text">节点（Node）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%EF%BC%88Relationship%EF%BC%89"><span class="toc-number">1.0.7.</span> <span class="toc-text">关系（Relationship）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7%EF%BC%88Property%EF%BC%89"><span class="toc-number">1.0.8.</span> <span class="toc-text">属性（Property）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.0.9.</span> <span class="toc-text">示例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E8%8A%82%E7%82%B9%E5%92%8C%E5%85%B3%E7%B3%BB"><span class="toc-number">1.0.9.1.</span> <span class="toc-text">创建节点和关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E8%8A%82%E7%82%B9%E5%92%8C%E5%85%B3%E7%B3%BB"><span class="toc-number">1.0.9.2.</span> <span class="toc-text">查询节点和关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E8%8A%82%E7%82%B9%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="toc-number">1.0.9.3.</span> <span class="toc-text">查询节点的属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E5%85%B3%E7%B3%BB%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="toc-number">1.0.9.4.</span> <span class="toc-text">查询关系的属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E8%8A%82%E7%82%B9%E5%92%8C%E5%85%B3%E7%B3%BB%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="toc-number">1.0.9.5.</span> <span class="toc-text">更新节点和关系的属性</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cypher"><span class="toc-number">1.1.</span> <span class="toc-text">Cypher</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Cypher-%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95"><span class="toc-number">1.1.1.</span> <span class="toc-text">Cypher 基础语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E6%9F%A5%E8%AF%A2"><span class="toc-number">1.1.2.</span> <span class="toc-text">示例查询</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Neo4j/" title="Neo4j">Neo4j</a><time datetime="2023-12-28T13:48:35.000Z" title="发表于 2023-12-28 21:48:35">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Git-FQA/" title="Git FQA">Git FQA</a><time datetime="2023-12-28T13:35:43.000Z" title="发表于 2023-12-28 21:35:43">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/26/Fast-API/" title="Fast API">Fast API</a><time datetime="2023-12-26T02:07:14.000Z" title="发表于 2023-12-26 10:07:14">2023-12-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/15/%E5%9F%BA%E4%BA%8E%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%8C%BB%E8%8D%AF%E9%97%AE%E7%AD%94%E7%A0%94%E7%A9%B6/" title="基于大语言模型的医药问答研究">基于大语言模型的医药问答研究</a><time datetime="2023-12-15T04:45:25.000Z" title="发表于 2023-12-15 12:45:25">2023-12-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/07/Love-Story-App/" title="Love Story App">Love Story App</a><time datetime="2023-12-07T02:42:14.000Z" title="发表于 2023-12-07 10:42:14">2023-12-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2023 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="I,LOVE,YOU,TANG,QUANWEI" data-fontsize="20px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

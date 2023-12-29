@@ -1,0 +1,2 @@
+cd /home/quanwei/workspaceFolder/blog
+tar -cvjf deploy.tar.bz2 ./.deploy_git
