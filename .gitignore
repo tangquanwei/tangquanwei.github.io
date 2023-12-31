@@ -1,3 +1,7 @@
 node_modules
 .deploy_git
 public
+*.log
+node_modules/
+public/
+.deploy*/
