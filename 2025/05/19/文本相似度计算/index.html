@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>文本相似度计算 | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="文本相似度计算 基准方法：文本-&gt;词-&gt;嵌入-&gt;平均池化-&gt;余弦相似度 Word Mover’s Distance rank_bm25  无监督短文本匹配1. TF-IDF Term Frequency-Inverse Document FrequencyTF-IDF（Term Frequency-Inverse Document Frequency）是一种在信息检索和文本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文本相似度计算">
+<meta property="og:url" content="https://github.com/tangquanwei/tangquanwei.github.io/2025/05/19/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E5%BA%A6%E8%AE%A1%E7%AE%97/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="文本相似度计算 基准方法：文本-&gt;词-&gt;嵌入-&gt;平均池化-&gt;余弦相似度 Word Mover’s Distance rank_bm25  无监督短文本匹配1. TF-IDF Term Frequency-Inverse Document FrequencyTF-IDF（Term Frequency-Inverse Document Frequency）是一种在信息检索和文本">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://github.com/tangquanwei/tangquanwei.github.io/images/maomi.png">
+<meta property="article:published_time" content="2025-05-19T12:26:55.000Z">
+<meta property="article:modified_time" content="2025-05-19T13:53:13.503Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="文本相似度计算">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.com/tangquanwei/tangquanwei.github.io/images/maomi.png"><link rel="shortcut icon" href="/images/favicon-16x16.ico"><link rel="canonical" href="https://github.com/tangquanwei/tangquanwei.github.io/2025/05/19/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E5%BA%A6%E8%AE%A1%E7%AE%97/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '文本相似度计算',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-05-19 21:53:13'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/maomi.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">53</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/p1.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="QUANWEI"><span class="site-name">QUANWEI</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">文本相似度计算</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-05-19T12:26:55.000Z" title="发表于 2025-05-19 20:26:55">2025-05-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-19T13:53:13.503Z" title="更新于 2025-05-19 21:53:13">2025-05-19</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="文本相似度计算"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="文本相似度计算"><a href="#文本相似度计算" class="headerlink" title="文本相似度计算"></a>文本相似度计算</h2><ol>
+<li>基准方法：文本-&gt;词-&gt;嵌入-&gt;平均池化-&gt;余弦相似度</li>
+<li>Word Mover’s Distance</li>
+<li>rank_bm25</li>
+</ol>
+<h2 id="无监督短文本匹配"><a href="#无监督短文本匹配" class="headerlink" title="无监督短文本匹配"></a>无监督短文本匹配</h2><h3 id="1-TF-IDF-Term-Frequency-Inverse-Document-Frequency"><a href="#1-TF-IDF-Term-Frequency-Inverse-Document-Frequency" class="headerlink" title="1. TF-IDF Term Frequency-Inverse Document Frequency"></a>1. TF-IDF Term Frequency-Inverse Document Frequency</h3><p>TF-IDF（Term Frequency-Inverse Document Frequency）是一种在信息检索和文本挖掘中广泛使用的加权技术，用于评估一个词在一个文档或语料库中的重要性。TF-IDF算法结合了两个统计测量：词频（TF）和逆文档频率（IDF），来计算一个词的权重。</p>
+<p>词频（TF, Term Frequency）</p>
+<p>词频是指一个词在文档中出现的频率。一个词在文档中出现得越频繁，其TF值就越高，表明这个词对该文档的内容可能越重要。然而，仅仅使用词频作为权重是有缺陷的，因为常见的词汇（如冠词、介词等）会获得较高的权重，尽管它们对于文档的主题贡献不大。</p>
+<p>TF的计算公式可以表示为：<br>$$ \text{TF}(t, d) &#x3D; \frac{\text{词 } t \text{ 在文档 } d \text{ 中出现的次数}}{\text{文档 } d \text{ 中的总词数}} $$</p>
+<p>逆文档频率（IDF, Inverse Document Frequency）</p>
+<p>逆文档频率是用来反映一个词的普遍重要性，即一个词在文档集合中的罕见程度。一个词如果在许多文档中都出现，则其IDF值较低；反之，如果一个词只在少数文档中出现，则其IDF值较高，表明这个词可能具有很好的区分度，是文档的关键特征。</p>
+<p>IDF的计算公式可以表示为：<br>$$ \text{IDF}(t) &#x3D; \log\left(\frac{\text{文档总数} + 1}{\text{包含词 } t \text{ 的文档数} + 1}\right) $$<br>这里加1是为了避免分母为0的情况。</p>
+<p>TF-IDF</p>
+<p>TF-IDF是词频和逆文档频率的乘积，它反映了词在文档中的重要性。TF-IDF值越高，说明词对文档的重要性越大。</p>
+<p>TF-IDF的计算公式可以表示为：<br>$$ \text{TF-IDF}(t, d) &#x3D; \text{TF}(t, d) \times \text{IDF}(t) $$</p>
+<p><strong>实际应用</strong></p>
+<ul>
+<li><strong>关键词提取</strong>：识别出文档中最重要的词汇。</li>
+<li><strong>文档相似度计算</strong>：比较两份文档之间的相似性，经常用于信息检索和推荐系统。</li>
+<li><strong>文本分类</strong>：在机器学习中作为特征向量，帮助分类器理解文档内容。</li>
+</ul>
+<p>TF-IDF的一个常见变体是在计算TF时使用词频的对数形式，以减少极高词频的影响，有时也会对IDF进行平滑处理，确保数值的稳定性。在Python的Scikit-learn库中，<code>TfidfVectorizer</code>类提供了实现TF-IDF算法的功能，可以方便地应用于文本数据的预处理和特征工程中。</p>
+<h3 id="BM25-Best-Match-25"><a href="#BM25-Best-Match-25" class="headerlink" title="BM25 Best Match 25"></a>BM25 Best Match 25</h3><p>BM25（Best Match 25）是一种广泛用于信息检索的评分函数，它基于概率模型，用于评估文档与给定查询的相关性。BM25算法考虑了词频（词项在文档中的频率）、逆文档频率（IDF，衡量词项的普遍重要性）、文档长度以及一些调整参数。下面详细介绍BM25算法的原理：</p>
+<ul>
+<li><strong>词频（Term Frequency, TF）</strong>：某个词项在文档中出现的次数。</li>
+<li><strong>逆文档频率（Inverse Document Frequency, IDF）</strong>：衡量词项的普遍重要性，常见词项的IDF较低，而罕见词项的IDF较高。</li>
+<li><strong>文档长度</strong>：文档的长度会影响词项的TF，BM25通过调整参数来校正这一点，防止过长的文档仅因为含有更多词项而获得过高评分。</li>
+</ul>
+<p>对于查询(Q)中的每一个词项(t)，文档(D)的BM25得分由以下公式给出：</p>
+<p>$$ \text{score}(D, Q) &#x3D; \sum_{t \in Q} w_t \cdot \frac{(k_1 + 1) \cdot f(t, D)}{k_1 \cdot \left(1 - b + b \cdot \frac{|D|}{\bar{D}}\right) + f(t, D)} \cdot \text{IDF}(t) \cdot \frac{k_2 + 1}{k_2 + qf(t, Q)} $$</p>
+<p>其中：</p>
+<ul>
+<li>(f(t, D))是词项(t)在文档(D)中的频率。</li>
+<li>(qf(t, Q))是词项(t)在查询(Q)中的频率。</li>
+<li>(\text{IDF}(t))是词项(t)的逆文档频率。</li>
+<li>(k_1)和(k_2)是调整参数，用于平衡词项频率和文档长度的影响。</li>
+<li>(b)是另一个调整参数，用于控制文档长度对得分的影响。</li>
+<li>(|D|)是文档(D)的长度。</li>
+<li>(\bar{D})是文档集合中文档的平均长度。</li>
+<li><strong>(k_1)和(k_2)</strong>：常数，通常(k_1)设置为1.2至2.0，(k_2)设置为100，用于调整词频和查询词频对得分的影响。</li>
+<li><strong>(b)</strong>：介于0和1之间的常数，用于调整文档长度对词频的影响。当(b&#x3D;0)时，文档长度不产生影响；当(b&#x3D;1)时，文档长度完全影响词频的权重。</li>
+</ul>
+<p>BM25算法通过计算查询中每个词项在文档中的得分，然后将这些得分相加以得到文档的总得分。得分高的文档被认为与查询更相关。BM25的核心在于它能够有效地平衡词频、逆文档频率和文档长度等因素，使得结果更加合理和准确。</p>
+<p>在实际应用中，BM25常常作为基础的文档排名算法，尤其在全文搜索引擎中被广泛应用，因为它能提供较为准确的文档相关性排序。</p>
+<h3 id="词向量-sif或者usif或者TFIDF权重平滑"><a href="#词向量-sif或者usif或者TFIDF权重平滑" class="headerlink" title="词向量+sif或者usif或者TFIDF权重平滑"></a>词向量+sif或者usif或者TFIDF权重平滑</h3><p>词向量（Word Vectors）结合SIF（Smoothed Inverse Frequency）、USIF（Unigram SIF）或TF-IDF（Term Frequency-Inverse Document Frequency）权重平滑是一种用于生成文档或句子向量的有效方法。这种方法的主要目的是利用词向量捕捉单词的语义信息，并通过权重平滑技术增强模型对高频和低频词的处理能力，以生成更具有语义一致性的文本表示。</p>
+<p><strong>SIF (Smoothed Inverse Frequency)</strong></p>
+<p>SIF旨在减少向量表示中频繁词汇的影响，同时保留稀有词汇的信息。SIF使用平滑的逆频率（a smoothed inverse frequency）来加权每个词的词向量，公式如下：</p>
+<p>$$ v_d &#x3D; \sum_{w \in d} \frac{r(w)}{r(w) + a} \cdot v_w $$</p>
+<p>其中，</p>
+<ul>
+<li>(v_d)是文档的向量表示。</li>
+<li>(v_w)是词(w)的词向量。</li>
+<li>(r(w))是词(w)的逆频率，即文档中不包含词(w)的比例。</li>
+<li>(a)是平滑参数，通常设为常数。</li>
+</ul>
+<p><strong>USIF (Unigram SIF)</strong></p>
+<p>USIF是SIF的一个变体，它使用词频而不是逆频率来加权词向量。这样可以进一步调整权重，以更好地反映词在文本中的实际重要性。</p>
+<p><strong>TF-IDF 权重平滑</strong></p>
+<p>在生成文本向量时，每个词的词向量可以乘以其TF-IDF值作为权重。TF-IDF权重平滑可以防止文档长度和高频词对向量表示的过度影响。</p>
+<p>结合词向量和上述权重平滑方法的基本思路是，首先对文档中的每个词使用预训练的词向量模型（如Word2Vec、GloVe或FastText）来获取词向量，然后根据SIF、USIF或TF-IDF计算权重，最后将所有词的加权词向量求和或平均，得到整个文档或句子的向量表示。</p>
+<p>这种方法的优点是它能够利用词向量的强大语义表示能力，同时通过权重平滑技术调整高频词和低频词的影响，使文档向量更接近人类的理解方式。然而，这种方法也有其局限性，比如它可能无法很好地处理多义词和上下文依赖性。</p>
+<h3 id="Bert-flow"><a href="#Bert-flow" class="headerlink" title="Bert-flow"></a>Bert-flow</h3><p>为了解决BERT句向量分布不平整的问题，作者认为可以利用标准化流(Normalizing Flows)将BERT句向量分布变换成一个光滑的，各向同性的标准高斯分布。</p>
+<p><a href="https://github.com/bohanli/BERT-flow">https://github.com/bohanli/BERT-flow</a></p>
+<p>将预训练BERT迁移到文本语义相似度计算任务上大致有两种思路：</p>
+<p>「交互编码：」 这是BERT原文给出的微调方法，也就是把两个需要计算语义相似度的文本用[SEP]拼接起来，将其作为输入来微调BERT。虽然BERT的cross-attention可以让两个文本得到充分的信息交互，在一些对文本交互要求较高的任务上表现得很好(比如需要模型具备句间推理能力的AFS数据集[3])</p>
+<p>「向量空间模型：」 利用预训练BERT生成的句向量(sentence embeddings)作为文本的整体表示，比如取[CLS]对应的hidden state或对最后一层或几层的hidden states做average pooling(后者更好)，然后用句向量的cosine相似度来表示文本的语义相似度。这种方式没有利用句子对相似度标签来微调BERT，因此是无监督的，因此非常适用于大规模文本检索的应用场景，「但奇怪的是，实验表明BERT句向量的表现有时候还不如non-contextualized的GloVe句向量。」</p>
+<ol start="4">
+<li>Bert-whitening</li>
+</ol>
+<p>去除特征间的相关性和让所有特征具有相同的均值和方差</p>
+<ol start="6">
+<li>SimCSE和ESimCSE</li>
+</ol>
+<p>通过对比学习, 进行自监督的方法, 使用计算交叉熵为loss通过softmax分类来学习正负样本相似度。ESimCSE是SimCSE升级版。</p>
+<h2 id="有监督短文本匹配"><a href="#有监督短文本匹配" class="headerlink" title="有监督短文本匹配"></a>有监督短文本匹配</h2><h3 id="表示型短文本匹配模型-经典双塔模型DSSM"><a href="#表示型短文本匹配模型-经典双塔模型DSSM" class="headerlink" title="表示型短文本匹配模型(经典双塔模型DSSM)"></a>表示型短文本匹配模型(经典双塔模型DSSM)</h3><pre><code>优点： 
+  性能好, 可以对离线计算句向量, 大幅度降低在线计算耗时
+  能学习到深层语义
+缺点： 
+  对各文本抽取的仅仅是最后的语义向量, 其中的(词层面的细节)信息损失难以衡量
+  缺乏对文本pair间词法、句法信息的比较;
+  会导致会失去语义焦点, 易语义漂移(没有关注重要的点)。
+  可能准确率不如交互型模型;
+</code></pre>
+<p>一些关键步骤和方法：</p>
+<p>  <strong>词嵌入（Word Embeddings）</strong><br>  这是将文本转换为数值向量的初步步骤。词嵌入能够捕捉词汇的语义和上下文信息，常见的词嵌入模型包括Word2Vec、GloVe和FastText。</p>
+<p>  <strong>句子表示（Sentence Representation）</strong><br>  平均池化：将句子中所有词的嵌入向量取平均。<br>  LSTM 或 GRU：使用长短时记忆网络（LSTM）或门控循环单元（GRU）来捕捉序列中的依赖关系。<br>  Transformer：基于注意力机制的模型，如BERT，可以生成更复杂的句子表示。</p>
+<p>  <strong>相似度计算</strong><br>  在得到两个文本的向量表示后，可以使用以下方法计算它们的相似度：</p>
+<p>  余弦相似度：测量两个向量之间的角度，范围在-1到1之间。<br>  欧氏距离：计算两个向量之间的直线距离。</p>
+<h3 id="交互型-单塔模型"><a href="#交互型-单塔模型" class="headerlink" title="交互型(单塔模型)"></a>交互型(单塔模型)</h3><pre><code>优点:
+  准确率更好;
+  更好地把握了语义焦点;
+  可以对上下文重要性进行合理的建模。
+缺点:
+  耗时长;
+  忽视了句法、句间对照等全局性信息, 无法由局部匹配信息刻画全局匹配信息。
+</code></pre>
+<h2 id="传统方法-词汇层面"><a href="#传统方法-词汇层面" class="headerlink" title="传统方法(词汇层面)"></a>传统方法(词汇层面)</h2><p>主要解决词汇层面的匹配问题, 或者说词汇层面的相似度问题。而实际上, 基于词汇的匹配算法有很大的局限性。不能理解同义词和近义词</p>
+<p>距离度量算法</p>
+<p>  最小编辑距离,Levenshtein距离<br>    设(d[i][j])表示A的前i个字符到B的前j个字符的最小编辑距离。则动态规划的递推方程如下：<br>    $$ d[i][j] &#x3D; \min \begin{cases}<br>    d[i-1][j] + 1 &amp; \text{（删除A的第i个字符）} \<br>    d[i][j-1] + 1 &amp; \text{（在A的末尾插入B的第j个字符）} \<br>    d[i-1][j-1] + \mathbb{1}_{(A_i \neq B_j)} &amp; \text{（替换A的第i个字符或保持不变）}<br>     \end{cases} $$</p>
+<p>  simhash和海明距离</p>
+<p>  $L_p$距离</p>
+<p>  余弦距离</p>
+<p>  杰卡德相似度</p>
+<h2 id="深度语义匹配模型-语义层面"><a href="#深度语义匹配模型-语义层面" class="headerlink" title="深度语义匹配模型(语义层面)"></a>深度语义匹配模型(语义层面)</h2></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://github.com/tangquanwei/tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://github.com/tangquanwei/tangquanwei.github.io/2025/05/19/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E5%BA%A6%E8%AE%A1%E7%AE%97/">https://github.com/tangquanwei/tangquanwei.github.io/2025/05/19/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E5%BA%A6%E8%AE%A1%E7%AE%97/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://github.com/tangquanwei/tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E5%BA%A6%E8%AE%A1%E7%AE%97/">文本相似度计算</a></div><div class="post_share"><div class="social-share" data-image="/images/maomi.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/05/19/PG-Vector/" title="PG Vector"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">PG Vector</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Quanwei</div><div class="author-info__description">幸得识卿桃花面，从此阡陌多暖春 </div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">53</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E5%BA%A6%E8%AE%A1%E7%AE%97"><span class="toc-number">1.</span> <span class="toc-text">文本相似度计算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A0%E7%9B%91%E7%9D%A3%E7%9F%AD%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D"><span class="toc-number">2.</span> <span class="toc-text">无监督短文本匹配</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-TF-IDF-Term-Frequency-Inverse-Document-Frequency"><span class="toc-number">2.1.</span> <span class="toc-text">1. TF-IDF Term Frequency-Inverse Document Frequency</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BM25-Best-Match-25"><span class="toc-number">2.2.</span> <span class="toc-text">BM25 Best Match 25</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%8D%E5%90%91%E9%87%8F-sif%E6%88%96%E8%80%85usif%E6%88%96%E8%80%85TFIDF%E6%9D%83%E9%87%8D%E5%B9%B3%E6%BB%91"><span class="toc-number">2.3.</span> <span class="toc-text">词向量+sif或者usif或者TFIDF权重平滑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Bert-flow"><span class="toc-number">2.4.</span> <span class="toc-text">Bert-flow</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89%E7%9B%91%E7%9D%A3%E7%9F%AD%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D"><span class="toc-number">3.</span> <span class="toc-text">有监督短文本匹配</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A8%E7%A4%BA%E5%9E%8B%E7%9F%AD%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-%E7%BB%8F%E5%85%B8%E5%8F%8C%E5%A1%94%E6%A8%A1%E5%9E%8BDSSM"><span class="toc-number">3.1.</span> <span class="toc-text">表示型短文本匹配模型(经典双塔模型DSSM)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E4%BA%92%E5%9E%8B-%E5%8D%95%E5%A1%94%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.2.</span> <span class="toc-text">交互型(单塔模型)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%A0%E7%BB%9F%E6%96%B9%E6%B3%95-%E8%AF%8D%E6%B1%87%E5%B1%82%E9%9D%A2"><span class="toc-number">4.</span> <span class="toc-text">传统方法(词汇层面)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%B1%E5%BA%A6%E8%AF%AD%E4%B9%89%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-%E8%AF%AD%E4%B9%89%E5%B1%82%E9%9D%A2"><span class="toc-number">5.</span> <span class="toc-text">深度语义匹配模型(语义层面)</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E5%BA%A6%E8%AE%A1%E7%AE%97/" title="文本相似度计算">文本相似度计算</a><time datetime="2025-05-19T12:26:55.000Z" title="发表于 2025-05-19 20:26:55">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/PG-Vector/" title="PG Vector">PG Vector</a><time datetime="2025-05-19T12:24:37.000Z" title="发表于 2025-05-19 20:24:37">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/Gen-AI/" title="Gen AI">Gen AI</a><time datetime="2025-05-19T12:16:21.000Z" title="发表于 2025-05-19 20:16:21">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/%E6%A6%82%E7%8E%87%E8%AE%BA/" title="概率论">概率论</a><time datetime="2025-05-19T11:59:51.000Z" title="发表于 2025-05-19 19:59:51">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/07/24/LLM-Hallucination/" title="LLM Hallucination">LLM Hallucination</a><time datetime="2024-07-24T12:17:45.000Z" title="发表于 2024-07-24 20:17:45">2024-07-24</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2025 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

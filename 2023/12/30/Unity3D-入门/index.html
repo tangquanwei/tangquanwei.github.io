@@ -1,0 +1,212 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Unity3D 入门 | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="GameObject在Unity中，GameObject 是场景中所有实体的基类。它为场景中的对象提供了一个通用的结构和一系列的属性和方法。GameObject 本身并不包含任何渲染或物理功能，但它可以包含其他组件，如 MeshRenderer、Collider、Rigidbody 等，这些组件赋予了 GameObject 实际的功能和特性。以下是 GameObject 的一些关键特性和常用的属性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unity3D 入门">
+<meta property="og:url" content="https://github.com/tangquanwei/tangquanwei.github.io/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="GameObject在Unity中，GameObject 是场景中所有实体的基类。它为场景中的对象提供了一个通用的结构和一系列的属性和方法。GameObject 本身并不包含任何渲染或物理功能，但它可以包含其他组件，如 MeshRenderer、Collider、Rigidbody 等，这些组件赋予了 GameObject 实际的功能和特性。以下是 GameObject 的一些关键特性和常用的属性">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://github.com/tangquanwei/tangquanwei.github.io/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/20231231095827.png">
+<meta property="article:published_time" content="2023-12-30T15:01:48.000Z">
+<meta property="article:modified_time" content="2023-12-31T07:22:34.000Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="Unity3D">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.com/tangquanwei/tangquanwei.github.io/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/20231231095827.png"><link rel="shortcut icon" href="/images/favicon-16x16.ico"><link rel="canonical" href="https://github.com/tangquanwei/tangquanwei.github.io/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Unity3D 入门',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-12-31 15:22:34'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/maomi.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">53</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/20231231095827.png')"><nav id="nav"><span id="blog-info"><a href="/" title="QUANWEI"><span class="site-name">QUANWEI</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Unity3D 入门</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-12-30T15:01:48.000Z" title="发表于 2023-12-30 23:01:48">2023-12-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-12-31T07:22:34.000Z" title="更新于 2023-12-31 15:22:34">2023-12-31</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Unity3D 入门"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="GameObject"><a href="#GameObject" class="headerlink" title="GameObject"></a>GameObject</h2><p>在Unity中，<code>GameObject</code> 是场景中所有实体的基类。它为场景中的对象提供了一个通用的结构和一系列的属性和方法。<code>GameObject</code> 本身并不包含任何渲染或物理功能，但它可以包含其他组件，如 <code>MeshRenderer</code>、<code>Collider</code>、<code>Rigidbody</code> 等，这些组件赋予了 <code>GameObject</code> 实际的功能和特性。<br>以下是 <code>GameObject</code> 的一些关键特性和常用的属性和方法：</p>
+<h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><ul>
+<li><code>activeInHierarchy</code>：定义了 <code>GameObject</code> 是否在场景中激活。</li>
+<li><code>activeSelf</code>：表示 <code>GameObject</code> 本身的激活状态，不受父物体的影响。</li>
+<li><code>transform</code>：包含了 <code>GameObject</code> 的位置、旋转和缩放信息。</li>
+<li><code>renderer</code>：用于渲染 <code>GameObject</code> 的网格。</li>
+<li><code>collider</code>：用于处理 <code>GameObject</code> 的碰撞。</li>
+<li><code>rigidbody</code>：如果 <code>GameObject</code> 拥有刚体属性，这个组件会包含相关的物理信息。</li>
+<li></li>
+</ul>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><ul>
+<li><code>Find</code>：在场景中查找具有特定名称的 <code>GameObject</code>。</li>
+<li><code>FindWithTag</code>：根据 <code>GameObject</code> 的标签来查找。</li>
+<li><code>FindAll</code>：查找与特定查询匹配的所有 <code>GameObject</code>。</li>
+<li><code>SetActive</code>：设置 <code>GameObject</code> 的激活状态。</li>
+<li><code>Destroy</code>：销毁 <code>GameObject</code> 和其上的所有组件。</li>
+<li><code>AddComponent</code>：向 <code>GameObject</code> 添加一个新的组件。</li>
+<li><code>RemoveComponent</code>：从 <code>GameObject</code> 中移除一个组件。</li>
+<li></li>
+</ul>
+<h3 id="创建和操作"><a href="#创建和操作" class="headerlink" title="创建和操作"></a>创建和操作</h3><p>在Unity中，可以通过预制体（Prefab）来创建 <code>GameObject</code> 的实例。预制体是一个包含 <code>GameObject</code> 结构和组件的模板，可以用于快速创建具有特定功能的对象。创建 <code>GameObject</code> 实例后，可以通过脚本或编辑器来操作它们，比如改变它们的位置、旋转、缩放，或者为它们添加新的组件。</p>
+<h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><p>以下是一个简单的示例，展示了如何在Unity中查找和操作 <code>GameObject</code>：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> UnityEngine;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ExampleClass</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> GameObject myObject;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Start</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 在场景中查找名为 &quot;MyObject&quot; 的 GameObject</span></span><br><span class="line">        myObject = GameObject.Find(<span class="string">&quot;MyObject&quot;</span>);</span><br><span class="line">        <span class="comment">// 如果找到了，设置它为激活状态</span></span><br><span class="line">        <span class="keyword">if</span> (myObject != <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            myObject.SetActive(<span class="literal">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Update</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 在场景中查找所有标签为 &quot;MyTag&quot; 的 GameObject</span></span><br><span class="line">        <span class="keyword">foreach</span> (GameObject obj <span class="keyword">in</span> GameObject.FindGameObjectsWithTag(<span class="string">&quot;MyTag&quot;</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 对找到的对象进行操作</span></span><br><span class="line">            Debug.Log(obj.name);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="坐标系"><a href="#坐标系" class="headerlink" title="坐标系"></a>坐标系</h2><p>Unity中的坐标系是用来确定和表示游戏中对象（如Cube、Sphere等）在三维空间中的位置、方向和缩放的一套标准。在Unity中主要有以下几种坐标系：</p>
+<ol>
+<li>世界坐标系 (World Space)<br>世界坐标系是游戏世界中所有物体共同的参照系。它以世界原点为中心，使用左手定则来定义X、Y、Z轴的方向，其中Z轴为正向，X轴向右，Y轴向上。世界坐标系是固定不变的，所有物体在世界坐标系中的位置、旋转和缩放都是相对于这个全局的坐标系来确定的。我们可以通过<code>transform.position</code>来获取物体的世界坐标。</li>
+<li>局部坐标系 (Local Space)<br>局部坐标系是相对于物体的父节点来定义的。每个物体都有自己的局部坐标系，这个坐标系会随着物体相对于父节点的移动和旋转而改变。在Unity中，父节点和子节点之间的坐标系是对齐的，子节点的局部坐标可以通过<code>transform.localPosition</code>来获取。</li>
+<li>屏幕坐标系 (Screen Space)<br>屏幕坐标系是用于表示屏幕上的像素点的坐标系。它以屏幕的左下角为原点(0,0)，右上角为屏幕的宽度和高度。屏幕坐标系主要用来表示UI元素和屏幕上的交互点（如鼠标和触摸位置）。我们可以通过<code>Input.mousePosition</code>来获取当前鼠标的屏幕坐标。</li>
+<li>视口坐标系 (ViewPort Space)<br>视口坐标系是相机视角下的一个坐标系，它定义了相机视野内的点的位置。在视口坐标系中，相机的左下角为(0,0)，右上角为(1,1)，Z轴的位置是以相机的世界单位来衡量的。视口坐标系常用于确定渲染到屏幕上的点的位置。我们可以通过<code>Camera.ViewportToWorldPoint</code>和<code>Camera.WorldToViewportPoint</code>方法来在视口坐标系和世界坐标系之间进行转换。</li>
+<li>GUI坐标系<br>GUI坐标系是在Unity中绘制UI元素时使用的坐标系。它以屏幕的左上角为原点(0,0)，右下角为屏幕的宽度和高度。GUI坐标系与屏幕坐标系类似，但它的原点在左上角。<br>在Unity中，各种坐标系之间的转换是非常常见的操作。例如，我们可能需要将屏幕坐标系中的点转换为世界坐标系中的点，或者将世界坐标系中的点转换为视口坐标系中的点。Unity提供了相应的数学方法和API来帮助我们进行这些转换，如<code>Camera.WorldToScreenPoint</code>、<code>Camera.ScreenToWorldPoint</code>、<code>Camera.ViewportToWorldPoint</code>和<code>Camera.WorldToViewportPoint</code>等。<br>了解和掌握这些坐标系及其转换方法对于Unity开发者来说是非常重要的，它们是进行游戏开发和实现各种游戏功能的基础。</li>
+</ol>
+<h2 id="Application"><a href="#Application" class="headerlink" title="Application"></a>Application</h2><p>Unity 中的 <code>Application</code> 类是一个基础组件，它提供了一系列与应用程序运行时管理相关的功能。这个类不是直接实例化的；而是通过 <code>Application</code> 类本身作为静态类来访问其成员。<br>以下是 <code>Application</code> 类的一些关键方面：</p>
+<ol>
+<li><strong>静态属性</strong>：<code>Application</code> 类包含多个静态属性，提供关于应用程序运行时状态及其环境的信息。例如：<ul>
+<li><code>dataPath</code>：返回存储应用程序数据的目录路径。这个路径是相对的，可能会因平台而异。</li>
+<li><code>persistentDataPath</code>：类似于 <code>dataPath</code>，但这个路径用于存储即使在应用程序更新或重新安装后也需要持久的数据。</li>
+<li><code>streamingAssetsPath</code>：用于从互联网上流式传输或在运行时加载的资产。</li>
+<li><code>temporaryCachePath</code>：用于临时文件，这些文件不需要在应用程序会话之间持久存在。</li>
+</ul>
+</li>
+<li><strong>互联网可达性</strong>：<code>Application</code> 类提供了检查互联网可达性的方法，这可以用于确定网络状态并相应地调整应用程序行为。</li>
+<li><strong>场景管理</strong>：<code>Application</code> 有用于加载和切换场景的方法，如 <code>LoadLevel</code> 和 <code>ChangeScene</code>。然而，这些方法已被弃用，转而使用 <code>SceneManager</code> 类，后者提供了更强大的场景管理功能。</li>
+<li><strong>进程控制</strong>：您可以使用 <code>Application</code> 来启动外部进程，打开 URL 或执行其他任务，比如使用 <code>Process.Start</code> 方法。</li>
+<li><strong>应用程序版本</strong>：<code>Application.version</code> 属性提供了创建应用程序时使用的 Unity 编辑器的版本，这与应用程序的版本号可能不同。</li>
+<li><strong>装饰器</strong>：在设计模式方面，<code>Application</code> 类可以被装饰以扩展其功能，而不修改原始类。这允许动态地添加其他行为，例如日志记录、错误处理或其他跨切关注点。</li>
+<li><strong>内存管理</strong>：<code>Application</code> 类还有用于管理内存的方法，如 <code>Memory.Dispose</code>，尽管这通常由 Unity 自动处理，不需要手动干预。<br>在使用 <code>Application</code> 类时，需要考虑适当的上下文和平台，因为某些方法和属性可能在不同的情况下（如 Unity 编辑器、独立应用程序或 Web 播放器）表现出不同的行为。<br>总之，Unity 中的 <code>Application</code> 类提供了一系列与应用程序运行时交互、管理场景、与外部进程工作以及提供应用程序环境信息的方法和属性。它是 Unity API 的关键部分，广泛应用于游戏开发的各个方面。</li>
+</ol>
+<h2 id="Transform"><a href="#Transform" class="headerlink" title="Transform"></a>Transform</h2><p>控制game object的位置、旋转、缩放<br>控制父子级</p>
+<h2 id="物理材质"><a href="#物理材质" class="headerlink" title="物理材质"></a>物理材质</h2><p>物理材质是计算机图形学中的一个概念，特别是在游戏开发中，它用于模拟物体表面的物理属性，如摩擦力和弹性。物理材质可以影响物体间的相互作用，如物体之间的碰撞、滑动和反弹等。在Unity等游戏引擎中，物理材质是一个重要的资源，它定义了物体表面的动态和静态摩擦力、弹跳力等特性。<br>创建和使用物理材质的基本步骤如下：</p>
+<ol>
+<li>创建物理材质：在Unity中，可以通过Project窗口右键选择Create -&gt; Physics Material来创建一个新的物理材质。</li>
+<li>设置物理材质属性：物理材质包含几个关键属性，包括Dynamic Friction（动态摩擦力）、Static Friction（静态摩擦力）、Bounciness（弹跳力）以及用于定义摩擦力和弹跳力如何与其他物体相作用的Friction Combine和Bounce Combine。动态摩擦力是指物体在滑动时的摩擦力，静态摩擦力是指物体静止时的摩擦力，而弹跳力则决定了物体在碰撞后的反弹程度。</li>
+<li>应用物理材质：创建物理材质后，需要将其应用到具有物理属性的物体上。这通常是通过将物理材质拖拽到物体的碰撞器组件上实现的。</li>
+<li>运行和测试：应用物理材质后，运行游戏并测试物体的物理反应，以确保物理材质的效果符合预期。<br>物理材质在游戏开发中非常重要，因为它可以显著影响游戏物体的行为和玩家的游戏体验。通过合理设置和使用物理材质，可以创建出更加真实和有趣的游戏环境。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://github.com/tangquanwei/tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://github.com/tangquanwei/tangquanwei.github.io/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/">https://github.com/tangquanwei/tangquanwei.github.io/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://github.com/tangquanwei/tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Unity3D/">Unity3D</a></div><div class="post_share"><div class="social-share" data-image="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/20231231095827.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/03/15/RAG-Retrieval-Method/" title="RAG Retrieval Method"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">RAG Retrieval Method</div></div></a></div><div class="next-post pull-right"><a href="/2023/12/28/Neo4j/" title="Neo4j"><img class="cover" src="/2023/12/28/Neo4j/20231231100111.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Neo4j</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Quanwei</div><div class="author-info__description">幸得识卿桃花面，从此阡陌多暖春 </div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">53</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#GameObject"><span class="toc-number">1.</span> <span class="toc-text">GameObject</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7"><span class="toc-number">1.1.</span> <span class="toc-text">属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%92%8C%E6%93%8D%E4%BD%9C"><span class="toc-number">1.3.</span> <span class="toc-text">创建和操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-number">1.4.</span> <span class="toc-text">示例代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9D%90%E6%A0%87%E7%B3%BB"><span class="toc-number">2.</span> <span class="toc-text">坐标系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Application"><span class="toc-number">3.</span> <span class="toc-text">Application</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Transform"><span class="toc-number">4.</span> <span class="toc-text">Transform</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%A9%E7%90%86%E6%9D%90%E8%B4%A8"><span class="toc-number">5.</span> <span class="toc-text">物理材质</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E5%BA%A6%E8%AE%A1%E7%AE%97/" title="文本相似度计算">文本相似度计算</a><time datetime="2025-05-19T12:26:55.000Z" title="发表于 2025-05-19 20:26:55">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/PG-Vector/" title="PG Vector">PG Vector</a><time datetime="2025-05-19T12:24:37.000Z" title="发表于 2025-05-19 20:24:37">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/Gen-AI/" title="Gen AI">Gen AI</a><time datetime="2025-05-19T12:16:21.000Z" title="发表于 2025-05-19 20:16:21">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/%E6%A6%82%E7%8E%87%E8%AE%BA/" title="概率论">概率论</a><time datetime="2025-05-19T11:59:51.000Z" title="发表于 2025-05-19 19:59:51">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/07/24/LLM-Hallucination/" title="LLM Hallucination">LLM Hallucination</a><time datetime="2024-07-24T12:17:45.000Z" title="发表于 2024-07-24 20:17:45">2024-07-24</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2025 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

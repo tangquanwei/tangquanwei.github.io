@@ -1,0 +1,212 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>概率论 | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="条件概率是指在给定某个条件下，某个事件发生的概率。用于描述事件之间的依赖关系。假设我们有两个事件 A 和 B，其中事件 A 是我们感兴趣的事件，事件 B 是某个条件。条件概率表示在已知事件 B 发生的情况下，事件 A 发生的概率，记作 $P(A|B)$。 条件概率的计算公式如下： $$ P(A|B) &#x3D; \frac{P(A \cap B)}{P(B)} $$ 其中，$P(A \cap B">
+<meta property="og:type" content="article">
+<meta property="og:title" content="概率论">
+<meta property="og:url" content="https://github.com/tangquanwei/tangquanwei.github.io/2025/05/19/%E6%A6%82%E7%8E%87%E8%AE%BA/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="条件概率是指在给定某个条件下，某个事件发生的概率。用于描述事件之间的依赖关系。假设我们有两个事件 A 和 B，其中事件 A 是我们感兴趣的事件，事件 B 是某个条件。条件概率表示在已知事件 B 发生的情况下，事件 A 发生的概率，记作 $P(A|B)$。 条件概率的计算公式如下： $$ P(A|B) &#x3D; \frac{P(A \cap B)}{P(B)} $$ 其中，$P(A \cap B">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://github.com/tangquanwei/tangquanwei.github.io/images/maomi.png">
+<meta property="article:published_time" content="2025-05-19T11:59:51.000Z">
+<meta property="article:modified_time" content="2025-05-19T12:03:35.412Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="概率论">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.com/tangquanwei/tangquanwei.github.io/images/maomi.png"><link rel="shortcut icon" href="/images/favicon-16x16.ico"><link rel="canonical" href="https://github.com/tangquanwei/tangquanwei.github.io/2025/05/19/%E6%A6%82%E7%8E%87%E8%AE%BA/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '概率论',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-05-19 20:03:35'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/maomi.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">53</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/p1.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="QUANWEI"><span class="site-name">QUANWEI</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">概率论</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-05-19T11:59:51.000Z" title="发表于 2025-05-19 19:59:51">2025-05-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-19T12:03:35.412Z" title="更新于 2025-05-19 20:03:35">2025-05-19</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="概率论"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="条件概率是指在给定某个条件下，某个事件发生的概率。"><a href="#条件概率是指在给定某个条件下，某个事件发生的概率。" class="headerlink" title="条件概率是指在给定某个条件下，某个事件发生的概率。"></a>条件概率是指在给定某个条件下，某个事件发生的概率。</h2><p>用于描述事件之间的依赖关系。<br>假设我们有两个事件 A 和 B，其中事件 A 是我们感兴趣的事件，事件 B 是某个条件。条件概率表示在已知事件 B 发生的情况下，事件 A 发生的概率，记作 $P(A|B)$。 条件概率的计算公式如下： $$ P(A|B) &#x3D; \frac{P(A \cap B)}{P(B)} $$ 其中，$P(A \cap B)$ 表示事件 A 和事件 B 同时发生的概率，称为事件 A 与事件 B 的交集。<br>$P(B)$ 表示事件 B 发生的概率。 </p>
+<p>条件概率的计算可以通过已知的概率和事件之间的关系来进行推导。它可以帮助我们理解事件之间的依赖关系，并在实际问题中进行推断和决策。 </p>
+<p>条件概率在很多领域都有广泛的应用，例如在机器学习中，条件概率可以用于建模和分类；在信息论中，条件概率可以用于计算熵和互信息等。 需要注意的是，条件概率的计算需要满足一些前提条件，例如事件 B 的概率不能为零，事件 A 和事件 B 之间应该是独立或有一定的关联性等。 </p>
+<h2 id="联合概率是指多个事件同时发生的概率。"><a href="#联合概率是指多个事件同时发生的概率。" class="headerlink" title="联合概率是指多个事件同时发生的概率。"></a>联合概率是指多个事件同时发生的概率。</h2><p>在概率论中，联合概率是一个重要的概念，用于描述多个事件之间的关系。 假设我们有两个事件 A 和 B，它们的联合概率表示为 $P(A \cap B)$，表示事件 A 和事件 B 同时发生的概率。联合概率可以通过乘法规则来计算，即： $$ P(A \cap B) &#x3D; P(A) \cdot P(B|A) $$ 其中，<br>$P(A)$ 表示事件 A 发生的概率，<br>$P(B|A)$ 表示在事件 A 发生的条件下，事件 B 发生的概率，称为条件概率。 </p>
+<p>联合概率可以扩展到多个事件的情况。假设我们有 $n$ 个事件 $A_1, A_2, …, A_n$，它们的联合概率表示为 $P(A_1 \cap A_2 \cap … \cap A_n)$，可以通过乘法规则来计算，即： $$ P(A_1 \cap A_2 \cap … \cap A_n) &#x3D; P(A_1) \cdot P(A_2|A_1) \cdot … \cdot P(A_n|A_1 \cap A_2 \cap … \cap A_{n-1}) $$<br>联合概率在概率论和统计学中有广泛的应用，例如在贝叶斯推断中，联合概率可以用于计算后验概率；在机器学习中，联合概率可以用于建模和分类等。 需要注意的是，联合概率的计算需要满足一些前提条件，例如事件之间应该是独立或有一定的关联性等。 </p>
+<h2 id="最大似然估计（Maximum-Likelihood-Estimation，简称MLE）"><a href="#最大似然估计（Maximum-Likelihood-Estimation，简称MLE）" class="headerlink" title="最大似然估计（Maximum Likelihood Estimation，简称MLE）"></a>最大似然估计（Maximum Likelihood Estimation，简称MLE）</h2><p>是一种常用的参数估计方法，用于从观测数据中估计模型的参数值。 </p>
+<p>在最大似然估计中，我们假设观测数据是由某个概率分布生成的，并希望通过最大化观测数据的似然函数来确定模型参数的值。似然函数表示给定观测数据时，模型参数取某个值的概率。 具体来说，假设我们有一组独立同分布的观测数据 ${x_1, x_2, …, x_n}$，其概率密度函数（概率质量函数）为 $f(x;\theta)$，其中 $\theta$ 是待估计的参数。观测数据的似然函数定义为： $$ L(\theta) &#x3D; f(x_1;\theta) \cdot f(x_2;\theta) \cdot … \cdot f(x_n;\theta) $$ 最大似然估计的思想是寻找使得似然函数取得最大值的参数值 $\hat{\theta}$，即： $$ \hat{\theta} &#x3D; \arg\max_{\theta} L(\theta) $$ 通常我们更倾向于求解对数似然函数的最大值，因为对数函数是单调递增的，可以简化计算。对数似然函数定义为： $$ \log L(\theta) &#x3D; \log f(x_1;\theta) + \log f(x_2;\theta) + … + \log f(x_n;\theta) $$ 通过最大化对数似然函数，可以得到最大似然估计的参数值 $\hat{\theta}$。</p>
+<p>最大似然估计在统计学和机器学习中被广泛应用，常见的概率分布（如正态分布、伯努利分布、多项分布等）都可以使用最大似然估计来估计其参数。最大似然估计具有良好的性质，当样本足够大时，最大似然估计可以渐进地达到参数的真实值。 需要注意的是，最大似然估计并不一定能保证得到全局最优解，有时可能会收敛到局部最优解。此外，在一些情况下，最大似然估计可能会出现估计值不存在或不唯一的情况。因此，在实际应用中，需要结合领域知识和实验结果来对估计结果进行解释和评估。 </p>
+<h2 id="概率分布（Probability-distribution）"><a href="#概率分布（Probability-distribution）" class="headerlink" title="概率分布（Probability distribution）"></a>概率分布（Probability distribution）</h2><p>是指描述随机变量或随机事件可能取值的概率的函数或规律。</p>
+<p><strong>随机变量</strong>是一个变量，它的取值是由随机过程决定的。</p>
+<p>概率分布描述了随机变量可能取值的概率，可以通过<br><strong>概率密度函数</strong>（Probability Density Function，简称 PDF）或<br><strong>概率质量函数</strong>（Probability Mass Function，简称 PMF）来表示。</p>
+<p>概率密度函数（PDF）用于描述连续型随机变量的概率分布，它是一个非负函数，且满足积分为 1 的条件。<br>概率密度函数可以用于计算随机变量落在某个区间内的概率。 </p>
+<p>概率质量函数（PMF）用于描述离散型随机变量的概率分布，它是一个非负函数，且满足所有可能取值的概率之和为 1。概率质量函数可以用于计算随机变量取某个特定值的概率。 </p>
+<h2 id="常见的概率分布："><a href="#常见的概率分布：" class="headerlink" title="常见的概率分布："></a>常见的概率分布：</h2><ol>
+<li><p>正态分布（Normal distribution）：也称为高斯分布，是最常见的概率分布之一，具有钟形曲线的形状。正态分布在自然界和社会现象中都有广泛的应用，例如身高、体重、智力等连续性变量的分布都可以近似为正态分布。</p>
+</li>
+<li><p>二项分布（Binomial distribution）：描述了在一系列独立重复的是&#x2F;非试验中成功次数的概率分布。例如，抛硬币、掷骰子、抽样调查等都可以用二项分布来描述。</p>
+</li>
+<li><p>泊松分布（Poisson distribution）：用于描述在一段固定时间或空间内随机事件发生的次数的概率分布。例如，电话交换机接到的电话数量、一天内发生的交通事故数量等都可以用泊松分布来描述。</p>
+</li>
+<li><p>均匀分布（Uniform distribution）：在给定区间内的所有取值具有相等的概率分布。例如，掷骰子、抽奖等都可以用均匀分布来描述。</p>
+</li>
+<li><p>指数分布（Exponential distribution）：用于描述随机事件之间的时间间隔的概率分布。例如，等待下一次地震的时间、等待下一次电话的时间等都可以用指数分布来描述。</p>
+</li>
+<li><p>负二项分布（Negative binomial distribution）：描述了在一系列独立重复的是&#x2F;非试验中成功次数的概率分布，但与二项分布不同的是，负二项分布是指在达到一定的成功次数之前，失败次数的概率分布。例如，需要抛多少次硬币才能得到 5 次正面朝上的概率分布就可以用负二项分布来描述。</p>
+</li>
+<li><p>卡方分布（Chi-square distribution）：用于描述样本方差的概率分布。在统计学中，卡方分布经常用于检验假设、构建置信区间等。</p>
+</li>
+<li><p>t 分布（Student’s t-distribution）：用于描述小样本情况下样本均值的概率分布。在统计学中，t 分布经常用于构建置信区间、进行假设检验等。</p>
+</li>
+<li><p>F 分布（F-distribution）：用于描述两个样本方差比值的概率分布。在统计学中，F 分布经常用于方差分析、回归分析等。</p>
+</li>
+</ol>
+<p>概率分布在统计学、机器学习、风险管理、金融等领域具有广泛的应用。通过对随机变量的概率分布进行建模和分析，可以帮助我们理解和预测随机现象的行为。</p>
+<h2 id="卡方分布（Chi-square-distribution）"><a href="#卡方分布（Chi-square-distribution）" class="headerlink" title="卡方分布（Chi-square distribution）"></a>卡方分布（Chi-square distribution）</h2><p>是一种常见的概率分布，用于描述样本方差的概率分布。<br>它在统计学中经常用于假设检验、构建置信区间等。 </p>
+<p>卡方分布的定义依赖于自由度（degrees of freedom）。自由度是指用于计算卡方统计量的独立观测值的个数减去约束条件的个数。</p>
+<p>卡方分布的概率密度函数（PDF）可以用如下的公式表示： $$f(x) &#x3D; \frac{1}{2^{\frac{v}{2}} \Gamma\left(\frac{v}{2}\right)} x^{\frac{v}{2}-1} e^{-\frac{x}{2}}, \quad x \geq 0$$ 其中，$v$ 表示自由度，$\Gamma(\cdot)$ 表示伽玛函数。 </p>
+<p>卡方分布的特点包括： </p>
+<ol>
+<li>卡方分布的取值范围是非负实数，即 $x \geq 0$。 </li>
+<li>卡方分布的形状取决于自由度。随着自由度的增加，卡方分布的形状逐渐向右偏斜。 </li>
+<li>当自由度 $v$ 趋近于无穷大时，卡方分布逼近于正态分布。</li>
+</ol>
+<p>卡方分布在统计学中的应用非常广泛，特别是在假设检验中。例如，卡方检验用于比较观察值与期望值之间的差异，判断两个变量之间是否存在关联。此外，卡方分布还用于构建置信区间、拟合数据分布等。 </p>
+<h2 id="正态分布（Normal-distribution）"><a href="#正态分布（Normal-distribution）" class="headerlink" title="正态分布（Normal distribution）"></a>正态分布（Normal distribution）</h2><p>也称为高斯分布（Gaussian distribution），是最常见的概率分布之一。它具有钟形曲线的形状，对称分布于均值周围。 </p>
+<p>正态分布的概率密度函数（PDF）可以用如下的公式表示： $$f(x) &#x3D; \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}$$ 其中，<br>$x$ 表示随机变量的取值，<br>$\mu$ 表示均值，<br>$\sigma$ 表示标准差。<br>正态分布的特点包括： </p>
+<ol>
+<li>对称性：正态分布是关于均值 $\mu$ 对称的，即在均值处取得最大值，两侧的概率密度逐渐减小。</li>
+<li>唯一性：正态分布由均值和标准差完全决定，相同均值和标准差的正态分布是相同的。 </li>
+<li>中心极限定理：当独立随机变量的样本容量足够大时，它们的和或平均值的分布会趋近于正态分布。 </li>
+<li>标准正态分布：当均值 $\mu&#x3D;0$，标准差 $\sigma&#x3D;1$ 时，正态分布称为标准正态分布。标准正态分布的随机变量记为 $Z$，其概率密度函数可以简化为 $f(x) &#x3D; \frac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}$。</li>
+</ol>
+<p>正态分布在统计学和自然科学中具有广泛的应用。许多自然现象和随机变量都可以近似地服从正态分布，例如身高、体重、测量误差等。正态分布的性质和统计推断方法使其成为数据分析和模型建立中重要的工具。</p>
+<h2 id="贝叶斯"><a href="#贝叶斯" class="headerlink" title="贝叶斯"></a>贝叶斯</h2><p>贝叶斯定理（Bayes’ theorem）用于计算在给定观测数据的条件下，某个事件的后验概率。</p>
+<p>假设我们有两个事件 A 和 B，其中事件 A 是我们感兴趣的事件，事件 B 是观测到的证据。贝叶斯定理表达了在已知观测数据的情况下，事件 A 发生的概率如何更新。 贝叶斯定理的数学表达式如下： $$ P(A|B) &#x3D; \frac{P(B|A) \cdot P(A)}{P(B)} $$ 其中，<br>$P(A|B)$ 表示在观测到事件 B 的条件下，事件 A 发生的概率，称为后验概率（posterior probability）。<br>$P(B|A)$ 表示在事件 A 发生的条件下，观测到事件 B 的概率，称为似然度（likelihood）。<br>$P(A)$ 和 $P(B)$ 分别表示事件 A 和事件 B 的先验概率（prior probability）和边缘概率（marginal probability）。 </p>
+<p>贝叶斯定理的应用非常广泛，特别在统计推断、机器学习和人工智能领域中被广泛使用。通过贝叶斯定理，我们可以根据观测数据来更新对事件发生概率的估计，从而进行推断、分类、预测等任务。 需要注意的是，贝叶斯定理的有效应用需要合理的先验概率和似然度的估计。在实际应用中，我们可以通过领域知识、历史数据或其他方法来估计这些概率。 </p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://github.com/tangquanwei/tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://github.com/tangquanwei/tangquanwei.github.io/2025/05/19/%E6%A6%82%E7%8E%87%E8%AE%BA/">https://github.com/tangquanwei/tangquanwei.github.io/2025/05/19/%E6%A6%82%E7%8E%87%E8%AE%BA/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://github.com/tangquanwei/tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/">概率论</a></div><div class="post_share"><div class="social-share" data-image="/images/maomi.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/05/19/Gen-AI/" title="Gen AI"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Gen AI</div></div></a></div><div class="next-post pull-right"><a href="/2024/07/24/LLM-Hallucination/" title="LLM Hallucination"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">LLM Hallucination</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Quanwei</div><div class="author-info__description">幸得识卿桃花面，从此阡陌多暖春 </div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">53</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E6%A6%82%E7%8E%87%E6%98%AF%E6%8C%87%E5%9C%A8%E7%BB%99%E5%AE%9A%E6%9F%90%E4%B8%AA%E6%9D%A1%E4%BB%B6%E4%B8%8B%EF%BC%8C%E6%9F%90%E4%B8%AA%E4%BA%8B%E4%BB%B6%E5%8F%91%E7%94%9F%E7%9A%84%E6%A6%82%E7%8E%87%E3%80%82"><span class="toc-number">1.</span> <span class="toc-text">条件概率是指在给定某个条件下，某个事件发生的概率。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%94%E5%90%88%E6%A6%82%E7%8E%87%E6%98%AF%E6%8C%87%E5%A4%9A%E4%B8%AA%E4%BA%8B%E4%BB%B6%E5%90%8C%E6%97%B6%E5%8F%91%E7%94%9F%E7%9A%84%E6%A6%82%E7%8E%87%E3%80%82"><span class="toc-number">2.</span> <span class="toc-text">联合概率是指多个事件同时发生的概率。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1%EF%BC%88Maximum-Likelihood-Estimation%EF%BC%8C%E7%AE%80%E7%A7%B0MLE%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">最大似然估计（Maximum Likelihood Estimation，简称MLE）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E7%8E%87%E5%88%86%E5%B8%83%EF%BC%88Probability-distribution%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">概率分布（Probability distribution）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E6%A6%82%E7%8E%87%E5%88%86%E5%B8%83%EF%BC%9A"><span class="toc-number">5.</span> <span class="toc-text">常见的概率分布：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%A1%E6%96%B9%E5%88%86%E5%B8%83%EF%BC%88Chi-square-distribution%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">卡方分布（Chi-square distribution）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%80%81%E5%88%86%E5%B8%83%EF%BC%88Normal-distribution%EF%BC%89"><span class="toc-number">7.</span> <span class="toc-text">正态分布（Normal distribution）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%9D%E5%8F%B6%E6%96%AF"><span class="toc-number">8.</span> <span class="toc-text">贝叶斯</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E5%BA%A6%E8%AE%A1%E7%AE%97/" title="文本相似度计算">文本相似度计算</a><time datetime="2025-05-19T12:26:55.000Z" title="发表于 2025-05-19 20:26:55">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/PG-Vector/" title="PG Vector">PG Vector</a><time datetime="2025-05-19T12:24:37.000Z" title="发表于 2025-05-19 20:24:37">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/Gen-AI/" title="Gen AI">Gen AI</a><time datetime="2025-05-19T12:16:21.000Z" title="发表于 2025-05-19 20:16:21">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/%E6%A6%82%E7%8E%87%E8%AE%BA/" title="概率论">概率论</a><time datetime="2025-05-19T11:59:51.000Z" title="发表于 2025-05-19 19:59:51">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/07/24/LLM-Hallucination/" title="LLM Hallucination">LLM Hallucination</a><time datetime="2024-07-24T12:17:45.000Z" title="发表于 2024-07-24 20:17:45">2024-07-24</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2025 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

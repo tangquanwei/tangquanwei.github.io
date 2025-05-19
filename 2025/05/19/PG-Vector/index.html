@@ -1,0 +1,607 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>PG Vector | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Getting StartedEnable the extension (do this once in each database where you want to use it) 1CREATE EXTENSION vector;  Create a vector column with 3 dimensions 1CREATE TABLE items (id bigserial PRIMA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PG Vector">
+<meta property="og:url" content="https://github.com/tangquanwei/tangquanwei.github.io/2025/05/19/PG-Vector/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="Getting StartedEnable the extension (do this once in each database where you want to use it) 1CREATE EXTENSION vector;  Create a vector column with 3 dimensions 1CREATE TABLE items (id bigserial PRIMA">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://github.com/tangquanwei/tangquanwei.github.io/images/maomi.png">
+<meta property="article:published_time" content="2025-05-19T12:24:37.000Z">
+<meta property="article:modified_time" content="2025-05-19T12:24:45.474Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="PG Vector">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.com/tangquanwei/tangquanwei.github.io/images/maomi.png"><link rel="shortcut icon" href="/images/favicon-16x16.ico"><link rel="canonical" href="https://github.com/tangquanwei/tangquanwei.github.io/2025/05/19/PG-Vector/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'PG Vector',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-05-19 20:24:45'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/maomi.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">53</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/p1.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="QUANWEI"><span class="site-name">QUANWEI</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">PG Vector</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-05-19T12:24:37.000Z" title="发表于 2025-05-19 20:24:37">2025-05-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-19T12:24:45.474Z" title="更新于 2025-05-19 20:24:45">2025-05-19</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="PG Vector"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="Getting-Started"><a href="#Getting-Started" class="headerlink" title="Getting Started"></a>Getting Started</h2><p>Enable the extension (do this once in each database where you want to use it)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE EXTENSION vector;</span><br></pre></td></tr></table></figure>
+
+<p>Create a vector column with 3 dimensions</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> items (id bigserial <span class="keyword">PRIMARY</span> KEY, embedding vector(<span class="number">3</span>));</span><br></pre></td></tr></table></figure>
+
+<p>Insert vectors</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> items (embedding) <span class="keyword">VALUES</span> (<span class="string">&#x27;[1,2,3]&#x27;</span>), (<span class="string">&#x27;[4,5,6]&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Get the nearest neighbors by L2 distance</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> items <span class="keyword">ORDER</span> <span class="keyword">BY</span> embedding <span class="operator">&lt;</span><span class="operator">-</span><span class="operator">&gt;</span> <span class="string">&#x27;[3,1,2]&#x27;</span> LIMIT <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Also supports inner product (<code>&lt;#&gt;</code>) and cosine distance (<code>&lt;=&gt;</code>)</p>
+<p>Note: <code>&lt;#&gt;</code> returns the negative inner product since Postgres only supports <code>ASC</code> order index scans on operators</p>
+<h2 id="Storing"><a href="#Storing" class="headerlink" title="Storing"></a>Storing</h2><p>Create a new table with a vector column</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> items (id bigserial <span class="keyword">PRIMARY</span> KEY, embedding vector(<span class="number">3</span>));</span><br></pre></td></tr></table></figure>
+
+<p>Or add a vector column to an existing table</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> items <span class="keyword">ADD</span> <span class="keyword">COLUMN</span> embedding vector(<span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Insert vectors</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> items (embedding) <span class="keyword">VALUES</span> (<span class="string">&#x27;[1,2,3]&#x27;</span>), (<span class="string">&#x27;[4,5,6]&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Or load vectors in bulk using <code>COPY</code> (<a href="https://github.com/pgvector/pgvector-python/blob/master/examples/bulk_loading.py">example</a>)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">COPY</span> items (embedding) <span class="keyword">FROM</span> STDIN <span class="keyword">WITH</span> (FORMAT <span class="type">BINARY</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Upsert vectors</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> items (id, embedding) <span class="keyword">VALUES</span> (<span class="number">1</span>, <span class="string">&#x27;[1,2,3]&#x27;</span>), (<span class="number">2</span>, <span class="string">&#x27;[4,5,6]&#x27;</span>)</span><br><span class="line">    <span class="keyword">ON</span> CONFLICT (id) DO <span class="keyword">UPDATE</span> <span class="keyword">SET</span> embedding <span class="operator">=</span> EXCLUDED.embedding;</span><br></pre></td></tr></table></figure>
+
+<p>Update vectors</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> items <span class="keyword">SET</span> embedding <span class="operator">=</span> <span class="string">&#x27;[1,2,3]&#x27;</span> <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Delete vectors</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> items <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Querying"><a href="#Querying" class="headerlink" title="Querying"></a>Querying</h2><p>Get the nearest neighbors to a vector</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> items <span class="keyword">ORDER</span> <span class="keyword">BY</span> embedding <span class="operator">&lt;</span><span class="operator">-</span><span class="operator">&gt;</span> <span class="string">&#x27;[3,1,2]&#x27;</span> LIMIT <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Get the nearest neighbors to a row</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> items <span class="keyword">WHERE</span> id <span class="operator">!=</span> <span class="number">1</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> embedding <span class="operator">&lt;</span><span class="operator">-</span><span class="operator">&gt;</span> (<span class="keyword">SELECT</span> embedding <span class="keyword">FROM</span> items <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span>) LIMIT <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Get rows within a certain distance</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> items <span class="keyword">WHERE</span> embedding <span class="operator">&lt;</span><span class="operator">-</span><span class="operator">&gt;</span> <span class="string">&#x27;[3,1,2]&#x27;</span> <span class="operator">&lt;</span> <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Note: Combine with <code>ORDER BY</code> and <code>LIMIT</code> to use an index</p>
+<h4 id="Distances"><a href="#Distances" class="headerlink" title="Distances"></a>Distances</h4><p>Get the distance</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> embedding <span class="operator">&lt;</span><span class="operator">-</span><span class="operator">&gt;</span> <span class="string">&#x27;[3,1,2]&#x27;</span> <span class="keyword">AS</span> distance <span class="keyword">FROM</span> items;</span><br></pre></td></tr></table></figure>
+
+<p>For inner product, multiply by -1 (since <code>&lt;#&gt;</code> returns the negative inner product)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT (embedding &lt;#&gt; &#x27;[3,1,2]&#x27;) * -1 AS inner_product FROM items;</span><br></pre></td></tr></table></figure>
+
+<p>For cosine similarity, use 1 - cosine distance</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="number">1</span> <span class="operator">-</span> (embedding <span class="operator">&lt;=&gt;</span> <span class="string">&#x27;[3,1,2]&#x27;</span>) <span class="keyword">AS</span> cosine_similarity <span class="keyword">FROM</span> items;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Aggregates"><a href="#Aggregates" class="headerlink" title="Aggregates"></a>Aggregates</h4><p>Average vectors</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="built_in">AVG</span>(embedding) <span class="keyword">FROM</span> items;</span><br></pre></td></tr></table></figure>
+
+<p>Average groups of vectors</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> category_id, <span class="built_in">AVG</span>(embedding) <span class="keyword">FROM</span> items <span class="keyword">GROUP</span> <span class="keyword">BY</span> category_id;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Indexing"><a href="#Indexing" class="headerlink" title="Indexing"></a>Indexing</h2><p>By default, pgvector performs exact nearest neighbor search, which provides perfect recall.</p>
+<p>You can add an index to use approximate nearest neighbor search, which trades some recall for speed. Unlike typical indexes, you will see different results for queries after adding an approximate index.</p>
+<p>Supported index types are:</p>
+<ul>
+<li><a href="#hnsw">HNSW</a> - added in 0.5.0</li>
+<li><a href="#ivfflat">IVFFlat</a></li>
+</ul>
+<h2 id="HNSW"><a href="#HNSW" class="headerlink" title="HNSW"></a>HNSW</h2><p>An HNSW index creates a multilayer graph. It has better query performance than IVFFlat (in terms of speed-recall tradeoff), but has slower build times and uses more memory. Also, an index can be created without any data in the table since there isn’t a training step like IVFFlat.</p>
+<p>Add an index for each distance function you want to use.</p>
+<p>L2 distance</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX <span class="keyword">ON</span> items <span class="keyword">USING</span> hnsw (embedding vector_l2_ops);</span><br></pre></td></tr></table></figure>
+
+<p>Inner product</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX <span class="keyword">ON</span> items <span class="keyword">USING</span> hnsw (embedding vector_ip_ops);</span><br></pre></td></tr></table></figure>
+
+<p>Cosine distance</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX <span class="keyword">ON</span> items <span class="keyword">USING</span> hnsw (embedding vector_cosine_ops);</span><br></pre></td></tr></table></figure>
+
+<p>Vectors with up to 2,000 dimensions can be indexed.</p>
+<h3 id="Index-Options"><a href="#Index-Options" class="headerlink" title="Index Options"></a>Index Options</h3><p>Specify HNSW parameters</p>
+<ul>
+<li><code>m</code> - the max number of connections per layer (16 by default)</li>
+<li><code>ef_construction</code> - the size of the dynamic candidate list for constructing the graph (64 by default)</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX <span class="keyword">ON</span> items <span class="keyword">USING</span> hnsw (embedding vector_l2_ops) <span class="keyword">WITH</span> (m <span class="operator">=</span> <span class="number">16</span>, ef_construction <span class="operator">=</span> <span class="number">64</span>);</span><br></pre></td></tr></table></figure>
+
+<p>A higher value of <code>ef_construction</code> provides better recall at the cost of index build time &#x2F; insert speed.</p>
+<h3 id="Query-Options"><a href="#Query-Options" class="headerlink" title="Query Options"></a>Query Options</h3><p>Specify the size of the dynamic candidate list for search (40 by default)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> hnsw.ef_search <span class="operator">=</span> <span class="number">100</span>;</span><br></pre></td></tr></table></figure>
+
+<p>A higher value provides better recall at the cost of speed.</p>
+<p>Use <code>SET LOCAL</code> inside a transaction to set it for a single query</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">LOCAL</span> hnsw.ef_search <span class="operator">=</span> <span class="number">100</span>;</span><br><span class="line"><span class="keyword">SELECT</span> ...</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Index-Build-Time"><a href="#Index-Build-Time" class="headerlink" title="Index Build Time"></a>Index Build Time</h3><p>Indexes build significantly faster when the graph fits into <code>maintenance_work_mem</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> maintenance_work_mem <span class="operator">=</span> <span class="string">&#x27;8GB&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>A notice is shown when the graph no longer fits</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NOTICE:  hnsw graph no longer fits into maintenance_work_mem after 100000 tuples</span><br><span class="line">DETAIL:  Building will take significantly more time.</span><br><span class="line">HINT:  Increase maintenance_work_mem to speed up builds.</span><br></pre></td></tr></table></figure>
+
+<p>Note: Do not set <code>maintenance_work_mem</code> so high that it exhausts the memory on the server</p>
+<p>Like other index types, it’s faster to create an index after loading your initial data</p>
+<p>Starting with 0.6.0, you can also speed up index creation by increasing the number of parallel workers (2 by default)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> max_parallel_maintenance_workers <span class="operator">=</span> <span class="number">7</span>; <span class="comment">-- plus leader</span></span><br></pre></td></tr></table></figure>
+
+<p>For a large number of workers, you may also need to increase <code>max_parallel_workers</code> (8 by default)</p>
+<h3 id="Indexing-Progress"><a href="#Indexing-Progress" class="headerlink" title="Indexing Progress"></a>Indexing Progress</h3><p>Check <a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/progress-reporting.html#CREATE-INDEX-PROGRESS-REPORTING">indexing progress</a> with Postgres 12+</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> phase, round(<span class="number">100.0</span> <span class="operator">*</span> blocks_done <span class="operator">/</span> <span class="built_in">nullif</span>(blocks_total, <span class="number">0</span>), <span class="number">1</span>) <span class="keyword">AS</span> &quot;%&quot; <span class="keyword">FROM</span> pg_stat_progress_create_index;</span><br></pre></td></tr></table></figure>
+
+<p>The phases for HNSW are:</p>
+<ol>
+<li><code>initializing</code></li>
+<li><code>loading tuples</code></li>
+</ol>
+<h2 id="IVFFlat"><a href="#IVFFlat" class="headerlink" title="IVFFlat"></a>IVFFlat</h2><p>An IVFFlat index divides vectors into lists, and then searches a subset of those lists that are closest to the query vector. It has faster build times and uses less memory than HNSW, but has lower query performance (in terms of speed-recall tradeoff).</p>
+<p>Three keys to achieving good recall are:</p>
+<ol>
+<li>Create the index <em>after</em> the table has some data</li>
+<li>Choose an appropriate number of lists - a good place to start is <code>rows / 1000</code> for up to 1M rows and <code>sqrt(rows)</code> for over 1M rows</li>
+<li>When querying, specify an appropriate number of <a href="#query-options">probes</a> (higher is better for recall, lower is better for speed) - a good place to start is <code>sqrt(lists)</code></li>
+</ol>
+<p>Add an index for each distance function you want to use.</p>
+<p>L2 distance</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX <span class="keyword">ON</span> items <span class="keyword">USING</span> ivfflat (embedding vector_l2_ops) <span class="keyword">WITH</span> (lists <span class="operator">=</span> <span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Inner product</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX <span class="keyword">ON</span> items <span class="keyword">USING</span> ivfflat (embedding vector_ip_ops) <span class="keyword">WITH</span> (lists <span class="operator">=</span> <span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Cosine distance</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX <span class="keyword">ON</span> items <span class="keyword">USING</span> ivfflat (embedding vector_cosine_ops) <span class="keyword">WITH</span> (lists <span class="operator">=</span> <span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Vectors with up to 2,000 dimensions can be indexed.</p>
+<h3 id="Query-Options-1"><a href="#Query-Options-1" class="headerlink" title="Query Options"></a>Query Options</h3><p>Specify the number of probes (1 by default)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> ivfflat.probes <span class="operator">=</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+
+<p>A higher value provides better recall at the cost of speed, and it can be set to the number of lists for exact nearest neighbor search (at which point the planner won’t use the index)</p>
+<p>Use <code>SET LOCAL</code> inside a transaction to set it for a single query</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">LOCAL</span> ivfflat.probes <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line"><span class="keyword">SELECT</span> ...</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Index-Build-Time-1"><a href="#Index-Build-Time-1" class="headerlink" title="Index Build Time"></a>Index Build Time</h3><p>Speed up index creation on large tables by increasing the number of parallel workers (2 by default)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> max_parallel_maintenance_workers <span class="operator">=</span> <span class="number">7</span>; <span class="comment">-- plus leader</span></span><br></pre></td></tr></table></figure>
+
+<p>For a large number of workers, you may also need to increase <code>max_parallel_workers</code> (8 by default)</p>
+<h3 id="Indexing-Progress-1"><a href="#Indexing-Progress-1" class="headerlink" title="Indexing Progress"></a>Indexing Progress</h3><p>Check <a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/progress-reporting.html#CREATE-INDEX-PROGRESS-REPORTING">indexing progress</a> with Postgres 12+</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> phase, round(<span class="number">100.0</span> <span class="operator">*</span> tuples_done <span class="operator">/</span> <span class="built_in">nullif</span>(tuples_total, <span class="number">0</span>), <span class="number">1</span>) <span class="keyword">AS</span> &quot;%&quot; <span class="keyword">FROM</span> pg_stat_progress_create_index;</span><br></pre></td></tr></table></figure>
+
+<p>The phases for IVFFlat are:</p>
+<ol>
+<li><code>initializing</code></li>
+<li><code>performing k-means</code></li>
+<li><code>assigning tuples</code></li>
+<li><code>loading tuples</code></li>
+</ol>
+<p>Note: <code>%</code> is only populated during the <code>loading tuples</code> phase</p>
+<h2 id="Filtering"><a href="#Filtering" class="headerlink" title="Filtering"></a>Filtering</h2><p>There are a few ways to index nearest neighbor queries with a <code>WHERE</code> clause</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> items <span class="keyword">WHERE</span> category_id <span class="operator">=</span> <span class="number">123</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> embedding <span class="operator">&lt;</span><span class="operator">-</span><span class="operator">&gt;</span> <span class="string">&#x27;[3,1,2]&#x27;</span> LIMIT <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Create an index on one <a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/indexes-multicolumn.html">or more</a> of the <code>WHERE</code> columns for exact search</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX <span class="keyword">ON</span> items (category_id);</span><br></pre></td></tr></table></figure>
+
+<p>Or a <a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/indexes-partial.html">partial index</a> on the vector column for approximate search</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX <span class="keyword">ON</span> items <span class="keyword">USING</span> hnsw (embedding vector_l2_ops) <span class="keyword">WHERE</span> (category_id <span class="operator">=</span> <span class="number">123</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Use <a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/ddl-partitioning.html">partitioning</a> for approximate search on many different values of the <code>WHERE</code> columns</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> items (embedding vector(<span class="number">3</span>), category_id <span class="type">int</span>) <span class="keyword">PARTITION</span> <span class="keyword">BY</span> LIST(category_id);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Hybrid-Search"><a href="#Hybrid-Search" class="headerlink" title="Hybrid Search"></a>Hybrid Search</h2><p>Use together with Postgres <a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/textsearch-intro.html">full-text search</a> for hybrid search.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id, content <span class="keyword">FROM</span> items, plainto_tsquery(<span class="string">&#x27;hello search&#x27;</span>) query</span><br><span class="line">    <span class="keyword">WHERE</span> textsearch @@ query <span class="keyword">ORDER</span> <span class="keyword">BY</span> ts_rank_cd(textsearch, query) <span class="keyword">DESC</span> LIMIT <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<p>You can use <a href="https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search_rrf.py">Reciprocal Rank Fusion</a> or a <a href="https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search.py">cross-encoder</a> to combine results.</p>
+<h2 id="Performance"><a href="#Performance" class="headerlink" title="Performance"></a>Performance</h2><h3 id="Tuning"><a href="#Tuning" class="headerlink" title="Tuning"></a>Tuning</h3><p>Use a tool like <a target="_blank" rel="noopener" href="https://pgtune.leopard.in.ua/">PgTune</a> to set initial values for Postgres server parameters.</p>
+<h3 id="Loading"><a href="#Loading" class="headerlink" title="Loading"></a>Loading</h3><p>Use <code>COPY</code> for bulk loading data (<a href="https://github.com/pgvector/pgvector-python/blob/master/examples/bulk_loading.py">example</a>).</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">COPY</span> items (embedding) <span class="keyword">FROM</span> STDIN <span class="keyword">WITH</span> (FORMAT <span class="type">BINARY</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Add any indexes <em>after</em> loading the initial data for best performance.</p>
+<h3 id="Indexing-1"><a href="#Indexing-1" class="headerlink" title="Indexing"></a>Indexing</h3><p>See index build time for <a href="#index-build-time">HNSW</a> and <a href="#index-build-time-1">IVFFlat</a>.</p>
+<p>In production environments, create indexes concurrently to avoid blocking writes.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX CONCURRENTLY ...</span><br></pre></td></tr></table></figure>
+
+<h3 id="Querying-1"><a href="#Querying-1" class="headerlink" title="Querying"></a>Querying</h3><p>Use <code>EXPLAIN ANALYZE</code> to debug performance.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN ANALYZE <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> items <span class="keyword">ORDER</span> <span class="keyword">BY</span> embedding <span class="operator">&lt;</span><span class="operator">-</span><span class="operator">&gt;</span> <span class="string">&#x27;[3,1,2]&#x27;</span> LIMIT <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Exact-Search"><a href="#Exact-Search" class="headerlink" title="Exact Search"></a>Exact Search</h4><p>To speed up queries without an index, increase <code>max_parallel_workers_per_gather</code>.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> max_parallel_workers_per_gather <span class="operator">=</span> <span class="number">4</span>;</span><br></pre></td></tr></table></figure>
+
+<p>If vectors are normalized to length 1 (like <a target="_blank" rel="noopener" href="https://platform.openai.com/docs/guides/embeddings/which-distance-function-should-i-use">OpenAI embeddings</a>), use inner product for best performance.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM items ORDER BY embedding &lt;#&gt; &#x27;[3,1,2]&#x27; LIMIT 5;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Approximate-Search"><a href="#Approximate-Search" class="headerlink" title="Approximate Search"></a>Approximate Search</h4><p>To speed up queries with an IVFFlat index, increase the number of inverted lists (at the expense of recall).</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX <span class="keyword">ON</span> items <span class="keyword">USING</span> ivfflat (embedding vector_l2_ops) <span class="keyword">WITH</span> (lists <span class="operator">=</span> <span class="number">1000</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Vacuuming"><a href="#Vacuuming" class="headerlink" title="Vacuuming"></a>Vacuuming</h3><p>Vacuuming can take a while for HNSW indexes. Speed it up by reindexing first.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">REINDEX INDEX CONCURRENTLY index_name;</span><br><span class="line">VACUUM table_name;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Monitoring"><a href="#Monitoring" class="headerlink" title="Monitoring"></a>Monitoring</h2><p>Monitor performance with <a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/pgstatstatements.html">pg_stat_statements</a> (be sure to add it to <code>shared_preload_libraries</code>).</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> EXTENSION pg_stat_statements;</span><br></pre></td></tr></table></figure>
+
+<p>Get the most time-consuming queries with:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> query, calls, ROUND((total_plan_time <span class="operator">+</span> total_exec_time) <span class="operator">/</span> calls) <span class="keyword">AS</span> avg_time_ms,</span><br><span class="line">    ROUND((total_plan_time <span class="operator">+</span> total_exec_time) <span class="operator">/</span> <span class="number">60000</span>) <span class="keyword">AS</span> total_time_min</span><br><span class="line">    <span class="keyword">FROM</span> pg_stat_statements <span class="keyword">ORDER</span> <span class="keyword">BY</span> total_plan_time <span class="operator">+</span> total_exec_time <span class="keyword">DESC</span> LIMIT <span class="number">20</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Note: Replace <code>total_plan_time + total_exec_time</code> with <code>total_time</code> for Postgres &lt; 13</p>
+<p>Monitor recall by comparing results from approximate search with exact search.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">LOCAL</span> enable_indexscan <span class="operator">=</span> off; <span class="comment">-- use exact search</span></span><br><span class="line"><span class="keyword">SELECT</span> ...</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Scaling"><a href="#Scaling" class="headerlink" title="Scaling"></a>Scaling</h2><p>Scale pgvector the same way you scale Postgres.</p>
+<p>Scale vertically by increasing memory, CPU, and storage on a single instance. Use existing tools to <a href="#tuning">tune parameters</a> and <a href="#monitoring">monitor performance</a>.</p>
+<p>Scale horizontally with <a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/hot-standby.html">replicas</a>, or use <a href="https://github.com/citusdata/citus">Citus</a> or another approach for sharding (<a href="https://github.com/pgvector/pgvector-python/blob/master/examples/citus.py">example</a>).</p>
+<h2 id="Languages"><a href="#Languages" class="headerlink" title="Languages"></a>Languages</h2><p>Use pgvector from any language with a Postgres client. You can even generate and store vectors in one language and query them in another.</p>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Libraries &#x2F; Examples</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>C</td>
+<td><a href="https://github.com/pgvector/pgvector-c">pgvector-c</a></td>
+</tr>
+<tr>
+<td>C++</td>
+<td><a href="https://github.com/pgvector/pgvector-cpp">pgvector-cpp</a></td>
+</tr>
+<tr>
+<td>C#, F#, Visual Basic</td>
+<td><a href="https://github.com/pgvector/pgvector-dotnet">pgvector-dotnet</a></td>
+</tr>
+<tr>
+<td>Crystal</td>
+<td><a href="https://github.com/pgvector/pgvector-crystal">pgvector-crystal</a></td>
+</tr>
+<tr>
+<td>Dart</td>
+<td><a href="https://github.com/pgvector/pgvector-dart">pgvector-dart</a></td>
+</tr>
+<tr>
+<td>Elixir</td>
+<td><a href="https://github.com/pgvector/pgvector-elixir">pgvector-elixir</a></td>
+</tr>
+<tr>
+<td>Go</td>
+<td><a href="https://github.com/pgvector/pgvector-go">pgvector-go</a></td>
+</tr>
+<tr>
+<td>Haskell</td>
+<td><a href="https://github.com/pgvector/pgvector-haskell">pgvector-haskell</a></td>
+</tr>
+<tr>
+<td>Java, Kotlin, Groovy, Scala</td>
+<td><a href="https://github.com/pgvector/pgvector-java">pgvector-java</a></td>
+</tr>
+<tr>
+<td>JavaScript, TypeScript</td>
+<td><a href="https://github.com/pgvector/pgvector-node">pgvector-node</a></td>
+</tr>
+<tr>
+<td>Julia</td>
+<td><a href="https://github.com/pgvector/pgvector-julia">pgvector-julia</a></td>
+</tr>
+<tr>
+<td>Lisp</td>
+<td><a href="https://github.com/pgvector/pgvector-lisp">pgvector-lisp</a></td>
+</tr>
+<tr>
+<td>Lua</td>
+<td><a href="https://github.com/pgvector/pgvector-lua">pgvector-lua</a></td>
+</tr>
+<tr>
+<td>Nim</td>
+<td><a href="https://github.com/pgvector/pgvector-nim">pgvector-nim</a></td>
+</tr>
+<tr>
+<td>OCaml</td>
+<td><a href="https://github.com/pgvector/pgvector-ocaml">pgvector-ocaml</a></td>
+</tr>
+<tr>
+<td>Perl</td>
+<td><a href="https://github.com/pgvector/pgvector-perl">pgvector-perl</a></td>
+</tr>
+<tr>
+<td>PHP</td>
+<td><a href="https://github.com/pgvector/pgvector-php">pgvector-php</a></td>
+</tr>
+<tr>
+<td>Python</td>
+<td><a href="https://github.com/pgvector/pgvector-python">pgvector-python</a></td>
+</tr>
+<tr>
+<td>R</td>
+<td><a href="https://github.com/pgvector/pgvector-r">pgvector-r</a></td>
+</tr>
+<tr>
+<td>Ruby</td>
+<td><a href="https://github.com/pgvector/pgvector-ruby">pgvector-ruby</a>, <a href="https://github.com/ankane/neighbor">Neighbor</a></td>
+</tr>
+<tr>
+<td>Rust</td>
+<td><a href="https://github.com/pgvector/pgvector-rust">pgvector-rust</a></td>
+</tr>
+<tr>
+<td>Swift</td>
+<td><a href="https://github.com/pgvector/pgvector-swift">pgvector-swift</a></td>
+</tr>
+<tr>
+<td>Zig</td>
+<td><a href="https://github.com/pgvector/pgvector-zig">pgvector-zig</a></td>
+</tr>
+</tbody></table>
+<h2 id="Frequently-Asked-Questions"><a href="#Frequently-Asked-Questions" class="headerlink" title="Frequently Asked Questions"></a>Frequently Asked Questions</h2><h4 id="How-many-vectors-can-be-stored-in-a-single-table"><a href="#How-many-vectors-can-be-stored-in-a-single-table" class="headerlink" title="How many vectors can be stored in a single table?"></a>How many vectors can be stored in a single table?</h4><p>A non-partitioned table has a limit of 32 TB by default in Postgres. A partitioned table can have thousands of partitions of that size.</p>
+<h4 id="Is-replication-supported"><a href="#Is-replication-supported" class="headerlink" title="Is replication supported?"></a>Is replication supported?</h4><p>Yes, pgvector uses the write-ahead log (WAL), which allows for replication and point-in-time recovery.</p>
+<h4 id="What-if-I-want-to-index-vectors-with-more-than-2-000-dimensions"><a href="#What-if-I-want-to-index-vectors-with-more-than-2-000-dimensions" class="headerlink" title="What if I want to index vectors with more than 2,000 dimensions?"></a>What if I want to index vectors with more than 2,000 dimensions?</h4><p>You’ll need to use <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Dimensionality_reduction">dimensionality reduction</a> at the moment.</p>
+<h4 id="Can-I-store-vectors-with-different-dimensions-in-the-same-column"><a href="#Can-I-store-vectors-with-different-dimensions-in-the-same-column" class="headerlink" title="Can I store vectors with different dimensions in the same column?"></a>Can I store vectors with different dimensions in the same column?</h4><p>You can use <code>vector</code> as the type (instead of <code>vector(3)</code>).</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> embeddings (model_id <span class="type">bigint</span>, item_id <span class="type">bigint</span>, embedding vector, <span class="keyword">PRIMARY</span> KEY (model_id, item_id));</span><br></pre></td></tr></table></figure>
+
+<p>However, you can only create indexes on rows with the same number of dimensions (using <a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/indexes-expressional.html">expression</a> and <a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/indexes-partial.html">partial</a> indexing):</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX <span class="keyword">ON</span> embeddings <span class="keyword">USING</span> hnsw ((embedding::vector(<span class="number">3</span>)) vector_l2_ops) <span class="keyword">WHERE</span> (model_id <span class="operator">=</span> <span class="number">123</span>);</span><br></pre></td></tr></table></figure>
+
+<p>and query with:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> embeddings <span class="keyword">WHERE</span> model_id <span class="operator">=</span> <span class="number">123</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> embedding::vector(<span class="number">3</span>) <span class="operator">&lt;</span><span class="operator">-</span><span class="operator">&gt;</span> <span class="string">&#x27;[3,1,2]&#x27;</span> LIMIT <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Can-I-store-vectors-with-more-precision"><a href="#Can-I-store-vectors-with-more-precision" class="headerlink" title="Can I store vectors with more precision?"></a>Can I store vectors with more precision?</h4><p>You can use the <code>double precision[]</code> or <code>numeric[]</code> type to store vectors with more precision.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> items (id bigserial <span class="keyword">PRIMARY</span> KEY, embedding <span class="type">double precision</span>[]);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- use &#123;&#125; instead of [] for Postgres arrays</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> items (embedding) <span class="keyword">VALUES</span> (<span class="string">&#x27;&#123;1,2,3&#125;&#x27;</span>), (<span class="string">&#x27;&#123;4,5,6&#125;&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Optionally, add a <a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/ddl-constraints.html">check constraint</a> to ensure data can be converted to the <code>vector</code> type and has the expected dimensions.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> items <span class="keyword">ADD</span> <span class="keyword">CHECK</span> (vector_dims(embedding::vector) <span class="operator">=</span> <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Use <a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/indexes-expressional.html">expression indexing</a> to index (at a lower precision):</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX <span class="keyword">ON</span> items <span class="keyword">USING</span> hnsw ((embedding::vector(<span class="number">3</span>)) vector_l2_ops);</span><br></pre></td></tr></table></figure>
+
+<p>and query with:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> items <span class="keyword">ORDER</span> <span class="keyword">BY</span> embedding::vector(<span class="number">3</span>) <span class="operator">&lt;</span><span class="operator">-</span><span class="operator">&gt;</span> <span class="string">&#x27;[3,1,2]&#x27;</span> LIMIT <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Do-indexes-need-to-fit-into-memory"><a href="#Do-indexes-need-to-fit-into-memory" class="headerlink" title="Do indexes need to fit into memory?"></a>Do indexes need to fit into memory?</h4><p>No, but like other index types, you’ll likely see better performance if they do. You can get the size of an index with:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> pg_size_pretty(pg_relation_size(<span class="string">&#x27;index_name&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+<h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><h4 id="Why-isn’t-a-query-using-an-index"><a href="#Why-isn’t-a-query-using-an-index" class="headerlink" title="Why isn’t a query using an index?"></a>Why isn’t a query using an index?</h4><p>The query needs to have an <code>ORDER BY</code> and <code>LIMIT</code>, and the <code>ORDER BY</code> must be the result of a distance operator, not an expression.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- index</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> embedding <span class="operator">&lt;=&gt;</span> <span class="string">&#x27;[3,1,2]&#x27;</span> LIMIT <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- no index</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="number">1</span> <span class="operator">-</span> (embedding <span class="operator">&lt;=&gt;</span> <span class="string">&#x27;[3,1,2]&#x27;</span>) <span class="keyword">DESC</span> LIMIT <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<p>You can encourage the planner to use an index for a query with:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">LOCAL</span> enable_seqscan <span class="operator">=</span> off;</span><br><span class="line"><span class="keyword">SELECT</span> ...</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Also, if the table is small, a table scan may be faster.</p>
+<h4 id="Why-isn’t-a-query-using-a-parallel-table-scan"><a href="#Why-isn’t-a-query-using-a-parallel-table-scan" class="headerlink" title="Why isn’t a query using a parallel table scan?"></a>Why isn’t a query using a parallel table scan?</h4><p>The planner doesn’t consider <a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/storage-toast.html">out-of-line storage</a> in cost estimates, which can make a serial scan look cheaper. You can reduce the cost of a parallel scan for a query with:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">LOCAL</span> min_parallel_table_scan_size <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">LOCAL</span> parallel_setup_cost <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">SELECT</span> ...</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
+
+<p>or choose to store vectors inline:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> items <span class="keyword">ALTER</span> <span class="keyword">COLUMN</span> embedding <span class="keyword">SET</span> STORAGE PLAIN;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Why-are-there-less-results-for-a-query-after-adding-an-HNSW-index"><a href="#Why-are-there-less-results-for-a-query-after-adding-an-HNSW-index" class="headerlink" title="Why are there less results for a query after adding an HNSW index?"></a>Why are there less results for a query after adding an HNSW index?</h4><p>Results are limited by the size of the dynamic candidate list (<code>hnsw.ef_search</code>). There may be even less results due to dead tuples or filtering conditions in the query. We recommend setting <code>hnsw.ef_search</code> to at least twice the <code>LIMIT</code> of the query. If you need more than 500 results, use an IVFFlat index instead.</p>
+<h4 id="Why-are-there-less-results-for-a-query-after-adding-an-IVFFlat-index"><a href="#Why-are-there-less-results-for-a-query-after-adding-an-IVFFlat-index" class="headerlink" title="Why are there less results for a query after adding an IVFFlat index?"></a>Why are there less results for a query after adding an IVFFlat index?</h4><p>The index was likely created with too little data for the number of lists. Drop the index until the table has more data.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> INDEX index_name;</span><br></pre></td></tr></table></figure>
+
+<p>Results can also be limited by the number of probes (<code>ivfflat.probes</code>).</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><h3 id="Vector-Type"><a href="#Vector-Type" class="headerlink" title="Vector Type"></a>Vector Type</h3><p>Each vector takes <code>4 * dimensions + 8</code> bytes of storage. Each element is a single precision floating-point number (like the <code>real</code> type in Postgres), and all elements must be finite (no <code>NaN</code>, <code>Infinity</code> or <code>-Infinity</code>). Vectors can have up to 16,000 dimensions.</p>
+<h3 id="Vector-Operators"><a href="#Vector-Operators" class="headerlink" title="Vector Operators"></a>Vector Operators</h3><table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Description</th>
+<th>Added</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>+</td>
+<td>element-wise addition</td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td>element-wise subtraction</td>
+<td></td>
+</tr>
+<tr>
+<td>*</td>
+<td>element-wise multiplication</td>
+<td>0.5.0</td>
+</tr>
+<tr>
+<td>&lt;-&gt;</td>
+<td>Euclidean distance</td>
+<td></td>
+</tr>
+<tr>
+<td>&lt;#&gt;</td>
+<td>negative inner product</td>
+<td></td>
+</tr>
+<tr>
+<td>&lt;&#x3D;&gt;</td>
+<td>cosine distance</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="Vector-Functions"><a href="#Vector-Functions" class="headerlink" title="Vector Functions"></a>Vector Functions</h3><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+<th>Added</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cosine_distance(vector, vector) → double precision</td>
+<td>cosine distance</td>
+<td></td>
+</tr>
+<tr>
+<td>inner_product(vector, vector) → double precision</td>
+<td>inner product</td>
+<td></td>
+</tr>
+<tr>
+<td>l2_distance(vector, vector) → double precision</td>
+<td>Euclidean distance</td>
+<td></td>
+</tr>
+<tr>
+<td>l1_distance(vector, vector) → double precision</td>
+<td>taxicab distance</td>
+<td>0.5.0</td>
+</tr>
+<tr>
+<td>vector_dims(vector) → integer</td>
+<td>number of dimensions</td>
+<td></td>
+</tr>
+<tr>
+<td>vector_norm(vector) → double precision</td>
+<td>Euclidean norm</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="Aggregate-Functions"><a href="#Aggregate-Functions" class="headerlink" title="Aggregate Functions"></a>Aggregate Functions</h3><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+<th>Added</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>avg(vector) → vector</td>
+<td>average</td>
+<td></td>
+</tr>
+<tr>
+<td>sum(vector) → vector</td>
+<td>sum</td>
+<td>0.5.0</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://github.com/tangquanwei/tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://github.com/tangquanwei/tangquanwei.github.io/2025/05/19/PG-Vector/">https://github.com/tangquanwei/tangquanwei.github.io/2025/05/19/PG-Vector/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://github.com/tangquanwei/tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/PG-Vector/">PG Vector</a></div><div class="post_share"><div class="social-share" data-image="/images/maomi.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/05/19/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E5%BA%A6%E8%AE%A1%E7%AE%97/" title="文本相似度计算"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">文本相似度计算</div></div></a></div><div class="next-post pull-right"><a href="/2025/05/19/Gen-AI/" title="Gen AI"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Gen AI</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Quanwei</div><div class="author-info__description">幸得识卿桃花面，从此阡陌多暖春 </div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">53</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Getting-Started"><span class="toc-number">1.</span> <span class="toc-text">Getting Started</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Storing"><span class="toc-number">2.</span> <span class="toc-text">Storing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Querying"><span class="toc-number">3.</span> <span class="toc-text">Querying</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Distances"><span class="toc-number">3.0.1.</span> <span class="toc-text">Distances</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Aggregates"><span class="toc-number">3.0.2.</span> <span class="toc-text">Aggregates</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Indexing"><span class="toc-number">4.</span> <span class="toc-text">Indexing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HNSW"><span class="toc-number">5.</span> <span class="toc-text">HNSW</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Index-Options"><span class="toc-number">5.1.</span> <span class="toc-text">Index Options</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Query-Options"><span class="toc-number">5.2.</span> <span class="toc-text">Query Options</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Index-Build-Time"><span class="toc-number">5.3.</span> <span class="toc-text">Index Build Time</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Indexing-Progress"><span class="toc-number">5.4.</span> <span class="toc-text">Indexing Progress</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IVFFlat"><span class="toc-number">6.</span> <span class="toc-text">IVFFlat</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Query-Options-1"><span class="toc-number">6.1.</span> <span class="toc-text">Query Options</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Index-Build-Time-1"><span class="toc-number">6.2.</span> <span class="toc-text">Index Build Time</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Indexing-Progress-1"><span class="toc-number">6.3.</span> <span class="toc-text">Indexing Progress</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Filtering"><span class="toc-number">7.</span> <span class="toc-text">Filtering</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hybrid-Search"><span class="toc-number">8.</span> <span class="toc-text">Hybrid Search</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Performance"><span class="toc-number">9.</span> <span class="toc-text">Performance</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Tuning"><span class="toc-number">9.1.</span> <span class="toc-text">Tuning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Loading"><span class="toc-number">9.2.</span> <span class="toc-text">Loading</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Indexing-1"><span class="toc-number">9.3.</span> <span class="toc-text">Indexing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Querying-1"><span class="toc-number">9.4.</span> <span class="toc-text">Querying</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Exact-Search"><span class="toc-number">9.4.1.</span> <span class="toc-text">Exact Search</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Approximate-Search"><span class="toc-number">9.4.2.</span> <span class="toc-text">Approximate Search</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vacuuming"><span class="toc-number">9.5.</span> <span class="toc-text">Vacuuming</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Monitoring"><span class="toc-number">10.</span> <span class="toc-text">Monitoring</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Scaling"><span class="toc-number">11.</span> <span class="toc-text">Scaling</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Languages"><span class="toc-number">12.</span> <span class="toc-text">Languages</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Frequently-Asked-Questions"><span class="toc-number">13.</span> <span class="toc-text">Frequently Asked Questions</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#How-many-vectors-can-be-stored-in-a-single-table"><span class="toc-number">13.0.1.</span> <span class="toc-text">How many vectors can be stored in a single table?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Is-replication-supported"><span class="toc-number">13.0.2.</span> <span class="toc-text">Is replication supported?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#What-if-I-want-to-index-vectors-with-more-than-2-000-dimensions"><span class="toc-number">13.0.3.</span> <span class="toc-text">What if I want to index vectors with more than 2,000 dimensions?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Can-I-store-vectors-with-different-dimensions-in-the-same-column"><span class="toc-number">13.0.4.</span> <span class="toc-text">Can I store vectors with different dimensions in the same column?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Can-I-store-vectors-with-more-precision"><span class="toc-number">13.0.5.</span> <span class="toc-text">Can I store vectors with more precision?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Do-indexes-need-to-fit-into-memory"><span class="toc-number">13.0.6.</span> <span class="toc-text">Do indexes need to fit into memory?</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Troubleshooting"><span class="toc-number">14.</span> <span class="toc-text">Troubleshooting</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Why-isn%E2%80%99t-a-query-using-an-index"><span class="toc-number">14.0.1.</span> <span class="toc-text">Why isn’t a query using an index?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Why-isn%E2%80%99t-a-query-using-a-parallel-table-scan"><span class="toc-number">14.0.2.</span> <span class="toc-text">Why isn’t a query using a parallel table scan?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Why-are-there-less-results-for-a-query-after-adding-an-HNSW-index"><span class="toc-number">14.0.3.</span> <span class="toc-text">Why are there less results for a query after adding an HNSW index?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Why-are-there-less-results-for-a-query-after-adding-an-IVFFlat-index"><span class="toc-number">14.0.4.</span> <span class="toc-text">Why are there less results for a query after adding an IVFFlat index?</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">15.</span> <span class="toc-text">Reference</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Vector-Type"><span class="toc-number">15.1.</span> <span class="toc-text">Vector Type</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vector-Operators"><span class="toc-number">15.2.</span> <span class="toc-text">Vector Operators</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vector-Functions"><span class="toc-number">15.3.</span> <span class="toc-text">Vector Functions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Aggregate-Functions"><span class="toc-number">15.4.</span> <span class="toc-text">Aggregate Functions</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E5%BA%A6%E8%AE%A1%E7%AE%97/" title="文本相似度计算">文本相似度计算</a><time datetime="2025-05-19T12:26:55.000Z" title="发表于 2025-05-19 20:26:55">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/PG-Vector/" title="PG Vector">PG Vector</a><time datetime="2025-05-19T12:24:37.000Z" title="发表于 2025-05-19 20:24:37">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/Gen-AI/" title="Gen AI">Gen AI</a><time datetime="2025-05-19T12:16:21.000Z" title="发表于 2025-05-19 20:16:21">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/19/%E6%A6%82%E7%8E%87%E8%AE%BA/" title="概率论">概率论</a><time datetime="2025-05-19T11:59:51.000Z" title="发表于 2025-05-19 19:59:51">2025-05-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/07/24/LLM-Hallucination/" title="LLM Hallucination">LLM Hallucination</a><time datetime="2024-07-24T12:17:45.000Z" title="发表于 2024-07-24 20:17:45">2024-07-24</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2025 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
