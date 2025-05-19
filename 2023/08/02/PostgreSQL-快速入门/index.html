@@ -1,0 +1,387 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>PostgreSQL 快速入门 | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="PostgreSQL命令 连接到数据库：  1psql -U username -d database_name  请将username替换为您的用户名，database_name替换为您要连接的数据库名称。  显示数据库列表：  1\l  这将列出所有可用的数据库。  切换到特定数据库：  1\c database_name  请将database_name替换为您要切换到的数据库名称。  显示">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PostgreSQL 快速入门">
+<meta property="og:url" content="http://tangquanwei.github.io/2023/08/02/PostgreSQL-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="PostgreSQL命令 连接到数据库：  1psql -U username -d database_name  请将username替换为您的用户名，database_name替换为您要连接的数据库名称。  显示数据库列表：  1\l  这将列出所有可用的数据库。  切换到特定数据库：  1\c database_name  请将database_name替换为您要切换到的数据库名称。  显示">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/images/maomi.png">
+<meta property="article:published_time" content="2023-08-02T12:31:35.000Z">
+<meta property="article:modified_time" content="2023-12-30T14:28:03.000Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="Database">
+<meta property="article:tag" content="PostgreSQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/images/maomi.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "PostgreSQL 快速入门",
+  "url": "http://tangquanwei.github.io/2023/08/02/PostgreSQL-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/",
+  "image": "http://tangquanwei.github.io/images/maomi.png",
+  "datePublished": "2023-08-02T12:31:35.000Z",
+  "dateModified": "2023-12-30T14:28:03.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Quanwei",
+      "url": "http://tangquanwei.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/2023/08/02/PostgreSQL-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'PostgreSQL 快速入门',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">78</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/p1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a><a class="nav-page-title" href="/"><span class="site-name">PostgreSQL 快速入门</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">PostgreSQL 快速入门</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-08-02T12:31:35.000Z" title="发表于 2023-08-02 20:31:35">2023-08-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-12-30T14:28:03.000Z" title="更新于 2023-12-30 22:28:03">2023-12-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="PostgreSQL命令"><a href="#PostgreSQL命令" class="headerlink" title="PostgreSQL命令"></a>PostgreSQL命令</h2><ol>
+<li>连接到数据库：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">psql -U username -d database_name</span><br></pre></td></tr></table></figure>
+
+<p>请将<code>username</code>替换为您的用户名，<code>database_name</code>替换为您要连接的数据库名称。</p>
+<ol start="2">
+<li>显示数据库列表：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\l</span><br></pre></td></tr></table></figure>
+
+<p>这将列出所有可用的数据库。</p>
+<ol start="3">
+<li>切换到特定数据库：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\c database_name</span><br></pre></td></tr></table></figure>
+
+<p>请将<code>database_name</code>替换为您要切换到的数据库名称。</p>
+<ol start="4">
+<li>显示表列表：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\dt</span><br></pre></td></tr></table></figure>
+
+<p>这将列出当前数据库中的所有表。</p>
+<ol start="5">
+<li>显示表结构：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\d table_name</span><br></pre></td></tr></table></figure>
+
+<p>请将<code>table_name</code>替换为您要查看结构的表名称。</p>
+<ol start="6">
+<li>执行SQL查询：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM table_name;</span><br></pre></td></tr></table></figure>
+
+<p>请将<code>table_name</code>替换为您要查询的表名称。</p>
+<ol start="7">
+<li>退出psql：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\q</span><br></pre></td></tr></table></figure>
+
+<p>这将退出psql命令行界面。</p>
+<h2 id="常用对象"><a href="#常用对象" class="headerlink" title="常用对象"></a>常用对象</h2><p>在PostgreSQL中，有多种类型的数据库对象可用于组织和管理数据。以下是一些常见的数据库对象：</p>
+<ol>
+<li><p>表（Table）：表是存储数据的基本单位。它由行和列组成，每个列定义了表中的一个属性。</p>
+</li>
+<li><p>视图（View）：视图是基于一个或多个表的查询结果的虚拟表。它可以简化复杂的查询，并提供一种抽象的方式来访问数据。</p>
+</li>
+<li><p>索引（Index）：索引是一种数据结构，用于加快对表中数据的访问速度。它可以根据一个或多个列的值快速定位到匹配的行。</p>
+</li>
+<li><p>序列（Sequence）：序列是一种生成唯一数值的对象。它通常用于为表的主键列生成自增的唯一标识符。</p>
+</li>
+<li><p>函数（Function）：函数是一段可重复使用的代码，接受输入参数并返回一个值或结果集。它可以用于执行特定的计算或操作。</p>
+</li>
+<li><p>存储过程（Stored Procedure）：存储过程是一组预定义的SQL语句，可以在数据库中进行调用。它可以接受输入参数，并根据需要执行一系列操作。</p>
+</li>
+<li><p>触发器（Trigger）：触发器是与表相关联的一段代码，当满足特定条件时自动执行。它可以用于在数据插入、更新或删除时执行额外的逻辑操作。</p>
+</li>
+<li><p>模式（Schema）：模式是用于组织和管理数据库对象的命名空间。它可以将数据库对象分组到逻辑上独立的单元中，以便更好地管理和控制访问权限。</p>
+</li>
+</ol>
+<h2 id="常用数据类型"><a href="#常用数据类型" class="headerlink" title="常用数据类型"></a>常用数据类型</h2><p>在PostgreSQL中，有多种常用的数据类型可用于存储和处理不同类型的数据。以下是一些常见的数据类型：</p>
+<ol>
+<li><p>整数类型（Integer Types）：用于存储整数值，如<code>integer</code>、<code>smallint</code>、<code>bigint</code>等。</p>
+</li>
+<li><p>浮点数类型（Floating-Point Types）：用于存储浮点数值，如<code>real</code>、<code>double precision</code>等。</p>
+</li>
+<li><p>字符串类型（Character Types）：用于存储文本数据，如<code>character varying</code>、<code>text</code>等。</p>
+</li>
+<li><p>日期和时间类型（Date and Time Types）：用于存储日期、时间和时间戳，如<code>date</code>、<code>time</code>、<code>timestamp</code>等。</p>
+</li>
+<li><p>布尔类型（Boolean Type）：用于存储布尔值，即<code>true</code>或<code>false</code>。</p>
+</li>
+<li><p>数组类型（Array Types）：用于存储多个相同类型的值的数组，如<code>integer[]</code>、<code>text[]</code>等。</p>
+</li>
+<li><p>JSON类型（JSON Type）：用于存储JSON格式的数据，如<code>json</code>、<code>jsonb</code>等。</p>
+</li>
+<li><p>UUID类型（UUID Type）：用于存储唯一标识符，如<code>uuid</code>。</p>
+</li>
+</ol>
+<h2 id="表操作"><a href="#表操作" class="headerlink" title="表操作"></a>表操作</h2><p>在PostgreSQL中，可以使用SQL语句对表进行各种操作。以下是一些常见的表操作：</p>
+<ol>
+<li>创建表（Create Table）：使用CREATE TABLE语句创建一个新的表，并指定表的名称和列的定义。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> table_name (</span><br><span class="line">    id serial <span class="keyword">PRIMARY KEY</span>, <span class="comment">-- 主键自增</span></span><br><span class="line">    table1_id <span class="type">integer</span> <span class="keyword">REFERENCES</span> table1(id),</span><br><span class="line">    column1 datatype <span class="keyword">DEFAULT</span> default_value,</span><br><span class="line">    ...</span><br><span class="line">    column3 datatype,</span><br><span class="line">    column2 datatype,</span><br><span class="line">    <span class="keyword">PRIMARY KEY</span> (column1, column2),<span class="comment">--复合主键（Composite Primary Key）</span></span><br><span class="line">    ...</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">--外部表（Foreign Table）</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FOREIGN</span> <span class="keyword">TABLE</span> table_name (</span><br><span class="line">    column1 datatype,</span><br><span class="line">    column2 datatype,</span><br><span class="line">    ...</span><br><span class="line">) SERVER server_name OPTIONS (option1 <span class="string">&#x27;value1&#x27;</span>, option2 <span class="string">&#x27;value2&#x27;</span>, ...);</span><br></pre></td></tr></table></figure>
+
+<p><code>SERIAL</code>是PostgreSQL中的一种伪类型，它实际上是一个自增长的整数列。</p>
+<p>使用<code>SERIAL</code>数据类型可以简化自增长列的创建过程。当我们将列的数据类型设置为<code>SERIAL</code>时，PostgreSQL会自动创建一个序列（sequence），并将其与该列关联起来。每次插入新行时，序列会自动递增，并将递增后的值赋给<code>SERIAL</code>列。</p>
+<ol>
+<li>修改表结构（Alter Table）：使用ALTER TABLE语句修改表的结构，包括添加、修改或删除列，添加或删除约束等。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 添加列</span></span><br><span class="line"><span class="keyword">ALTER TABLE</span> table_name <span class="keyword">ADD</span> <span class="keyword">COLUMN</span> column_name datatype;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 修改列类型</span></span><br><span class="line"><span class="keyword">ALTER TABLE</span> table_name <span class="keyword">ALTER</span> <span class="keyword">COLUMN</span> column_name TYPE new_datatype;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除列</span></span><br><span class="line"><span class="keyword">ALTER TABLE</span> table_name <span class="keyword">DROP</span> <span class="keyword">COLUMN</span> column_name;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>插入数据（Insert Into）：使用INSERT INTO语句向表中插入新的行数据。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT INTO</span> table_name (column1, column2, ...)</span><br><span class="line"><span class="keyword">VALUES</span> (value1, value2, ...);</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>更新数据（Update）：使用UPDATE语句更新表中的行数据。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> table_name</span><br><span class="line"><span class="keyword">SET</span> column1 <span class="operator">=</span> value1, column2 <span class="operator">=</span> value2, ...</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">condition</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>删除数据（Delete）：使用DELETE语句删除表中的行数据。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> table_name</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">condition</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>查询数据（Select）：使用SELECT语句从表中检索数据。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column1, column2, ...</span><br><span class="line"><span class="keyword">FROM</span> table_name</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">condition</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>创建索引（Create Index）：使用CREATE INDEX语句创建索引，以加快对表中数据的访问速度。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX index_name</span><br><span class="line"><span class="keyword">ON</span> table_name (column1, column2, ...);</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><p>在PostgreSQL中，可以使用注释来为表、列、约束等数据库对象添加说明和描述。注释可以提供有关对象的额外信息，以便于理解和维护数据库结构。以下是在PostgreSQL中添加注释的方法：</p>
+<ol>
+<li>表注释（Table Comment）：可以使用COMMENT语句为表添加注释。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">COMMENT <span class="keyword">ON</span> <span class="keyword">TABLE</span> table_name <span class="keyword">IS</span> <span class="string">&#x27;This is a table comment.&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>列注释（Column Comment）：可以使用COMMENT语句为表中的列添加注释。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">COMMENT <span class="keyword">ON</span> <span class="keyword">COLUMN</span> table_name.column_name <span class="keyword">IS</span> <span class="string">&#x27;This is a column comment.&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>约束注释（Constraint Comment）：可以使用COMMENT语句为表中的约束添加注释。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">COMMENT <span class="keyword">ON</span> <span class="keyword">CONSTRAINT</span> constraint_name <span class="keyword">ON</span> table_name <span class="keyword">IS</span> <span class="string">&#x27;This is a constraint comment.&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>数据库注释（Database Comment）：可以使用COMMENT语句为整个数据库添加注释。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">COMMENT <span class="keyword">ON</span> DATABASE database_name <span class="keyword">IS</span> <span class="string">&#x27;This is a database comment.&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>查看注释（View Comments）：可以使用以下查询语句查看表、列、约束等对象的注释：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查看表注释</span></span><br><span class="line"><span class="keyword">SELECT</span> obj_description(<span class="string">&#x27;table_name&#x27;</span>::regclass) <span class="keyword">AS</span> table_comment;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查看列注释</span></span><br><span class="line"><span class="keyword">SELECT</span> col_description(<span class="string">&#x27;table_name&#x27;</span>::regclass, <span class="string">&#x27;column_name&#x27;</span>) <span class="keyword">AS</span> column_comment;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查看约束注释</span></span><br><span class="line"><span class="keyword">SELECT</span> obj_description(<span class="string">&#x27;constraint_name&#x27;</span>::regclass) <span class="keyword">AS</span> constraint_comment;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查看数据库注释</span></span><br><span class="line"><span class="keyword">SELECT</span> description <span class="keyword">FROM</span> pg_catalog.pg_shdescription <span class="keyword">WHERE</span> objoid <span class="operator">=</span> <span class="string">&#x27;database_name&#x27;</span>::regclass;</span><br></pre></td></tr></table></figure>
+
+<p>注意：在上述查询语句中，将’table_name’、’column_name’、’constraint_name’和’database_name’替换为实际的对象名称。</p>
+<h2 id="用户操作"><a href="#用户操作" class="headerlink" title="用户操作"></a>用户操作</h2><p>在PostgreSQL中，可以使用SQL语句和特定的命令来进行用户操作。以下是一些常见的用户操作：</p>
+<ol>
+<li>创建用户（Create User）：使用CREATE USER语句创建一个新的用户，并指定用户名和密码。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> username <span class="keyword">WITH</span> PASSWORD <span class="string">&#x27;password&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>修改用户密码（Alter User）：使用ALTER USER语句修改用户的密码。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> username <span class="keyword">WITH</span> PASSWORD <span class="string">&#x27;new_password&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>授予角色（Grant Role）：使用GRANT语句将角色授予用户。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GRANT</span> role_name <span class="keyword">TO</span> username;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>撤销角色（Revoke Role）：使用REVOKE语句从用户中撤销角色。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">REVOKE</span> role_name <span class="keyword">FROM</span> username;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>授予权限（Grant Privileges）：使用GRANT语句将特定的权限授予用户。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GRANT</span> privilege_name <span class="keyword">ON</span> table_name <span class="keyword">TO</span> username;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>撤销权限（Revoke Privileges）：使用REVOKE语句从用户中撤销特定的权限。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">REVOKE</span> privilege_name <span class="keyword">ON</span> table_name <span class="keyword">FROM</span> username;</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>删除用户（Drop User）：使用DROP USER语句删除用户。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">USER</span> username;</span><br></pre></td></tr></table></figure>
+
+<ol start="8">
+<li>查看用户（View Users）：可以使用以下查询语句查看数据库中的用户列表：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> usename <span class="keyword">FROM</span> pg_user;</span><br></pre></td></tr></table></figure>
+
+<h2 id="常用查询"><a href="#常用查询" class="headerlink" title="常用查询"></a>常用查询</h2><p>在PostgreSQL中，有许多常用的查询语句可以帮助你检索和操作数据库中的数据。以下是一些常见的查询示例：</p>
+<ol>
+<li>查询所有数据（Select All）：使用SELECT语句可以检索表中的所有数据。例如：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> table_name;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>条件查询（Conditional Query）：使用WHERE子句可以根据条件过滤数据。例如，查询年龄大于等于18岁的用户：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> age <span class="operator">&gt;=</span> <span class="number">18</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>排序查询（Ordering Query）：使用ORDER BY子句可以按照指定的列对结果进行排序。例如，按照用户的姓名进行升序排序：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">ORDER</span> <span class="keyword">BY</span> name <span class="keyword">ASC</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>聚合查询（Aggregate Query）：使用聚合函数可以对数据进行统计和计算。例如，计算某个列的平均值：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="built_in">AVG</span>(column_name) <span class="keyword">FROM</span> table_name;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>连接查询（Join Query）：使用JOIN语句可以将多个表连接在一起进行查询。例如，查询订单表和用户表中相关联的数据：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> orders</span><br><span class="line"><span class="keyword">JOIN</span> users <span class="keyword">ON</span> orders.user_id <span class="operator">=</span> users.id;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>分组查询（Grouping Query）：使用GROUP BY子句可以将数据按照指定的列进行分组。例如，按照用户的性别统计用户数量：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> gender, <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> users <span class="keyword">GROUP</span> <span class="keyword">BY</span> gender;</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>子查询（Subquery）：可以在查询中嵌套使用子查询来获取更复杂的结果。例如，查询年龄大于平均年龄的用户：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> age <span class="operator">&gt;</span> (<span class="keyword">SELECT</span> <span class="built_in">AVG</span>(age) <span class="keyword">FROM</span> users);</span><br></pre></td></tr></table></figure>
+
+<p>这些是一些常见的查询示例，可以根据具体的需求和数据结构进行相应的查询操作。使用合适的查询语句和条件，可以有效地检索和操作数据库中的数据。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io/2023/08/02/PostgreSQL-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">http://tangquanwei.github.io/2023/08/02/PostgreSQL-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Database/">Database</a><a class="post-meta__tags" href="/tags/PostgreSQL/">PostgreSQL</a></div><div class="post-share"><div class="social-share" data-image="/images/maomi.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2023/08/02/Docker-PostgreSQL/" title="PostgreSQL"><img class="cover" src="/2023/08/02/Docker-PostgreSQL/2023-08-02-19-46-38.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">PostgreSQL</div></div><div class="info-2"><div class="info-item-1">PostgreSQL: The World’s Most Advanced Open Source Relational Database Docker 安装 PostgreSQL12345docker run -d --name postgres \  -p 5432:5432 \  -e POSTGRES_PASSWORD=021009 \  -v /home/quanwei/docker/pgdata:/var/lib/postgresql/data \  postgres    Docker 安装 pgAdminpgAdmin is the most popular and feature rich Open Source administration and development platform for PostgreSQL, the most advanced Open Source database in the world.  123456docker run -d --name pgadmin \  -e...</div></div></div></a><a class="pagination-related" href="/2023/09/29/%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BB/" title="如何阅读"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">如何阅读</div></div><div class="info-2"><div class="info-item-1">阅读存在的问题：  读了马上就忘 看过去不知道讲了什么  阅读之所以不能只看内容，而要抓论纲，原因主要有两个。第一，学术全是围绕论证展开的，学生必须学会批判论证。发现并剖析论证（就是我们所说的“论纲”）是你处理任何文本的首要任务。比方说，教授安排你读五本关于法国大革命的书。有个国王掉了脑袋，这个事实你需要读多少次呢？一次还不够吗？你之所以要看五本不同的书，是因为每名作者都对史实有着不同的解读。因此，你的第一项任务是确定作者在论纲中表达的具体解读。第二项任务是拆解论纲，找到它最薄弱的环节。 你在阅读时的任务本质上是搜寻和批判：你要先搜寻论纲，然后你的目标是批判论纲。“批判”部分意味着你要评判书的优势和劣势 我们需要搜寻支撑论断的坚实证据，如果我们找不到证据，如果作者没有提供证据，或者作者的证据的主观性大于客观性，那我们大概就能推翻这个论纲了。 如何主动阅读第一步：分析主副标题。第二步：详读目录。 问一问你自己，作者在每一章中可能想要表达什么第三步：先读最后一节。...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2023/03/24/Docker-Oracle-11g/" title="Docker Oracle 11g"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-24</div><div class="info-item-2">Docker Oracle 11g</div></div><div class="info-2"><div class="info-item-1"> 12345docker run -d -p 1521:1521\ --name oracle-11g\ -e ORACLE_ALLOW_REMOTE=true\ -e ORACLE_DISABLE_ASYNCH_IO=true\ oracleinanutshell/oracle-xe-11g  关闭实例 shutdown immediate 启动实例到nomount状态startup nomount 建立控制文件alter database backup controlfile to trace; show parameter user_dump_dest; 123456789101112131415161718192021222324252627282930313233343536373839----     Set #1. NORESETLOGS case---- The following commands will create a new control file and use it-- to open the database.-- Data used by...</div></div></div></a><a class="pagination-related" href="/2022/09/24/Docker-Oracle-12c/" title="Docker Oracle-12c"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-24</div><div class="info-item-2">Docker Oracle-12c</div></div><div class="info-2"><div class="info-item-1">安装1. 获取镜像12345678# 查找docker search oracle# 拉取docker pull truevoly/oracle-12c# 查看docker images     2. 启动Oracle数据库更新更新！！！ 123docker run -d --name oracle-12c \  --privileged  --mount source=oracle-data,target=/u01/app/oracle \  -p 1521:1521 truevoly/oracle-12c   现在只需要执行上面一句就可以了！！！（意思和下面是一样的） 启动前有个比较坑的地方，需要先执行 12sudo mkdir -p  /u01/app/oracle  &amp;&amp; sudo chmod -R a+w /u01/app/oraclesudo mkdir -p  $(pwd)/.oradata  &amp;&amp; sudo chmod -R a+w $(pwd)/.oradata  不然会报错： 1Cannot create directory...</div></div></div></a><a class="pagination-related" href="/2023/05/28/Java-%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A1%86%E6%9E%B6/" title="Java 数据库框架"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-28</div><div class="info-item-2">Java 数据库框架</div></div><div class="info-2"><div class="info-item-1">Java 数据库访问框架JDBCJDBC（Java Database Connectivity）是Java语言中用于连接和操作数据库的API。JDBC提供了一组标准接口，使得Java程序可以与各种关系型数据库进行交互，如Oracle、MySQL、SQL Server等。 JDBC的工作原理是通过驱动程序（Driver）来实现与数据库的连接。驱动程序是一个Java类库，它包含了与特定数据库通信所需的代码和协议。在使用JDBC时，需要先加载相应的驱动程序，然后通过驱动程序建立与数据库的连接，最后执行SQL语句或存储过程等操作。 JDBC的主要功能包括：  建立与数据库的连接：通过DriverManager类的getConnection()方法建立与数据库的连接。  执行SQL语句：通过Statement或PreparedStatement对象执行SQL语句，如查询数据、插入数据、更新数据等。  处理结果集：通过ResultSet对象处理查询结果集，如获取查询结果、遍历结果集等。  事务管理：通过Connection对象控制事务的提交、回滚等操作。   JDBC是Java...</div></div></div></a><a class="pagination-related" href="/2023/06/10/MongoDB/" title="MongoDB 安装和使用"><img class="cover" src="/2023/06/10/MongoDB/2023-06-10-21-22-01.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-06-10</div><div class="info-item-2">MongoDB 安装和使用</div></div><div class="info-2"><div class="info-item-1">MongoDB 安装和使用使用 Docker 安装Pull the MongoDB Docker Image1docker pull mongo  Run the Image as a Container12345mkdir -p ~/.mongodb/dbdocker run --name mongo -d -p 27017:27017 --privileged=true \ -e MONGO_INITDB_ROOT_USERNAME=root \ -e MONGO_INITDB_ROOT_PASSWORD=021009 \ -v ~/docker/mongodb/db:/data/db mongo   Connect to the MongoDB Deployment with mongoshOpen an interactive container instance of mongo and connect to the deployment with mongosh. 1docker exec -it mongo mongosh   mongo...</div></div></div></a><a class="pagination-related" href="/2023/04/26/ORACLE-PLSQL-%E5%87%BD%E6%95%B0/" title="PL&#x2F;SQL 函数"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-26</div><div class="info-item-2">PL&#x2F;SQL 函数</div></div><div class="info-2"><div class="info-item-1">掌握函数的创建、修改及删除函数创建的语法格式：Create [or replace] function (&lt;参数1&gt; [方式1]&lt;数据类型1&gt;,&lt;参数2&gt; [方式2]&lt;数据类型2&gt;…)Return&lt;数据类型&gt; is|asPl&#x2F;sql程序体  ――其中必须有一个return语句 注：通常函数只有in类型的参数 例1： 123456789101112131415SET SERVEROUTPUT ON FORMAT WRAPPEDCREATE OR REPLACE FUNCTION DEPT_NUM (  IN_DEPT IN SCOTT.EMP.DEPTNO%TYPE) RETURN NUMBER AS  OUT_NUM NUMBER;BEGIN  SELECT    COUNT(*) INTO OUT_NUM  FROM    SCOTT.EMP  WHERE    SCOTT.EMP.DEPTNO=IN_DEPT;  RETURN(OUT_NUM);END...</div></div></div></a><a class="pagination-related" href="/2023/05/01/ORACLE-PLSQL-%E5%8C%85/" title="PL&#x2F;SQL 包"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-01</div><div class="info-item-2">PL&#x2F;SQL 包</div></div><div class="info-2"><div class="info-item-1">包的创建及使用包类似于面向对象中的类，是数据库中的一个实体，其中包含一系列公共常量、变量、数据类型、游标、过程以及函数的定义。 创建包包由包的描述部分和包体两部分组成，包描述部分相当于一个包头，他对包的所有部件进行一个简单的声明，这些部件可以被外界应用程序访问，包描述部分格式如下： 123CREATE PACKAGE &lt;包名&gt; IS  变量、常量及数据类型的定义； 游标定义头部； 函数、过程的说明；END&lt;包名&gt;；   包头部分：12345678910CREATE PACKAGE MY_PACKAGE IS DEPT_NUM NUMBER; --Cursor manager_cur; FUNCTION F_DEPT_NUM(  IN_DEPTNO IN SCOTT.EMP.DEPTNO%TYPE) RETURN NUMBER;PROCEDURE P_DEPT_NUM(  IN_DEPTNO IN SCOTT.EMP.DEPTNO%TYPE,  OUT_NUM OUT NUMBER);END...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">78</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PostgreSQL%E5%91%BD%E4%BB%A4"><span class="toc-number">1.</span> <span class="toc-text">PostgreSQL命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%AF%B9%E8%B1%A1"><span class="toc-number">2.</span> <span class="toc-text">常用对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">常用数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A8%E6%93%8D%E4%BD%9C"><span class="toc-number">4.</span> <span class="toc-text">表操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E9%87%8A"><span class="toc-number">5.</span> <span class="toc-text">注释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E6%93%8D%E4%BD%9C"><span class="toc-number">6.</span> <span class="toc-text">用户操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%9F%A5%E8%AF%A2"><span class="toc-number">7.</span> <span class="toc-text">常用查询</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/21/zsh/" title="zsh">zsh</a><time datetime="2024-03-21T03:34:44.000Z" title="发表于 2024-03-21 11:34:44">2024-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/" title="Unity3D 入门"><img src="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/20231231095827.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity3D 入门"/></a><div class="content"><a class="title" href="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/" title="Unity3D 入门">Unity3D 入门</a><time datetime="2023-12-30T15:01:48.000Z" title="发表于 2023-12-30 23:01:48">2023-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/28/Neo4j/" title="Neo4j"><img src="/2023/12/28/Neo4j/20231231100111.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Neo4j"/></a><div class="content"><a class="title" href="/2023/12/28/Neo4j/" title="Neo4j">Neo4j</a><time datetime="2023-12-28T13:48:35.000Z" title="发表于 2023-12-28 21:48:35">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Git-FQA/" title="Git FQA">Git FQA</a><time datetime="2023-12-28T13:35:43.000Z" title="发表于 2023-12-28 21:35:43">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/26/Fast-API/" title="Fast API">Fast API</a><time datetime="2023-12-26T02:07:14.000Z" title="发表于 2023-12-26 10:07:14">2023-12-26</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2025 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

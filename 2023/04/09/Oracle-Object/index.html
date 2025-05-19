@@ -1,0 +1,281 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Oracle Object | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Oracle Object表123create table t_&lt;name&gt;;select * from t_&lt;name&gt;;drop table t_&lt;name&gt;;  常用数据类型varchar2(n) 可变长的字符串   具体定义时指明最大长度n byte，最大字节数都是4000（UTF8 1333个汉字）  number(precision,scale) 可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Oracle Object">
+<meta property="og:url" content="http://tangquanwei.github.io/2023/04/09/Oracle-Object/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="Oracle Object表123create table t_&lt;name&gt;;select * from t_&lt;name&gt;;drop table t_&lt;name&gt;;  常用数据类型varchar2(n) 可变长的字符串   具体定义时指明最大长度n byte，最大字节数都是4000（UTF8 1333个汉字）  number(precision,scale) 可">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/images/maomi.png">
+<meta property="article:published_time" content="2023-04-09T01:12:56.000Z">
+<meta property="article:modified_time" content="2023-12-30T14:28:03.000Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="Database">
+<meta property="article:tag" content="Oracle">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/images/maomi.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Oracle Object",
+  "url": "http://tangquanwei.github.io/2023/04/09/Oracle-Object/",
+  "image": "http://tangquanwei.github.io/images/maomi.png",
+  "datePublished": "2023-04-09T01:12:56.000Z",
+  "dateModified": "2023-12-30T14:28:03.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Quanwei",
+      "url": "http://tangquanwei.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/2023/04/09/Oracle-Object/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Oracle Object',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">78</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/p1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a><a class="nav-page-title" href="/"><span class="site-name">Oracle Object</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Oracle Object</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-04-09T01:12:56.000Z" title="发表于 2023-04-09 09:12:56">2023-04-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-12-30T14:28:03.000Z" title="更新于 2023-12-30 22:28:03">2023-12-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Oracle-Object"><a href="#Oracle-Object" class="headerlink" title="Oracle Object"></a>Oracle Object</h1><h2 id="表"><a href="#表" class="headerlink" title="表"></a>表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create table</span> t_<span class="operator">&lt;</span>name<span class="operator">&gt;</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> t_<span class="operator">&lt;</span>name<span class="operator">&gt;</span>;</span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> t_<span class="operator">&lt;</span>name<span class="operator">&gt;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="常用数据类型"><a href="#常用数据类型" class="headerlink" title="常用数据类型"></a>常用数据类型</h3><p><strong>varchar2(n)</strong> 可变长的字符串  </p>
+<pre><code>具体定义时指明最大长度n byte，最大字节数都是4000（UTF8 1333个汉字）
+</code></pre>
+<p><strong>number(precision,scale)</strong> 可变长的数值列，允许浮点数、正值及负值  </p>
+<pre><code>precision [1,38] 是所有有效数字的位数（从左边第一个不为0的数算起，小数点和负号不计入有效位数）
+</code></pre>
+<p>   scale [-84,127] 是小数点以后的位数，多出来的位数四舍五入</p>
+<p><strong>date 时间日期</strong> </p>
+<pre><code>包括：世纪、年、月、日、时、分、秒
+sysdate
+TO_CHAR(SYSDATE, &#39;yyyy-mm-dd hh24:mi:ss&#39;)
+TO_DATE(&#39;2002-10-09 13:23:44&#39;, &#39;yyyy-mm-dd hh24:mi:ss&#39;)
+</code></pre>
+<p><strong>blob</strong> 二进制数据 用来保存较大的图形文件或带格式的文本文件</p>
+<p><strong>clob</strong> 字符型数据</p>
+<h2 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h2><p>视图以经过定制的方式显示来自一个或多个表的数据<br>  提供了另外一种级别的表安全性<br>  隐藏的数据的复杂性<br>  简化的用户的SQL命令<br>  隔离基表结构的改变<br>  通过重命名列，从另一个角度提供数据</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">view</span> v_<span class="operator">&lt;</span>name<span class="operator">&gt;</span> <span class="keyword">as</span></span><br><span class="line"><span class="keyword">select</span> ...</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> [<span class="keyword">OR</span> REPLACE] [FORCE] <span class="keyword">VIEW</span></span><br><span class="line">  view_name [(alias[, alias]...)] </span><br><span class="line"><span class="keyword">AS</span> select_statement</span><br><span class="line">[<span class="keyword">WITH</span> <span class="keyword">CHECK</span> OPTION]</span><br><span class="line">[<span class="keyword">WITH</span> READ <span class="keyword">ONLY</span>];</span><br></pre></td></tr></table></figure>
+<p>视图上的DML语句有如下限制：<br>  只能修改一个底层的基表<br>  如果修改违反了基表的约束条件，则无法更新视图<br>  如果视图包含连接操作符、DISTINCT 关键字、集合操作符、聚合函数或 GROUP BY 子句，则将无法更新视图<br>  如果视图包含伪列或表达式，则将无法更新视图</p>
+<h2 id="同义词"><a href="#同义词" class="headerlink" title="同义词"></a>同义词</h2><p>同义词是现有对象的一个别名<br>  简化SQL语句<br>  隐藏对象的名称和所有者<br>  提供对对象的公共访问<br>  公有同义词 可被所有的数据库用户访问。<br>  私有同义词 只能在其模式内访问，且不能与当前模式的对象同名</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> SYNONYM emp <span class="keyword">FOR</span> SCOTT.emp;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> PUBLIC SYNONYM s_emp <span class="keyword">FOR</span> SCOTT.emp;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">OR</span> REPLACE SYNONYM s_emp <span class="keyword">FOR</span> SCOTT.emp;</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> SYNONYM emp; </span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> PUBLIC SYNONYM s_emp; </span><br></pre></td></tr></table></figure>
+
+<h2 id="序列"><a href="#序列" class="headerlink" title="序列"></a>序列</h2><p>序列是用于生成唯一、连续序号的对象<br>序列可以是升序的，也可以是降序的</p>
+<p>通过序列的伪列来访问序列的值<br>  NEXTVAL 返回序列的下一个值<br>  CURRVAL 返回序列的当前值</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建</span></span><br><span class="line"><span class="keyword">CREATE</span> SEQUENCE seq_emp</span><br><span class="line"> <span class="keyword">START</span> <span class="keyword">WITH</span> <span class="number">10</span></span><br><span class="line"> INCREMENT <span class="keyword">BY</span> <span class="number">10</span></span><br><span class="line"> MAXVALUE <span class="number">2000</span></span><br><span class="line"> MINVALUE <span class="number">10</span></span><br><span class="line"> NOCYCLE</span><br><span class="line"> CACHE <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 使用</span></span><br><span class="line"><span class="keyword">INSERT INTO</span> emp (empno, ename, job) </span><br><span class="line">     <span class="keyword">VALUES</span> ( seq_emp.NEXTVAL, <span class="string">&#x27;quanwei&#x27;</span>, <span class="string">&#x27;sale&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> seq_emp.CURRVAL <span class="keyword">FROM</span> dual;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 不能更改序列的START WITH参数</span></span><br><span class="line"><span class="keyword">ALTER</span> SEQUENCE seq_emp MAXVALUE <span class="number">5000</span> <span class="keyword">CYCLE</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除</span></span><br><span class="line"><span class="keyword">DROP</span> SEQUENCE seq_emp;</span><br></pre></td></tr></table></figure>
+
+<p>相关参数:</p>
+<p><strong>increment by</strong>：序列每次增加的值，负数表示递减，缺省值为1；</p>
+<p><strong>start with</strong>：序列的初始值，缺省值为1；</p>
+<p><strong>maxvalue</strong>：序列可生成的最大值，缺省值为nomaxvalue，即不设置最大值；系统能产生的最大值为$10^{27}$；</p>
+<p><strong>minvalue</strong>：序列可生成的最小值，缺省值为nominvalue；</p>
+<p><strong>cycle</strong>：定义当序列达到最大&#x2F;小值后是否循环，缺省值为不循环；<strong>nocycle</strong>：不循环；cycle：循环；如果不使用循环达到限制值后继续产生新值就会出错；使用循环达到最大值后的下一个值为1，和start with设置的值无关，递增还是increment by设置的值；</p>
+<p><strong>cache</strong>：定义缓存序列的个数，缺省值为20，<strong>nocache</strong>表示不设置缓存；使用缓存可以提高序列的性能，但数据库出错时会造成数据丢失使序列不连续；</p>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><p>索引是Oracle自动维护的一个可选结构<br>  用以提高 SQL 语句执行的性能<br>  减少磁盘I&#x2F;O<br>  在逻辑上和物理上都独立于表的数据</p>
+<p>索引应该在SQL语句的”where”部分涉及的表列(也称谓词)建立</p>
+<p>如果表中列的值占该表中行的20%以内，这个表列就可以作为候选索引表列</p>
+<p>如果在SQL语句谓词中多个表列被一起连续引用，则应该考虑将这些表列一起放在一个索引内</p>
+<p>类型：<br>  B树索引(默认类型)</p>
+<p>  位图索引</p>
+<p>  HASH索引</p>
+<p>  索引组织表索引</p>
+<p>  反转键(reverse key)索引</p>
+<p>  基于函数的索引</p>
+<p>  分区索引(本地和全局索引)</p>
+<p>  位图连接索引</p>
+<p>不应该建索引:<br>  对于那些在查询中很少使用或者参考的列不应该创建索引<br>  对于那些只有很少数据值的列也不应该增加索引<br>  对于那些定义为blob数据类型的列不应该增加索引<br>  当修改性能远远大于检索性能时，不应该创建索引</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">-- 创建索引</span></span><br><span class="line"><span class="keyword">create</span> index [<span class="keyword">unique</span> <span class="operator">|</span> bitmap] [schema.]<span class="operator">&lt;</span>idx_name<span class="operator">&gt;</span> </span><br><span class="line">  <span class="keyword">on</span> [schema.]<span class="operator">&lt;</span>tab_name<span class="operator">&gt;</span>(<span class="operator">&lt;</span>col1<span class="operator">&gt;</span>[,<span class="operator">&lt;</span>clo2<span class="operator">&gt;</span>,...])</span><br><span class="line">  tablespace <span class="operator">&lt;</span>tbs_name<span class="operator">&gt;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查询索引</span></span><br><span class="line"><span class="keyword">select</span> t.<span class="operator">*</span></span><br><span class="line">  <span class="keyword">from</span> dba_indexes t</span><br><span class="line"><span class="keyword">where</span> t.owner <span class="operator">=</span> <span class="string">&#x27;SCOTT&#x27;</span></span><br><span class="line">  <span class="keyword">and</span> t.table_name <span class="operator">=</span> <span class="string">&#x27;STUDENT_INFO&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 修改索引名称 idx_si_sname -&gt; idx_si_sname_new</span></span><br><span class="line"><span class="keyword">alter</span> index [schema.]<span class="operator">&lt;</span>idx_name<span class="operator">&gt;</span>  rename <span class="keyword">to</span> <span class="operator">&lt;</span>new_idx_name<span class="operator">&gt;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 修改索引为无效</span></span><br><span class="line"><span class="keyword">alter</span> index [schema.]<span class="operator">&lt;</span>idx_name<span class="operator">&gt;</span> unusable;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 重建索引</span></span><br><span class="line"><span class="keyword">alter</span> index [schema.]<span class="operator">&lt;</span>idx_name<span class="operator">&gt;</span> rebuild online;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除索引</span></span><br><span class="line"><span class="keyword">drop</span> index [schema.]<span class="operator">&lt;</span>idx_name<span class="operator">&gt;</span>;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="数据库对象命名规范"><a href="#数据库对象命名规范" class="headerlink" title="数据库对象命名规范"></a>数据库对象命名规范</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>前缀</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>表</td>
+<td>t_</td>
+</tr>
+<tr>
+<td>视图</td>
+<td>v_</td>
+</tr>
+<tr>
+<td>同义词</td>
+<td>s_</td>
+</tr>
+<tr>
+<td>簇表</td>
+<td>c_</td>
+</tr>
+<tr>
+<td>序列</td>
+<td>seq_</td>
+</tr>
+<tr>
+<td>存储过程</td>
+<td>p_</td>
+</tr>
+<tr>
+<td>函数</td>
+<td>f_</td>
+</tr>
+<tr>
+<td>包</td>
+<td>pkg_</td>
+</tr>
+<tr>
+<td>类</td>
+<td>tp_</td>
+</tr>
+<tr>
+<td>主键</td>
+<td>pk_</td>
+</tr>
+<tr>
+<td>外键</td>
+<td>fk_</td>
+</tr>
+<tr>
+<td>普通索引</td>
+<td>x_</td>
+</tr>
+<tr>
+<td>唯一索引</td>
+<td>ux_</td>
+</tr>
+<tr>
+<td>位图索引</td>
+<td>bx_</td>
+</tr>
+<tr>
+<td>函数索引</td>
+<td>fx_</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io/2023/04/09/Oracle-Object/">http://tangquanwei.github.io/2023/04/09/Oracle-Object/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Database/">Database</a><a class="post-meta__tags" href="/tags/Oracle/">Oracle</a></div><div class="post-share"><div class="social-share" data-image="/images/maomi.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2023/04/07/OpenGauss-Database/" title="OpenGauss Database"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">OpenGauss Database</div></div><div class="info-2"><div class="info-item-1">OpenGauss Database安装1234567891011docker run --name opengauss --privileged=true -d -e GS_PASSWORD=Tq@021009 -p 5432:5432 enmotech/opengauss:latestdocker run --name opengauss --privileged=true -d -e GS_PASSWORD=Tq@021009 -p 5432:5432 opengauss/opengaussgsql -d postgres -U gaussdb -W &#x27;Tq@021009&#x27; -h host_ip -p 5432su - ommgsql  12345678910步骤 1 以操作系统用户omm登录数据库主节点。gs_om -t status --detail步骤 2 使用如下命令查询openGauss状态：若要查询某主机上的实例状态，请在命令中增加“-h”项。示例如下：。示例如下：gs_om -t status -h plat2...</div></div></div></a><a class="pagination-related" href="/2023/04/12/Oracle-User/" title="Oracle User"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Oracle User</div></div><div class="info-2"><div class="info-item-1">创建用户123456789CREATE USER user	IDENTIFIED &#123;BY password | EXTERNALLY&#125;	[ DEFAULT TABLESPACE tablespace ]	[ TEMPORARY TABLESPACE tablespace ]	[ QUOTA &#123;integer [K | M ] | UNLIMITED &#125; ON tablespace	[ QUOTA &#123;integer [K | M ] | UNLIMITED &#125; ON tablespace 	]...]	[ PASSWORD EXPIRE ]	[ ACCOUNT &#123; LOCK | UNLOCK &#125;]	[ PROFILE &#123; profile | DEFAULT &#125;]  修该密码 alter  user   scott  identified by “tiger”; 删除用户1DROP USER user [CASCADE] CASCADE...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2023/03/24/Docker-Oracle-11g/" title="Docker Oracle 11g"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-24</div><div class="info-item-2">Docker Oracle 11g</div></div><div class="info-2"><div class="info-item-1"> 12345docker run -d -p 1521:1521\ --name oracle-11g\ -e ORACLE_ALLOW_REMOTE=true\ -e ORACLE_DISABLE_ASYNCH_IO=true\ oracleinanutshell/oracle-xe-11g  关闭实例 shutdown immediate 启动实例到nomount状态startup nomount 建立控制文件alter database backup controlfile to trace; show parameter user_dump_dest; 123456789101112131415161718192021222324252627282930313233343536373839----     Set #1. NORESETLOGS case---- The following commands will create a new control file and use it-- to open the database.-- Data used by...</div></div></div></a><a class="pagination-related" href="/2022/09/24/Docker-Oracle-12c/" title="Docker Oracle-12c"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-24</div><div class="info-item-2">Docker Oracle-12c</div></div><div class="info-2"><div class="info-item-1">安装1. 获取镜像12345678# 查找docker search oracle# 拉取docker pull truevoly/oracle-12c# 查看docker images     2. 启动Oracle数据库更新更新！！！ 123docker run -d --name oracle-12c \  --privileged  --mount source=oracle-data,target=/u01/app/oracle \  -p 1521:1521 truevoly/oracle-12c   现在只需要执行上面一句就可以了！！！（意思和下面是一样的） 启动前有个比较坑的地方，需要先执行 12sudo mkdir -p  /u01/app/oracle  &amp;&amp; sudo chmod -R a+w /u01/app/oraclesudo mkdir -p  $(pwd)/.oradata  &amp;&amp; sudo chmod -R a+w $(pwd)/.oradata  不然会报错： 1Cannot create directory...</div></div></div></a><a class="pagination-related" href="/2023/04/26/ORACLE-PLSQL-%E5%87%BD%E6%95%B0/" title="PL&#x2F;SQL 函数"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-26</div><div class="info-item-2">PL&#x2F;SQL 函数</div></div><div class="info-2"><div class="info-item-1">掌握函数的创建、修改及删除函数创建的语法格式：Create [or replace] function (&lt;参数1&gt; [方式1]&lt;数据类型1&gt;,&lt;参数2&gt; [方式2]&lt;数据类型2&gt;…)Return&lt;数据类型&gt; is|asPl&#x2F;sql程序体  ――其中必须有一个return语句 注：通常函数只有in类型的参数 例1： 123456789101112131415SET SERVEROUTPUT ON FORMAT WRAPPEDCREATE OR REPLACE FUNCTION DEPT_NUM (  IN_DEPT IN SCOTT.EMP.DEPTNO%TYPE) RETURN NUMBER AS  OUT_NUM NUMBER;BEGIN  SELECT    COUNT(*) INTO OUT_NUM  FROM    SCOTT.EMP  WHERE    SCOTT.EMP.DEPTNO=IN_DEPT;  RETURN(OUT_NUM);END...</div></div></div></a><a class="pagination-related" href="/2023/05/01/ORACLE-PLSQL-%E5%8C%85/" title="PL&#x2F;SQL 包"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-01</div><div class="info-item-2">PL&#x2F;SQL 包</div></div><div class="info-2"><div class="info-item-1">包的创建及使用包类似于面向对象中的类，是数据库中的一个实体，其中包含一系列公共常量、变量、数据类型、游标、过程以及函数的定义。 创建包包由包的描述部分和包体两部分组成，包描述部分相当于一个包头，他对包的所有部件进行一个简单的声明，这些部件可以被外界应用程序访问，包描述部分格式如下： 123CREATE PACKAGE &lt;包名&gt; IS  变量、常量及数据类型的定义； 游标定义头部； 函数、过程的说明；END&lt;包名&gt;；   包头部分：12345678910CREATE PACKAGE MY_PACKAGE IS DEPT_NUM NUMBER; --Cursor manager_cur; FUNCTION F_DEPT_NUM(  IN_DEPTNO IN SCOTT.EMP.DEPTNO%TYPE) RETURN NUMBER;PROCEDURE P_DEPT_NUM(  IN_DEPTNO IN SCOTT.EMP.DEPTNO%TYPE,  OUT_NUM OUT NUMBER);END...</div></div></div></a><a class="pagination-related" href="/2023/04/12/ORACLE-PLSQL-%E5%9F%BA%E7%A1%80/" title="PL&#x2F;SQL 基础"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-12</div><div class="info-item-2">PL&#x2F;SQL 基础</div></div><div class="info-2"><div class="info-item-1">PL&#x2F;SQL 基础PL&#x2F;SQL的基本结构：PL&#x2F;SQL是一种块结构语言，其块结构如下: 1234567891011121314DECLARE     ――声明部分:声明变量、常量、用户定义的数据类型以及游标     ――这一部分可选，不需要可不写BEGIN     ――主程序体，在这可以加入各种合法的语句EXCEPTION     ――异常处理程序，当程序中出现错误时执行这一部分     ――这一部分可选END; ――主程序体结束，分号必不可少； 从上面的结构可以看出，PL/SQL块由三部分组成：声明部分、执行部分和异常处理部分，其中只有执行部分是必须的：BEGIN  /*执行部分*/   END;  12345DECLARE    /*声明部分*/ BEGIN    /*执行部分*/   END;  都是合法的。 PL&#x2F;SQL中的数据类型(1) 标量NUMBER–用于存储和操纵数字数据 ,格式是NUMBER（p,s）,p是数据宽度，s是小数点后的位数，默认为0； CHARACTER――   CHAR :字符型，最长2000b  ...</div></div></div></a><a class="pagination-related" href="/2023/04/26/ORACLE-PLSQL-%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" title="PL&#x2F;SQL 存储过程"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-26</div><div class="info-item-2">PL&#x2F;SQL 存储过程</div></div><div class="info-2"><div class="info-item-1">PL&#x2F;SQL 存储过程存储过程的创建及使用首先：set serveroutput on format wrapped 说明： In 参数类型：表示这个参数值输入给过程，供过程使用； Out参数类型：表示该参数是输出类型的参数，表示这个参数在过程中被赋值，可以传给过程体外的环境； In out参数类型：这种类型的参数实际上就是综合了上述两种参数类型，及向过程体传值，也向过程体外的环境传值； 例1：in &#x2F;out 参数的使用 123456789101112CREATE OR REPLACE PROCEDURE DEPT_MEMBER_NUM (  IN_DEPTNO IN SCOTT.EMP.DEPTNO%TYPE,  OUT_TOTAL_NUM OUT NUMBER) ASBEGIN  SELECT    COUNT(*) INTO OUT_TOTAL_NUM  FROM    SCOTT.EMP  WHERE    DEPTNO=IN_DEPTNO;END DEPT_MEMBER_NUM;  调用存储过程: 1234567DECLARE ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">78</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oracle-Object"><span class="toc-number">1.</span> <span class="toc-text">Oracle Object</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A8"><span class="toc-number">1.1.</span> <span class="toc-text">表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.1.</span> <span class="toc-text">常用数据类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE"><span class="toc-number">1.2.</span> <span class="toc-text">视图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8C%E4%B9%89%E8%AF%8D"><span class="toc-number">1.3.</span> <span class="toc-text">同义词</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%8F%E5%88%97"><span class="toc-number">1.4.</span> <span class="toc-text">序列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95"><span class="toc-number">1.5.</span> <span class="toc-text">索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%B9%E8%B1%A1%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="toc-number">1.6.</span> <span class="toc-text">数据库对象命名规范</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/21/zsh/" title="zsh">zsh</a><time datetime="2024-03-21T03:34:44.000Z" title="发表于 2024-03-21 11:34:44">2024-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/" title="Unity3D 入门"><img src="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/20231231095827.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity3D 入门"/></a><div class="content"><a class="title" href="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/" title="Unity3D 入门">Unity3D 入门</a><time datetime="2023-12-30T15:01:48.000Z" title="发表于 2023-12-30 23:01:48">2023-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/28/Neo4j/" title="Neo4j"><img src="/2023/12/28/Neo4j/20231231100111.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Neo4j"/></a><div class="content"><a class="title" href="/2023/12/28/Neo4j/" title="Neo4j">Neo4j</a><time datetime="2023-12-28T13:48:35.000Z" title="发表于 2023-12-28 21:48:35">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Git-FQA/" title="Git FQA">Git FQA</a><time datetime="2023-12-28T13:35:43.000Z" title="发表于 2023-12-28 21:35:43">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/26/Fast-API/" title="Fast API">Fast API</a><time datetime="2023-12-26T02:07:14.000Z" title="发表于 2023-12-26 10:07:14">2023-12-26</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2025 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

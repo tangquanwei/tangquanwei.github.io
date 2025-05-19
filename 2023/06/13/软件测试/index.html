@@ -1,0 +1,258 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>软件测试 | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="软件测试概念我认为概念是推理的基础,认识概念才能正确的运用相关技术  软件测试是什么  一种发现软件缺陷的的活动 评估软件的特性或能力,确定其是否达到预期  为什么要软件测试  为了保证软件质量  关于软件测试的两种观点   测试是为了证伪(Myers)  假设程序是错误的,证明其正确  测试是为了证明软件是正确的(Bill Hetzel)  假设程序是正确的    什么是软件质量  即产品所满足">
+<meta property="og:type" content="article">
+<meta property="og:title" content="软件测试">
+<meta property="og:url" content="http://tangquanwei.github.io/2023/06/13/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="软件测试概念我认为概念是推理的基础,认识概念才能正确的运用相关技术  软件测试是什么  一种发现软件缺陷的的活动 评估软件的特性或能力,确定其是否达到预期  为什么要软件测试  为了保证软件质量  关于软件测试的两种观点   测试是为了证伪(Myers)  假设程序是错误的,证明其正确  测试是为了证明软件是正确的(Bill Hetzel)  假设程序是正确的    什么是软件质量  即产品所满足">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/images/maomi.png">
+<meta property="article:published_time" content="2023-06-13T10:05:15.000Z">
+<meta property="article:modified_time" content="2023-12-30T14:28:03.000Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="软件测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/images/maomi.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "软件测试",
+  "url": "http://tangquanwei.github.io/2023/06/13/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/",
+  "image": "http://tangquanwei.github.io/images/maomi.png",
+  "datePublished": "2023-06-13T10:05:15.000Z",
+  "dateModified": "2023-12-30T14:28:03.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Quanwei",
+      "url": "http://tangquanwei.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/2023/06/13/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '软件测试',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">78</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/p1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a><a class="nav-page-title" href="/"><span class="site-name">软件测试</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">软件测试</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-06-13T10:05:15.000Z" title="发表于 2023-06-13 18:05:15">2023-06-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-12-30T14:28:03.000Z" title="更新于 2023-12-30 22:28:03">2023-12-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="软件测试概念"><a href="#软件测试概念" class="headerlink" title="软件测试概念"></a>软件测试概念</h2><p>我认为概念是推理的基础,认识概念才能正确的运用相关技术</p>
+<blockquote>
+<p>软件测试是什么</p>
+</blockquote>
+<p>一种发现软件缺陷的的活动</p>
+<p>评估软件的特性或能力,确定其是否达到预期</p>
+<blockquote>
+<p>为什么要软件测试</p>
+</blockquote>
+<p>为了保证软件质量</p>
+<blockquote>
+<p>关于软件测试的两种观点</p>
+</blockquote>
+<ol>
+<li><p>测试是为了证伪(Myers)</p>
+<p> 假设程序是错误的,证明其正确</p>
+</li>
+<li><p>测试是为了证明软件是正确的(Bill Hetzel)</p>
+<p> 假设程序是正确的</p>
+</li>
+</ol>
+<blockquote>
+<p>什么是软件质量</p>
+</blockquote>
+<p>即产品所满足的特性</p>
+<p>这些特性可能是用户的需求,产品固有的性质或者是行业标准所规定的</p>
+<blockquote>
+<p>内部质量</p>
+</blockquote>
+<p>主要是代码,极其相关的特性</p>
+<blockquote>
+<p>外部质量</p>
+</blockquote>
+<p>主要是产品的功能</p>
+<blockquote>
+<p>使用质量</p>
+</blockquote>
+<p>从场景和用户的角度出发分析质量</p>
+<blockquote>
+<p>软件缺陷</p>
+</blockquote>
+<p>从内部看: 软件设计,开发,维护的不合理</p>
+<p>从外部看: 软件功能的失效或违背</p>
+<h2 id="软件测试分类"><a href="#软件测试分类" class="headerlink" title="软件测试分类"></a>软件测试分类</h2><p>按阶段分:</p>
+<ol>
+<li>需求评审: 需求 SRS 是否完整,正确,清晰</li>
+<li>设计评审: 设计结果是否符合需求</li>
+<li>单元测试: 函数,类,模块</li>
+<li>集成测试: 几个完成的单元作为系统一起测试</li>
+<li>系统测试: 测试整个系统(软件,硬件)</li>
+<li>验收测试: 用户参与,在用户环境,使用用户数据作测试</li>
+<li>alpha测试: 开放外部用户参与测试</li>
+<li>beta测试: 如果不出问题就是正式版</li>
+</ol>
+<p>按测试目标分:</p>
+<ol>
+<li>功能测试: 测试功能是否按预定的方式工作</li>
+<li>负载(压力)测试: 测试系统在高负载情况下的表现</li>
+<li>性能测试: 测试不同负载情况下的各种指标</li>
+<li>安全性测试: 测试系统的访问控制和攻击防呼能力</li>
+<li>恢复测试: 系统发生灾难后恢复到灾难前的能力</li>
+<li>安装测试: 在多种用户环境下,测试能否正常安装</li>
+<li>兼容性测试: 测试软件在不同运行环境(硬件,软件)下的表现</li>
+<li>可用性测试: 测试服务正常运行的时间百分比</li>
+<li>可靠性测试: 测试用户访问服务时，服务按预期运行的可能性</li>
+</ol>
+<p>按测试对象分:</p>
+<ol>
+<li>单元测试</li>
+<li>接口测试</li>
+<li>系统测试</li>
+<li>数据测试</li>
+<li>界面测试</li>
+<li>文档测试</li>
+</ol>
+<h2 id="测试的-动-静-黑-白"><a href="#测试的-动-静-黑-白" class="headerlink" title="测试的 动 静 黑 白"></a>测试的 动 静 黑 白</h2><p>动 | 静 : 软件是否运行</p>
+<p>黑 | 白 : 源代码是否可见</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>百盒</th>
+<th>黑盒</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>静态</td>
+<td>源程序语法检查,评审</td>
+<td>评审非技术文档</td>
+</tr>
+<tr>
+<td>动态</td>
+<td>调试</td>
+<td>输入输出测试</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io/2023/06/13/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/">http://tangquanwei.github.io/2023/06/13/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/">软件测试</a></div><div class="post-share"><div class="social-share" data-image="/images/maomi.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2023/06/12/Linux-%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/" title="Linux 复习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Linux 复习</div></div><div class="info-2"><div class="info-item-1"> 选择题(15分)  新建文件 : touch mkdircat echo vimrm mv  简答题(16分)  yum 本地源配置 手动添加用户,系统变化的6个地方: /etc/passwd /etc/shadow /etc/gpasswd /etc/gshadow /home/.. /var/spool/mail   操作题(48分)  权限 字母数字 chmod cron cut sed awk su -  sudo su 描述 改变用户名,组名usermod  硬链接,软链接,如何建立,作用 打包,压缩 增删改查 touch\mkdir rm -rf vi find\grep  别名 alias  Shell 编程(16分)  1234567891011121314151617181920212223242526#!/bin/bash# # 输入用户名,数量,密码 # 创建对应数量的用户并设置初始密码# # 提醒读入read -p &quot;input username&quot; nameread -p &quot;input number of...</div></div></div></a><a class="pagination-related" href="/2023/06/21/GraphQL/" title="GraphQL"><img class="cover" src="/2023/06/21/GraphQL/2023-06-21-20-17-07.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">GraphQL</div></div><div class="info-2"><div class="info-item-1">GraphQL一种用于 API 的查询语言GraphQL 既是一种用于 API 的查询语言也是一个满足你数据查询的运行时。 GraphQL 对你的 API 中的数据提供了一套易于理解的完整描述，使得客户端能够准确地获得它需要的数据，而且没有任何冗余，也让 API 更容易地随着时间推移而演进，还能用于构建强大的开发者工具。 描述你的数据 12345type Project &#123;  name: String  tagline: String  contributors: [User] &#125;  请求你所要的数据 12345&#123;  project(name: &quot;GraphQL&quot;) &#123;    tagline  &#125;&#125;  得到可预测的结果 12345&#123;  &quot;project&quot;: &#123;    &quot;tagline&quot;: &quot;A query language for APIs&quot;  &#125;&#125;  特点请求你所要的数据不多不少 向你的 API...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">78</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">软件测试概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95%E5%88%86%E7%B1%BB"><span class="toc-number">2.</span> <span class="toc-text">软件测试分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%9A%84-%E5%8A%A8-%E9%9D%99-%E9%BB%91-%E7%99%BD"><span class="toc-number">3.</span> <span class="toc-text">测试的 动 静 黑 白</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/21/zsh/" title="zsh">zsh</a><time datetime="2024-03-21T03:34:44.000Z" title="发表于 2024-03-21 11:34:44">2024-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/" title="Unity3D 入门"><img src="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/20231231095827.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity3D 入门"/></a><div class="content"><a class="title" href="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/" title="Unity3D 入门">Unity3D 入门</a><time datetime="2023-12-30T15:01:48.000Z" title="发表于 2023-12-30 23:01:48">2023-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/28/Neo4j/" title="Neo4j"><img src="/2023/12/28/Neo4j/20231231100111.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Neo4j"/></a><div class="content"><a class="title" href="/2023/12/28/Neo4j/" title="Neo4j">Neo4j</a><time datetime="2023-12-28T13:48:35.000Z" title="发表于 2023-12-28 21:48:35">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Git-FQA/" title="Git FQA">Git FQA</a><time datetime="2023-12-28T13:35:43.000Z" title="发表于 2023-12-28 21:35:43">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/26/Fast-API/" title="Fast API">Fast API</a><time datetime="2023-12-26T02:07:14.000Z" title="发表于 2023-12-26 10:07:14">2023-12-26</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2025 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

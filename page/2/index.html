@@ -1,0 +1,290 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>QUANWEI - 记录生活中的点点滴滴</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="幸得识卿桃花面，从此阡陌多暖春">
+<meta property="og:type" content="website">
+<meta property="og:title" content="QUANWEI">
+<meta property="og:url" content="http://tangquanwei.github.io/page/2/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="幸得识卿桃花面，从此阡陌多暖春">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/images/maomi.png">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="LIFE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/images/maomi.png"><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/page/2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'QUANWEI',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">78</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/images/banner.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">QUANWEI</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/08/02/PostgreSQL-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" title="PostgreSQL 快速入门">PostgreSQL 快速入门</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-08-02T12:31:35.000Z" title="发表于 2023-08-02 20:31:35">2023-08-02</time></span></div><div class="content">PostgreSQL命令 连接到数据库：  1psql -U username -d database_name  请将username替换为您的用户名，database_name替换为您要连接的数据库名称。  显示数据库列表：  1\l  这将列出所有可用的数据库。  切换到特定数据库：  1\c database_name  请将database_name替换为您要切换到的数据库名称。  显示表列表：  1\dt  这将列出当前数据库中的所有表。  显示表结构：  1\d table_name  请将table_name替换为您要查看结构的表名称。  执行SQL查询：  1SELECT * FROM...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2023/08/02/Docker-PostgreSQL/" title="PostgreSQL"><img class="post-bg" src="/2023/08/02/Docker-PostgreSQL/2023-08-02-19-46-38.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PostgreSQL"></a></div><div class="recent-post-info"><a class="article-title" href="/2023/08/02/Docker-PostgreSQL/" title="PostgreSQL">PostgreSQL</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-08-02T11:27:25.000Z" title="发表于 2023-08-02 19:27:25">2023-08-02</time></span></div><div class="content">PostgreSQL: The World’s Most Advanced Open Source Relational Database Docker 安装 PostgreSQL12345docker run -d --name postgres \  -p 5432:5432 \  -e POSTGRES_PASSWORD=021009 \  -v /home/quanwei/docker/pgdata:/var/lib/postgresql/data \  postgres    Docker 安装 pgAdminpgAdmin is the most popular and feature rich Open Source administration and development platform for PostgreSQL, the most advanced Open Source database in the world.  123456docker run -d --name pgadmin \  -e...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2023/08/02/KeyCloak/" title="KeyCloak - Open Source Identity and Access Management"><img class="post-bg" src="/2023/08/02/KeyCloak/2023-08-02-17-57-00.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="KeyCloak - Open Source Identity and Access Management"></a></div><div class="recent-post-info"><a class="article-title" href="/2023/08/02/KeyCloak/" title="KeyCloak - Open Source Identity and Access Management">KeyCloak - Open Source Identity and Access Management</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-08-02T09:55:57.000Z" title="发表于 2023-08-02 17:55:57">2023-08-02</time></span></div><div class="content">Docker 安装1docker run --name keycloak -p 8001:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=021009 quay.io/keycloak/keycloak:22.0.1 start-dev  登录管理控制台转到 Keycloak 管理控制台。 使用之前创建的用户名和密码登录。 创建领域(realm)Keycloak 中的领域等效于租户。每个领域都允许管理员创建独立的应用程序和用户组。最初，Keycloak 包括一个 master 领域。此领域仅用于管理 Keycloak，而不用于管理任何应用程序。 使用以下步骤创建第一个领域。 打开 Keycloak 管理控制台。 点按左上角的单词 master，然后点按“创建领域”。 在领域名称字段中输入: myrealm 单击创建。 创建用户最初，领域没有用户。使用以下步骤创建用户： 打开 Keycloak...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/07/10/Docker-Chevereto-%E5%9B%BE%E5%BA%8A/" title="Docker Chevereto 图床">Docker Chevereto 图床</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-07-10T03:48:15.000Z" title="发表于 2023-07-10 11:48:15">2023-07-10</time></span></div><div class="content">Docker 安装 Chevereto 图床有试过用mongoDB存图片，在网页上显示要经过一些列转换。速度还是不如直接交给操作系统管理 下面搭建一个图床），方便引用图片。 拉取镜像12docker pull mariadb &amp;&amp; docker pull nmtan/chevereto:1.4.1 创建图片存放目录12cd ~mkdir -p .chevereto/app/images   授权 1sudo chomod -R 777 ./app/  编辑php的配置1vim ./app/php.ini  写入 1234upload_max_filesize = 100Mpost_max_size = 100Mmemory_limit = 3072Mmax_execution_tim = 180    编辑docker-compose配置12vim...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/07/07/Docker-Draw-io/" title="Docker Draw.io">Docker Draw.io</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-07-07T14:23:45.000Z" title="发表于 2023-07-07 22:23:45">2023-07-07</time></span></div><div class="content">Docker 安装123456789docker run -it -m1g \  -v &quot;/home/quanwei/.drawio/letsencrypt-log:/var/log/letsencrypt/&quot; \  -v &quot;/home/quanwei/.drawio/letsencrypt-etc:/etc/letsencrypt/&quot; \  -v &quot;/home/quanwei/.drawio/letsencrypt-lib:/var/lib/letsencrypt&quot; \  -e LETS_ENCRYPT_ENABLED=true \  -e PUBLIC_DNS=drawio.example.com \  --name=&quot;drawio&quot; \  -p 8088:8080 \  jgraph/drawio  启动Start a web browser session to http://localhost:8080/?offline=1&amp;https=0  If you’re running...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/07/05/Docker-Elasticsearch/" title="Docker Elasticsearch">Docker Elasticsearch</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-07-05T01:31:06.000Z" title="发表于 2023-07-05 09:31:06">2023-07-05</time></span></div><div class="content">12345678910111213141516171819202122docker run -d --name es01 \ -p 9200:9200 \ -e ES_JAVA_OPTS=&quot;-Xms1g -Xmx1g&quot; \ -e &quot;discovery.type=single-node&quot; \ --ulimit nofile=1024:1024 \ elasticsearch:8.7.0docker exec -it es01 /usr/share/elasticsearch/bin/elasticsearch-reset-passworddocker cp es01:/usr/share/elasticsearch/config/certs/http_ca.crt .curl --cacert http_ca.crt -u elastic https://localhost:9200 1234567891011121314151617181920212223242526272829303132version:...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/07/04/Docker-MySQL/" title="Docker MySQL">Docker MySQL</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-07-04T07:46:43.000Z" title="发表于 2023-07-04 15:46:43">2023-07-04</time></span></div><div class="content">123456789docker run \  --name mysql-8 \  -d \  -p 3306:3306 \  --restart unless-stopped \  -v ~/.mysql/log:/var/log/mysql \  -v ~/.mysql/data:/var/lib/mysql \  -e MYSQL_ROOT_PASSWORD=021009 \  mysql:8.0.31  12345678910int：整型double：浮点型，例如double(5,2)表示最多5位，其中必须有2位小数，即最大值为999.99；char：固定长度字符串类型；    char(10)     &#x27;aaa       &#x27;  占10位varchar：可变长度字符串类型； varchar(10)  &#x27;aaa&#x27;  占3为text：字符串类型；blob：字节类型；date：日期类型，格式为：yyyy-MM-dd；time：时间类型，格式为：hh:mm:sstimestamp：时间戳类型 yyyy-MM-dd hh:mm:ss ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/07/01/Blender/" title="Blender">Blender</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-07-01T02:55:42.000Z" title="发表于 2023-07-01 10:55:42">2023-07-01</time></span></div><div class="content">BlenderBlender集成了完整的3D创作工具,...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2023/06/23/GraphQL-Apollo/" title="GraphQL Apollo"><img class="post-bg" src="/2023/06/23/GraphQL-Apollo/2023-06-23-09-26-28.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GraphQL Apollo"></a></div><div class="recent-post-info"><a class="article-title" href="/2023/06/23/GraphQL-Apollo/" title="GraphQL Apollo">GraphQL Apollo</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-06-23T00:52:19.000Z" title="发表于 2023-06-23 08:52:19">2023-06-23</time></span></div><div class="content">Step 1: 创建项目1234mkdir graphql-examplecd graphql-examplenpm init --yes &amp;&amp; npm pkg set type=&quot;module&quot;  Step 2: 安装依赖12npm install @apollo/index graphql  使用JS 1touch index.js  修改 package.json 添加启动 12345678&#123;  // ...etc.  &quot;type&quot;: &quot;module&quot;,  &quot;scripts&quot;: &#123;    &quot;start&quot;: &quot;node index.js&quot;  &#125;  // other dependencies&#125;  Step 3: 定义 GraphQL schemaindex.js 12345678910111213141516171819202122import &#123; ApolloServer &#125;...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2023/06/21/RESTful-API/" title="RESTful API"><img class="post-bg" src="/2023/06/21/RESTful-API/2023-06-21-21-23-36.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="RESTful API"></a></div><div class="recent-post-info"><a class="article-title" href="/2023/06/21/RESTful-API/" title="RESTful API">RESTful API</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-06-21T13:22:36.000Z" title="发表于 2023-06-21 21:22:36">2023-06-21</time></span></div><div class="content">什么是 RESTful APIRESTful API 是一种软件架构风格、设计风格，可以让软件更加清晰，更简洁，更有层次，可维护性更好 REST 是 Representational State Transfer 的缩写  即表现层状态转移,uri只是描述那里有数据,而数据怎么解释原来由服务端决定,现在REST API中由客户端决定,即资源的表现层状态由服务端转移到了客户端 如何使用RESTful API 请求请求 = 动词 + 宾语  动词 使用五种 HTTP 方法，对应 CRUD 操作 宾语 URL 应该全部使用名词复数 过滤信息（Filtering） 如果记录数量很多，API应该提供参数，过滤返回结果。?limit&#x3D;10 指定返回记录的数量 ?offset&#x3D;10...</div></div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#content-inner">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/#content-inner">8</a><a class="extend next" rel="next" href="/page/3/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">78</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/21/zsh/" title="zsh">zsh</a><time datetime="2024-03-21T03:34:44.000Z" title="发表于 2024-03-21 11:34:44">2024-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/" title="Unity3D 入门"><img src="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/20231231095827.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity3D 入门"/></a><div class="content"><a class="title" href="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/" title="Unity3D 入门">Unity3D 入门</a><time datetime="2023-12-30T15:01:48.000Z" title="发表于 2023-12-30 23:01:48">2023-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/28/Neo4j/" title="Neo4j"><img src="/2023/12/28/Neo4j/20231231100111.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Neo4j"/></a><div class="content"><a class="title" href="/2023/12/28/Neo4j/" title="Neo4j">Neo4j</a><time datetime="2023-12-28T13:48:35.000Z" title="发表于 2023-12-28 21:48:35">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Git-FQA/" title="Git FQA">Git FQA</a><time datetime="2023-12-28T13:35:43.000Z" title="发表于 2023-12-28 21:35:43">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/26/Fast-API/" title="Fast API">Fast API</a><time datetime="2023-12-26T02:07:14.000Z" title="发表于 2023-12-26 10:07:14">2023-12-26</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/OpenGauss/" style="font-size: 1.1em; color: #999">OpenGauss</a> <a href="/tags/3D/" style="font-size: 1.1em; color: #999">3D</a> <a href="/tags/Netty/" style="font-size: 1.1em; color: #999">Netty</a> <a href="/tags/Data-Structure/" style="font-size: 1.25em; color: #999fa7">Data Structure</a> <a href="/tags/Chevereto-%E5%9B%BE%E5%BA%8A/" style="font-size: 1.1em; color: #999">Chevereto 图床</a> <a href="/tags/Blender/" style="font-size: 1.1em; color: #999">Blender</a> <a href="/tags/Draw-io/" style="font-size: 1.1em; color: #999">Draw.io</a> <a href="/tags/%E5%A6%82%E4%BD%95%E7%9C%8B%E8%AE%BA%E6%96%87/" style="font-size: 1.1em; color: #999">如何看论文</a> <a href="/tags/JavaScript/" style="font-size: 1.3em; color: #99a1ac">JavaScript</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 1.1em; color: #999">网络</a> <a href="/tags/GraphQL/" style="font-size: 1.15em; color: #999b9e">GraphQL</a> <a href="/tags/FastAPI/" style="font-size: 1.1em; color: #999">FastAPI</a> <a href="/tags/ASM/" style="font-size: 1.1em; color: #999">ASM</a> <a href="/tags/Python/" style="font-size: 1.1em; color: #999">Python</a> <a href="/tags/Gitlab/" style="font-size: 1.1em; color: #999">Gitlab</a> <a href="/tags/AT-T/" style="font-size: 1.1em; color: #999">AT&T</a> <a href="/tags/WebScoket/" style="font-size: 1.1em; color: #999">WebScoket</a> <a href="/tags/Vim/" style="font-size: 1.1em; color: #999">Vim</a> <a href="/tags/App/" style="font-size: 1.1em; color: #999">App</a> <a href="/tags/Git/" style="font-size: 1.2em; color: #999da3">Git</a> <a href="/tags/RESTful/" style="font-size: 1.1em; color: #999">RESTful</a> <a href="/tags/Identity/" style="font-size: 1.1em; color: #999">Identity</a> <a href="/tags/Unity3D/" style="font-size: 1.1em; color: #999">Unity3D</a> <a href="/tags/%E5%9F%BA%E4%BA%8E%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%8C%BB%E8%8D%AF%E9%97%AE%E7%AD%94%E7%A0%94%E7%A9%B6/" style="font-size: 1.1em; color: #999">基于大语言模型的医药问答研究</a> <a href="/tags/Linux/" style="font-size: 1.5em; color: #99a9bf">Linux</a> <a href="/tags/Docker/" style="font-size: 1.3em; color: #99a1ac">Docker</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/" style="font-size: 1.1em; color: #999">软件测试</a> <a href="/tags/Docker-MySQL/" style="font-size: 1.1em; color: #999">Docker MySQL</a> <a href="/tags/WebSocket/" style="font-size: 1.1em; color: #999">WebSocket</a> <a href="/tags/LINUX/" style="font-size: 1.1em; color: #999">LINUX</a> <a href="/tags/Jenkins/" style="font-size: 1.1em; color: #999">Jenkins</a> <a href="/tags/%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BB/" style="font-size: 1.1em; color: #999">如何阅读</a> <a href="/tags/Database/" style="font-size: 1.45em; color: #99a7ba">Database</a> <a href="/tags/zsh/" style="font-size: 1.1em; color: #999">zsh</a> <a href="/tags/PostgreSQL/" style="font-size: 1.15em; color: #999b9e">PostgreSQL</a> <a href="/tags/KeyCloak/" style="font-size: 1.1em; color: #999">KeyCloak</a> <a href="/tags/Java/" style="font-size: 1.35em; color: #99a3b1">Java</a> <a href="/tags/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E5%AD%A6%E4%B9%A0%E8%A7%84%E5%88%92/" style="font-size: 1.1em; color: #999">自然语言处理学习规划</a> <a href="/tags/PL-SQL/" style="font-size: 1.4em; color: #99a5b6">PL/SQL</a> <a href="/tags/React/" style="font-size: 1.2em; color: #999da3">React</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      <a class="card-more-btn" href="/archives/"
+            title="查看更多">
+            <i class="fas fa-angle-right"></i>
+          </a>
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/03/">
+            <span class="card-archive-list-date">
+              三月 2024
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/12/">
+            <span class="card-archive-list-date">
+              十二月 2023
+            </span>
+            <span class="card-archive-list-count">6</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/10/">
+            <span class="card-archive-list-date">
+              十月 2023
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/09/">
+            <span class="card-archive-list-date">
+              九月 2023
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/08/">
+            <span class="card-archive-list-date">
+              八月 2023
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/07/">
+            <span class="card-archive-list-date">
+              七月 2023
+            </span>
+            <span class="card-archive-list-count">5</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/06/">
+            <span class="card-archive-list-date">
+              六月 2023
+            </span>
+            <span class="card-archive-list-count">15</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/05/">
+            <span class="card-archive-list-date">
+              五月 2023
+            </span>
+            <span class="card-archive-list-count">13</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">78</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-05-19T10:41:18.208Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2025 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: str => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: subtitleType => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        btf.getScript('https://cdn.jsdelivr.net/npm/typed.js/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  },
+  processSubtitle: (content, extraContents = []) => {
+    if (true) {
+      const sub = [].slice()
+
+      if (extraContents.length > 0) {
+        sub.unshift(...extraContents)
+      }
+
+      if (typeof content === 'string') {
+        sub.unshift(content)
+      } else if (Array.isArray(content)) {
+        sub.unshift(...content)
+      }
+
+      sub.length > 0 && typedJSFn.init(sub)
+    } else {
+      document.getElementById('subtitle').textContent = typeof content === 'string' ? content :
+        (Array.isArray(content) && content.length > 0 ? content[0] : '')
+    }
+  }
+}
+btf.addGlobalFn('pjaxSendOnce', () => { typed.destroy() }, 'typedDestroy')
+</script><script>function subtitleType () {
+  btf.getScript('https://sdk.jinrishici.com/v2/browser/jinrishici.js')
+    .then(() => {
+      jinrishici.load(result => {
+        if (result && result.data && result.data.content) {
+          typedJSFn.processSubtitle(result.data.content)
+        } else {
+          throw new Error('Failed to parse the return value of Jinrishici API')
+        }
+      })
+    })
+    .catch(err => {
+      console.error('Failed to get the Jinrishici API:', err)
+      typedJSFn.processSubtitle(0)
+    })
+}
+typedJSFn.run(subtitleType)
+</script></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

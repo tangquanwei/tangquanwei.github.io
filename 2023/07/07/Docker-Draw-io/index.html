@@ -1,0 +1,167 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Docker Draw.io | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Docker 安装123456789docker run -it -m1g \  -v &quot;&#x2F;home&#x2F;quanwei&#x2F;.drawio&#x2F;letsencrypt-log:&#x2F;var&#x2F;log&#x2F;letsencrypt&#x2F;&quot; \  -v &quot;&#x2F;home&#x2F;quanwei&#x2F;.drawio&#x2F;letsencrypt-etc:&#x2F;etc&#x2F;letsencrypt&#x2F;&quot; \  -v &amp;quo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker Draw.io">
+<meta property="og:url" content="http://tangquanwei.github.io/2023/07/07/Docker-Draw-io/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="Docker 安装123456789docker run -it -m1g \  -v &quot;&#x2F;home&#x2F;quanwei&#x2F;.drawio&#x2F;letsencrypt-log:&#x2F;var&#x2F;log&#x2F;letsencrypt&#x2F;&quot; \  -v &quot;&#x2F;home&#x2F;quanwei&#x2F;.drawio&#x2F;letsencrypt-etc:&#x2F;etc&#x2F;letsencrypt&#x2F;&quot; \  -v &amp;quo">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/images/maomi.png">
+<meta property="article:published_time" content="2023-07-07T14:23:45.000Z">
+<meta property="article:modified_time" content="2023-12-30T14:28:03.000Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Draw.io">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/images/maomi.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Docker Draw.io",
+  "url": "http://tangquanwei.github.io/2023/07/07/Docker-Draw-io/",
+  "image": "http://tangquanwei.github.io/images/maomi.png",
+  "datePublished": "2023-07-07T14:23:45.000Z",
+  "dateModified": "2023-12-30T14:28:03.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Quanwei",
+      "url": "http://tangquanwei.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/2023/07/07/Docker-Draw-io/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Docker Draw.io',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">78</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/p1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a><a class="nav-page-title" href="/"><span class="site-name">Docker Draw.io</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Docker Draw.io</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-07-07T14:23:45.000Z" title="发表于 2023-07-07 22:23:45">2023-07-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-12-30T14:28:03.000Z" title="更新于 2023-12-30 22:28:03">2023-12-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="Docker-安装"><a href="#Docker-安装" class="headerlink" title="Docker 安装"></a>Docker 安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -m1g \</span><br><span class="line">  -v <span class="string">&quot;/home/quanwei/.drawio/letsencrypt-log:/var/log/letsencrypt/&quot;</span> \</span><br><span class="line">  -v <span class="string">&quot;/home/quanwei/.drawio/letsencrypt-etc:/etc/letsencrypt/&quot;</span> \</span><br><span class="line">  -v <span class="string">&quot;/home/quanwei/.drawio/letsencrypt-lib:/var/lib/letsencrypt&quot;</span> \</span><br><span class="line">  -e LETS_ENCRYPT_ENABLED=<span class="literal">true</span> \</span><br><span class="line">  -e PUBLIC_DNS=drawio.example.com \</span><br><span class="line">  --name=<span class="string">&quot;drawio&quot;</span> \</span><br><span class="line">  -p 8088:8080 \</span><br><span class="line">  jgraph/drawio</span><br></pre></td></tr></table></figure>
+
+<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>Start a web browser session to <a target="_blank" rel="noopener" href="http://localhost:8080/?offline=1&https=0">http://localhost:8080/?offline=1&amp;https=0</a> </p>
+<p>If you’re running Docker Toolbox then start a web browser session to<br> <a target="_blank" rel="noopener" href="http://192.168.99.100:8080/?offline=1&https=0">http://192.168.99.100:8080/?offline=1&amp;https=0</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io/2023/07/07/Docker-Draw-io/">http://tangquanwei.github.io/2023/07/07/Docker-Draw-io/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Docker/">Docker</a><a class="post-meta__tags" href="/tags/Draw-io/">Draw.io</a></div><div class="post-share"><div class="social-share" data-image="/images/maomi.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2023/07/05/Docker-Elasticsearch/" title="Docker Elasticsearch"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Docker Elasticsearch</div></div><div class="info-2"><div class="info-item-1">12345678910111213141516171819202122docker run -d --name es01 \ -p 9200:9200 \ -e ES_JAVA_OPTS=&quot;-Xms1g -Xmx1g&quot; \ -e &quot;discovery.type=single-node&quot; \ --ulimit nofile=1024:1024 \ elasticsearch:8.7.0docker exec -it es01 /usr/share/elasticsearch/bin/elasticsearch-reset-passworddocker cp es01:/usr/share/elasticsearch/config/certs/http_ca.crt .curl --cacert http_ca.crt -u elastic https://localhost:9200 1234567891011121314151617181920212223242526272829303132version:...</div></div></div></a><a class="pagination-related" href="/2023/07/10/Docker-Chevereto-%E5%9B%BE%E5%BA%8A/" title="Docker Chevereto 图床"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Docker Chevereto 图床</div></div><div class="info-2"><div class="info-item-1">Docker 安装 Chevereto 图床有试过用mongoDB存图片，在网页上显示要经过一些列转换。速度还是不如直接交给操作系统管理 下面搭建一个图床），方便引用图片。 拉取镜像12docker pull mariadb &amp;&amp; docker pull nmtan/chevereto:1.4.1 创建图片存放目录12cd ~mkdir -p .chevereto/app/images   授权 1sudo chomod -R 777 ./app/  编辑php的配置1vim ./app/php.ini  写入 1234upload_max_filesize = 100Mpost_max_size = 100Mmemory_limit = 3072Mmax_execution_tim = 180    编辑docker-compose配置12vim...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2023/07/10/Docker-Chevereto-%E5%9B%BE%E5%BA%8A/" title="Docker Chevereto 图床"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-10</div><div class="info-item-2">Docker Chevereto 图床</div></div><div class="info-2"><div class="info-item-1">Docker 安装 Chevereto 图床有试过用mongoDB存图片，在网页上显示要经过一些列转换。速度还是不如直接交给操作系统管理 下面搭建一个图床），方便引用图片。 拉取镜像12docker pull mariadb &amp;&amp; docker pull nmtan/chevereto:1.4.1 创建图片存放目录12cd ~mkdir -p .chevereto/app/images   授权 1sudo chomod -R 777 ./app/  编辑php的配置1vim ./app/php.ini  写入 1234upload_max_filesize = 100Mpost_max_size = 100Mmemory_limit = 3072Mmax_execution_tim = 180    编辑docker-compose配置12vim...</div></div></div></a><a class="pagination-related" href="/2023/07/05/Docker-Elasticsearch/" title="Docker Elasticsearch"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-05</div><div class="info-item-2">Docker Elasticsearch</div></div><div class="info-2"><div class="info-item-1">12345678910111213141516171819202122docker run -d --name es01 \ -p 9200:9200 \ -e ES_JAVA_OPTS=&quot;-Xms1g -Xmx1g&quot; \ -e &quot;discovery.type=single-node&quot; \ --ulimit nofile=1024:1024 \ elasticsearch:8.7.0docker exec -it es01 /usr/share/elasticsearch/bin/elasticsearch-reset-passworddocker cp es01:/usr/share/elasticsearch/config/certs/http_ca.crt .curl --cacert http_ca.crt -u elastic https://localhost:9200 1234567891011121314151617181920212223242526272829303132version:...</div></div></div></a><a class="pagination-related" href="/2023/08/02/Docker-PostgreSQL/" title="PostgreSQL"><img class="cover" src="/2023/08/02/Docker-PostgreSQL/2023-08-02-19-46-38.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-02</div><div class="info-item-2">PostgreSQL</div></div><div class="info-2"><div class="info-item-1">PostgreSQL: The World’s Most Advanced Open Source Relational Database Docker 安装 PostgreSQL12345docker run -d --name postgres \  -p 5432:5432 \  -e POSTGRES_PASSWORD=021009 \  -v /home/quanwei/docker/pgdata:/var/lib/postgresql/data \  postgres    Docker 安装 pgAdminpgAdmin is the most popular and feature rich Open Source administration and development platform for PostgreSQL, the most advanced Open Source database in the world.  123456docker run -d --name pgadmin \  -e...</div></div></div></a><a class="pagination-related" href="/2022/09/24/Docker-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" title="docker 最佳实践"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-24</div><div class="info-item-2">docker 最佳实践</div></div><div class="info-2"><div class="info-item-1">DockerDocker镜像  搜索 cocker search ubuntu  拉取 docker pull ubuntu  运行 docker run -it –name ubuntu-test ubuntu &#x2F;bin&#x2F;bash  后台运行 docker run -itd  ubuntu &#x2F;bin&#x2F;bash   参数：   -i: 交互式操作。  -t: 终端。  -d: 参数默认不会进入容器，想要进入容器需要使用指令 docker exec  ubuntu: ubuntu 镜像。  &#x2F;bin&#x2F;bash：放在镜像名后的是命令，这里是交互式 Shell &#x2F;bin&#x2F;bash。 在使用 -d 参数时，容器启动后会进入后台。此时想要进入容器，可以通过以下指令进入：   docker attach &lt;容器 ID&gt; or   docker exec -it &lt;容器 ID&gt; &#x2F;bin&#x2F;bash #...</div></div></div></a><a class="pagination-related" href="/2023/06/10/MongoDB/" title="MongoDB 安装和使用"><img class="cover" src="/2023/06/10/MongoDB/2023-06-10-21-22-01.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-06-10</div><div class="info-item-2">MongoDB 安装和使用</div></div><div class="info-2"><div class="info-item-1">MongoDB 安装和使用使用 Docker 安装Pull the MongoDB Docker Image1docker pull mongo  Run the Image as a Container12345mkdir -p ~/.mongodb/dbdocker run --name mongo -d -p 27017:27017 --privileged=true \ -e MONGO_INITDB_ROOT_USERNAME=root \ -e MONGO_INITDB_ROOT_PASSWORD=021009 \ -v ~/docker/mongodb/db:/data/db mongo   Connect to the MongoDB Deployment with mongoshOpen an interactive container instance of mongo and connect to the deployment with mongosh. 1docker exec -it mongo mongosh   mongo...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">78</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">Docker 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8"><span class="toc-number">2.</span> <span class="toc-text">启动</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/21/zsh/" title="zsh">zsh</a><time datetime="2024-03-21T03:34:44.000Z" title="发表于 2024-03-21 11:34:44">2024-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/" title="Unity3D 入门"><img src="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/20231231095827.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity3D 入门"/></a><div class="content"><a class="title" href="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/" title="Unity3D 入门">Unity3D 入门</a><time datetime="2023-12-30T15:01:48.000Z" title="发表于 2023-12-30 23:01:48">2023-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/28/Neo4j/" title="Neo4j"><img src="/2023/12/28/Neo4j/20231231100111.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Neo4j"/></a><div class="content"><a class="title" href="/2023/12/28/Neo4j/" title="Neo4j">Neo4j</a><time datetime="2023-12-28T13:48:35.000Z" title="发表于 2023-12-28 21:48:35">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Git-FQA/" title="Git FQA">Git FQA</a><time datetime="2023-12-28T13:35:43.000Z" title="发表于 2023-12-28 21:35:43">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/26/Fast-API/" title="Fast API">Fast API</a><time datetime="2023-12-26T02:07:14.000Z" title="发表于 2023-12-26 10:07:14">2023-12-26</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2025 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

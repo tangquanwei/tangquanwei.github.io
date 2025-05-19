@@ -1,0 +1,400 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Linux AT&amp;T 汇编 | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="开始之前大名鼎鼎的Hello World 1234567891011121314151617.data   msg : .string &quot;Hello Word!\n&quot;  len &#x3D; . -msg.text.global _start _start :  movl $len,%edx  # len -&gt; edx  movl $msg,%ecx  # msg -&gt; ec">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux AT&amp;T 汇编">
+<meta property="og:url" content="http://tangquanwei.github.io/2023/05/21/Linux-AT-T-%E6%B1%87%E7%BC%96/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="开始之前大名鼎鼎的Hello World 1234567891011121314151617.data   msg : .string &quot;Hello Word!\n&quot;  len &#x3D; . -msg.text.global _start _start :  movl $len,%edx  # len -&gt; edx  movl $msg,%ecx  # msg -&gt; ec">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/images/maomi.png">
+<meta property="article:published_time" content="2023-05-21T04:30:48.000Z">
+<meta property="article:modified_time" content="2023-12-30T14:28:03.000Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="AT&amp;T">
+<meta property="article:tag" content="ASM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/images/maomi.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Linux AT&T 汇编",
+  "url": "http://tangquanwei.github.io/2023/05/21/Linux-AT-T-%E6%B1%87%E7%BC%96/",
+  "image": "http://tangquanwei.github.io/images/maomi.png",
+  "datePublished": "2023-05-21T04:30:48.000Z",
+  "dateModified": "2023-12-30T14:28:03.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Quanwei",
+      "url": "http://tangquanwei.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/2023/05/21/Linux-AT-T-%E6%B1%87%E7%BC%96/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Linux AT&T 汇编',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">78</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/p1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a><a class="nav-page-title" href="/"><span class="site-name">Linux AT&amp;T 汇编</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Linux AT&amp;T 汇编</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-05-21T04:30:48.000Z" title="发表于 2023-05-21 12:30:48">2023-05-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-12-30T14:28:03.000Z" title="更新于 2023-12-30 22:28:03">2023-12-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h2><p>大名鼎鼎的<strong>Hello World</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">.data </span><br><span class="line">  msg : .string &quot;Hello Word!\n&quot;</span><br><span class="line">  len = . -msg</span><br><span class="line"></span><br><span class="line">.text</span><br><span class="line">.global _start </span><br><span class="line"></span><br><span class="line">_start :</span><br><span class="line">  movl $len,%edx  # len -&gt; edx</span><br><span class="line">  movl $msg,%ecx  # msg -&gt; ecx</span><br><span class="line">  movl $1,%ebx</span><br><span class="line">  movl $4,%eax    # 系统调用号</span><br><span class="line">  int $0x80       # 调用  </span><br><span class="line"></span><br><span class="line">  movl $0,%ebx    # 退出代码</span><br><span class="line">  movl $1,%eax</span><br><span class="line">  int $0x80</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="通用寄存器"><a href="#通用寄存器" class="headerlink" title="通用寄存器"></a>通用寄存器</h2><p>汇编就是在几个寄存器间倒来倒去</p>
+<p>寄存器有两种概念，逻辑上的和物理上的，分别是：</p>
+<ul>
+<li>架构相关寄存器（architectural register）</li>
+<li>物理寄存器（physical register）</li>
+</ul>
+<p>前者是指令集（ISA）提供给编译器可见的，相当于API接口规范，一共16个通用寄存器；后者是硬件上实际设计的，软件领域不直接接触。最新的CPU可能有上百个实际的物理寄存器。对软件开发人员来说，我们只需要关注逻辑上的通用寄存器。</p>
+<p>这16个逻辑上的通用寄存器如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>寄存器</th>
+<th>约束</th>
+<th>惯例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>rax</td>
+<td>否</td>
+<td>系统调用时，调用号</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>函数返回值</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>除法运算中，存放除数、以及运算结果的商</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>乘法运算中，存放被乘数、以及运算结果</td>
+</tr>
+<tr>
+<td>rbx</td>
+<td>被调用者保存</td>
+<td>在32位模式下，用来存放GOT的地址</td>
+</tr>
+<tr>
+<td>rcx</td>
+<td>否</td>
+<td>函数调用时，第4个参数</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>有时用作counter</td>
+</tr>
+<tr>
+<td>rdx</td>
+<td>否</td>
+<td>函数调用时，第3个参数</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>除法运算中，存放运算结果的余数</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>乘法运算中，存放运算结果溢出的部分</td>
+</tr>
+<tr>
+<td>rbp</td>
+<td>被调用者保存</td>
+<td>frame pointer，存放当前函数调用时栈的基地址</td>
+</tr>
+<tr>
+<td>rsp</td>
+<td>被调用者保存</td>
+<td>时刻指向栈顶</td>
+</tr>
+<tr>
+<td>rdi</td>
+<td>否</td>
+<td>函数调用时，第1个参数</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>rep movsb中的目的寄存器</td>
+</tr>
+<tr>
+<td>rsi</td>
+<td>否</td>
+<td>函数调用时，第2个参数</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>rep movsb中的源寄存器</td>
+</tr>
+<tr>
+<td>r8</td>
+<td>否</td>
+<td>函数调用时，第5个参数</td>
+</tr>
+<tr>
+<td>r9</td>
+<td>否</td>
+<td>函数调用时，第6个参数</td>
+</tr>
+<tr>
+<td>r10</td>
+<td>否</td>
+<td></td>
+</tr>
+<tr>
+<td>r11</td>
+<td>否</td>
+<td></td>
+</tr>
+<tr>
+<td>r12</td>
+<td>被调用者保存</td>
+<td></td>
+</tr>
+<tr>
+<td>r13</td>
+<td>被调用者保存</td>
+<td></td>
+</tr>
+<tr>
+<td>r14</td>
+<td>被调用者保存</td>
+<td></td>
+</tr>
+<tr>
+<td>r15</td>
+<td>被调用者保存</td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h2><h3 id="1-前缀、操作数的方向、操作码的后缀"><a href="#1-前缀、操作数的方向、操作码的后缀" class="headerlink" title="1. 前缀、操作数的方向、操作码的后缀"></a>1. 前缀、操作数的方向、操作码的后缀</h3><p>关于前缀，AT&amp;T 汇编中：</p>
+<pre><code>寄存器：“%”
+立即数：“$”
+十六进制数：“0x”
+</code></pre>
+<p>在AT&amp;T 语境中说到386的通用寄存器时，会这样描述：8个32-bit寄存器 %eax，%ebx，%ecx，%edx，%edi，%esi，%ebp，%esp。比如：在stage1.s中，有这么一个定义：</p>
+<pre><code>#define ABS(x) （x-_start+0x7c00）
+</code></pre>
+<p>那么你就会知到0x7c00是个十六进制数（_start函数的入口地址就位于内存的0x7c00处）。而在设置int 0x13的0x42功能号时，它是这么说的：</p>
+<pre><code>movb $0x42,%ah
+</code></pre>
+<p>这句告诉了我们一些不同之处：</p>
+<pre><code>首先，操作码的后缀l表示的是操作码的大小：
+l是长整数32位，
+movw是16位，
+movb是8位；
+
+其次，立即数是用$前缀来表示的，就像$0x42；
+再次，寄存器的名字是有%前缀的，像例子中的%ah；
+最后，操作数的方向有点不一样，比如把立即数$0x42放 到寄存器%ah中，用的是movb $0x42,%ah，也即源操作数在前，目的操作数在后，这一点和intel汇编语法正好相反。
+</code></pre>
+<p>对于内存单元操作数来说，在AT&amp;T 中是把寄存器用（）括起来，而非[]。比如：</p>
+<pre><code>movl %ebx,8（%si）
+</code></pre>
+<p>将ebx寄存器里的值放到内存地址是8（%si）的内存单元上。正好，这里同时遇到了另一个问题，就是在AT&amp;T 汇编中，间接寻址方式是有别于intel汇编的。上例中的8（%si）就相当于intel汇编中的[si+8]。</p>
+<h3 id="2，运算指令"><a href="#2，运算指令" class="headerlink" title="2，运算指令"></a>2，运算指令</h3><p>一些常见的命令：</p>
+<pre><code>add %r10,%r11 # r10 + r11，结果放到r11 
+add $5,%r10 # 5 + r10，结果放到r10
+div %r10 # rax 除以r10，商放到rax，余数放到rdx
+inc %r10 # r10 加1
+mul %r10 # 将rax乘以 r10, 将结果放到rax中，溢出部分放到rdx 
+</code></pre>
+<h2 id="3，拷贝指令"><a href="#3，拷贝指令" class="headerlink" title="3，拷贝指令"></a>3，拷贝指令</h2><p>这些拷贝有从寄存器到寄存器、从寄存器到内存</p>
+<pre><code>mov %r10,%r11 #将r10寄存器的值赋值给r11 ；
+mov $99,%r10 #将立即数99赋值给r10寄存器； 
+mov %r10,(%r11) # 将r10的值拷贝到r11寄存器中的数值指向的内存地址上； 
+mov (%r10),%r11 # 将r10中数值指向的内存地址上的内容拷贝到r11；push %r10 # 将r10的值放到栈上 ；
+pop %r10 # 将栈顶的值pop到r10寄存器上。
+</code></pre>
+<h2 id="4，流程控制指令"><a href="#4，流程控制指令" class="headerlink" title="4，流程控制指令"></a>4，流程控制指令</h2><p>label（标号）程序控制语句</p>
+<pre><code>cmpb $GRUB_INVALID_DRIVE,%al
+    je 1f
+    movb %al,%dl
+1:
+    pushw %dx
+</code></pre>
+<p>上面就用到了标号，je 1f，前面的两个数进行比较，如果相等就跳转到1的位置。<br>注意，1后面的f表示的是forward，即从je指令后继续往前走来寻找1这个标号。所以，如果程序中有好几个叫做1的标号，就要看是1f还是1b了，b代表backward，方向和f相反。CivilNet BBS里有这么一个例子可以更好的帮助我们理解：</p>
+<pre><code>1: cmp  $0,  (%si)  
+  je  1f        # 跳转到后面的1标示的地方，也就是第6行
+  movsb  
+  stosb  
+  jmp  1b       # 跳转到前面1表示的地方  ，也就是第1行
+1: jmp  1b      # 跳转到前面1表示的地方，第6行，其实就是个死循环
+
+cmp %r10,%r11   # 比较r10 和 r11，根据比较结果来设置CPU的状态寄存器，从而影响后面的jump语句；
+cmp $99,%r11    # 比较99和r11，根据比较结果来设置CPU的状态寄存器，从而影响后面的jump语句；
+jmp label       #跳转到label je label #如果相等，跳转到label jne label       # 如果不相等，跳转到label 
+jl label        # 如果小于，跳转到label 
+jg label        # 如果大于，跳转到label 
+call label      # 调用函数
+ret             # 从函数调用返回
+syscall         #系统调用 (32位模式下, 使用&quot;int $0x80&quot; 软中断)
+</code></pre>
+<h2 id="AT-T-汇编指示符-Assembler-Directive"><a href="#AT-T-汇编指示符-Assembler-Directive" class="headerlink" title="AT&amp;T 汇编指示符 Assembler Directive"></a>AT&amp;T 汇编指示符 Assembler Directive</h2><p>所有的汇编指示符都由句号（’.’）开头。命令名的其余是字母,通常使用小写</p>
+<h3 id="1，-byte-表达式（expression-rs）"><a href="#1，-byte-表达式（expression-rs）" class="headerlink" title="1，.byte 表达式（expression_rs）"></a>1，.byte 表达式（expression_rs）</h3><p>.byte可不带参数或者带多个表达式参数，表达式之间由逗点分隔。每个表达式参数都被汇编成下一个字节。在stage1.s中，有这么一段代码：</p>
+<pre><code>after_BPB:
+CLI
+.byte 0x80,0xca
+</code></pre>
+<p>那么编译器在编译时，就会在cli指令的下面接着放上0x80和0xca，因为每个表达式要占用1个字节，所以此处一共占用2个字节。</p>
+<h3 id="2，-word-表达式"><a href="#2，-word-表达式" class="headerlink" title="2，.word 表达式"></a>2，.word 表达式</h3><p>这个表达式表示任意一节中的一个或多个表达式（同样用逗号分开），表达式占一个字（两个字节）。类似的还有.long。例：</p>
+<pre><code>.word 0x800
+</code></pre>
+<h3 id="3，-file-字符（string）"><a href="#3，-file-字符（string）" class="headerlink" title="3，.file 字符（string）"></a>3，.file 字符（string）</h3><p>.file 通告编译器我们准备开启一个新的逻辑文件。 string 是新文件名。</p>
+<pre><code>.file ”stage1.s”
+</code></pre>
+<h3 id="4，-text-小节（subsection）"><a href="#4，-text-小节（subsection）" class="headerlink" title="4，.text 小节（subsection）"></a>4，.text 小节（subsection）</h3><p>通知as编译器把后续语句汇编到编号为subsection的正文子段的末尾，subsection是一个纯粹的表达式。如果省略了参数subsection，则使用编号为0的子段。例：</p>
+<pre><code>.text
+</code></pre>
+<h3 id="5，-code16"><a href="#5，-code16" class="headerlink" title="5，.code16"></a>5，.code16</h3><p>告诉编译器生成16位的指令</p>
+<h3 id="6，-globl"><a href="#6，-globl" class="headerlink" title="6，.globl"></a>6，.globl</h3><p>.globl使得连接程序（ld）能够看到symbol，如果gemfield在局部程序中定义了symbol，那么与这个局部程序链接的局部程序也能存取symbol，例：</p>
+<pre><code>.globl SYMBOL_NAME(idt) 
+</code></pre>
+<p>定义idt为全局符号。</p>
+<h3 id="7，-fill-repeat-size-value"><a href="#7，-fill-repeat-size-value" class="headerlink" title="7，.fill repeat , size , value"></a>7，.fill repeat , size , value</h3><p>生成<strong>size</strong>个字节的<strong>repeat</strong>个副本。<br>repeat, size 和value都必须是纯粹的表达式。<br>repeat 可以是0或更大的值。<br>size 可以是0或更大的值, 但即使size大于8,也被视作8，以兼容其它的汇编器。</p>
+<p>例如，在linux初始化的过程中，对全局描述符表GDT进行设置的最后一句为：</p>
+<pre><code>.fill NR_CPUS*4,8,0
+</code></pre>
+<h2 id="编译和链接"><a href="#编译和链接" class="headerlink" title="编译和链接"></a>编译和链接</h2><p>linux下有两种方式，一种是使用汇编程序GAS和链接程序ld：</p>
+<pre><code>as filename.s –o filename.o
+ld filename.o –o filename 
+</code></pre>
+<p>最终将源代码转换为目标文件.o再连接为可执行文件filename。另一种就是更上层的gcc（内部使用了as）：</p>
+<pre><code>gcc –o filename filename.S
+</code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io/2023/05/21/Linux-AT-T-%E6%B1%87%E7%BC%96/">http://tangquanwei.github.io/2023/05/21/Linux-AT-T-%E6%B1%87%E7%BC%96/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/AT-T/">AT&amp;T</a><a class="post-meta__tags" href="/tags/ASM/">ASM</a></div><div class="post-share"><div class="social-share" data-image="/images/maomi.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2023/05/20/%E4%B8%89%E9%97%A8%E9%97%AE%E9%A2%98%E5%92%8C%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%AE%9A%E7%90%86/" title="三门问题和贝叶斯定理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">三门问题和贝叶斯定理</div></div><div class="info-2"><div class="info-item-1">三门问题也称为蒙提霍尔问题或蒙提霍尔悖论。这是一个经典的概率问题，最早由美国的数学家及电视主持人蒙提·霍尔（Monty Hall）在20世纪60年代初首次提出。 问题描述：你面前有三扇关闭的门，在其中一扇门后有奖品，另外两扇门后没有奖品。选手先选择其中一扇门，然后，主持人会在另外两扇门中打开一扇没有奖品的门。此时，选手可以选择是否更改自己的选择来获取奖品。请问，是否应该更改选择？ 解决对于三门问题中新事件所提供的信息，也就是主持人打开一扇没有汽车的门后告诉你选择正确概率只有1&#x2F;2，我们可以将其视为更新先前假设的过程。 在游戏开始前，我们有三个可能性：汽车在门A，汽车在门B，汽车在门C，每个可能性发生的先验概率都是1&#x2F;3。而当主持人打开了门B，并告诉你选择正确的概率只有1&#x2F;2时，这相当于给出了一个新的观测值（门B不含汽车），从而更新了我们的先验分布。 具体来说，我们可以根据贝叶斯定理计算更新后的后验分布。在这种情况下，我们需要计算的是汽车真实在门X（其中X&#x3D;?）的概率，因此我们有： P(X|B) &#x3D; P(B|X) * P(X)...</div></div></div></a><a class="pagination-related" href="/2023/05/22/Linux-%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" title="Linux 系统管理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Linux 系统管理</div></div><div class="info-2"><div class="info-item-1">Linux 系统管理PS 查看进程状态12345ps [options]ps aux |grep &lt;name&gt;ps efps -u &lt;username&gt;   Options: -A,-e,a     Select all processes.  Identical to -e. -a     Select all processes except both session leaders and processes not associated with a terminal. -d     Select all processes except session leaders. g      Really all, even session leaders.   -N,--deselect     Select all processes except those that fulfill the specified conditions (negates the selection).   T,t      Select all processes...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2023/06/08/Archlinux-BspWM-%E5%A4%96%E6%8E%A5%E6%98%BE%E7%A4%BA%E5%99%A8/" title="Archlinux BspWM 外接显示器"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-06-08</div><div class="info-item-2">Archlinux BspWM 外接显示器</div></div><div class="info-2"><div class="info-item-1">了解123man xrandr # 查看帮助xrandr # 获取显示器接口信息  显示配置非必要 1vim /etc/X11/xorg.conf.d/10-monitor.conf  12345678910111213Section &quot;Monitor&quot;        Identifier &quot;eDP-1-1&quot;        Option &quot;Primary&quot; &quot;true&quot;        Option &quot;DPMS&quot; &quot;true&quot;        Option &quot;PreferredMode&quot; &quot;1920x1080_60.00&quot;EndSectionSection &quot;Monitor&quot;        Identifier &quot;HDMI-0&quot;        Option &quot;DPMS&quot; &quot;true&quot;        Option...</div></div></div></a><a class="pagination-related" href="/2023/04/04/Archlinux-Mail/" title="Archlinux Mail"><img class="cover" src="/2023/04/04/Archlinux-Mail/mail.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-04</div><div class="info-item-2">Archlinux Mail</div></div><div class="info-2"><div class="info-item-1">Archlinux Mail安装1sudo pacman -S s-nail  编辑配置文件sudo vim &#x2F;etc&#x2F;mail.rc 12345set from=&quot;&lt;USERNAME&gt;@qq.com&quot;set smtp-auth=loginset mta=smtps://&lt;USERNAME&gt;:&lt;QQ邮箱授权码&gt;@smtp.qq.com:465	#smtp服务器端口是465set v15-compat	#必须要set nss-config-dir=/root/.certs  获得邮箱的SSL证书并存放到本地最后一行的nss-config-dir就是制定的存放QQ邮箱SSL证书的位置 手动的获取QQ邮箱的证书保存到本地指定的目录里以备调用和验证 12345678su rootmkdir -p /root/.certs/echo -n | openssl s_client -connect smtp.qq.com:465 | sed -ne &#x27;/-BEGIN CERTIFICATE-/,/-END...</div></div></div></a><a class="pagination-related" href="/2022/09/24/Archlinux-%E5%85%A5%E9%97%A8/" title="Arch linux"><img class="cover" src="/2022/09/24/Archlinux-%E5%85%A5%E9%97%A8/arch.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-24</div><div class="info-item-2">Arch linux</div></div><div class="info-2"><div class="info-item-1">安装软件  使用 pacman 安装、删除、升级  安装指定的包1pacman -S &lt;包名_1&gt; &lt;包名_2&gt; ... 安装一个本地包(不从源里下载）1pacman -U /path/to/package/package_name-version.pkg.tar.zst 安装一个远程包（不在 pacman 配置的源里面）1pacman -U &lt;http://www.example.com/repo/example.pkg.tar.zst&gt; 删除单个软件包，保留其全部已经安装的依赖关系1pacman -R package_name 删除指定软件包，及其所有没有被其他已安装软件包使用的依赖关系1pacman -Rs package_name 上面这条命令在移除包含其他所需包的组时有时候会拒绝运行。这种情况下可以尝试1pacman -Rsu package_name 升级所有软件包1pacman -Syu 查询包数据库1pacman 使用 -Q 参数查询本地软件包数据库， -S 查询同步数据库，以及 -F查询文件数据库 pacman...</div></div></div></a><a class="pagination-related" href="/2023/06/08/Archlinux-%E8%A7%A6%E6%91%B8%E6%9D%BF%E8%B0%83%E6%95%99/" title="ArchLinux 触摸板调教"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-06-08</div><div class="info-item-2">ArchLinux 触摸板调教</div></div><div class="info-2"><div class="info-item-1">开始之前OS：Archlinux WM：bspwm  安装触摸板驱动sudo pacman -S xf86-input-libinput 配置文件 1sudo vim /etc/X11/xorg.conf.d/30-touchpad.conf  1234567Section &quot;InputClass&quot;    Identifier &quot;touchpad&quot;    Driver &quot;libinput&quot;    MatchIsTouchpad &quot;on&quot;    Option &quot;Tapping&quot; &quot;on&quot;    Option &quot;TappingButtonMap&quot; &quot;lmr&quot;EndSection  写入配置之后记得重新启动一下 配置触摸板手势安装配置 libinput-gestures 1sudo pacman -S...</div></div></div></a><a class="pagination-related" href="/2023/02/08/Archlinux-%E8%BD%AF%E4%BB%B6/" title="Archlinux 软件"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-08</div><div class="info-item-2">Archlinux 软件</div></div><div class="info-2"><div class="info-item-1">软件桌面环境bspwm 窗口管理器sxhkd 响应快捷键feh 壁纸picom 窗口特效polybar 状态栏rofi (dmenu) app启动dunst 通知管理器xf86-input-libinput 触控板手势zsh shell 基础软件neovim 文本编辑器kitty 终端模拟器fcitx 中文输入法vs code 文本编辑器&amp;IDEnautilus 文件管理器firefox 浏览器google-chrome 浏览器flameshot 截屏redshift 护眼git 版本控制 开发工具intellij-idea-ultimate-editionnodejsopen-jdk JDKconda python包、环境管理docker 容器postman 接口测试blender 3D建模virtualbox 虚拟机dbeaver-ue 数据库连接 即时通讯linux-qq QQdeepin-wine-wechat...</div></div></div></a><a class="pagination-related" href="/2022/09/24/Docker-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" title="docker 最佳实践"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-24</div><div class="info-item-2">docker 最佳实践</div></div><div class="info-2"><div class="info-item-1">DockerDocker镜像  搜索 cocker search ubuntu  拉取 docker pull ubuntu  运行 docker run -it –name ubuntu-test ubuntu &#x2F;bin&#x2F;bash  后台运行 docker run -itd  ubuntu &#x2F;bin&#x2F;bash   参数：   -i: 交互式操作。  -t: 终端。  -d: 参数默认不会进入容器，想要进入容器需要使用指令 docker exec  ubuntu: ubuntu 镜像。  &#x2F;bin&#x2F;bash：放在镜像名后的是命令，这里是交互式 Shell &#x2F;bin&#x2F;bash。 在使用 -d 参数时，容器启动后会进入后台。此时想要进入容器，可以通过以下指令进入：   docker attach &lt;容器 ID&gt; or   docker exec -it &lt;容器 ID&gt; &#x2F;bin&#x2F;bash #...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">78</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D"><span class="toc-number">1.</span> <span class="toc-text">开始之前</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">通用寄存器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text">指令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%89%8D%E7%BC%80%E3%80%81%E6%93%8D%E4%BD%9C%E6%95%B0%E7%9A%84%E6%96%B9%E5%90%91%E3%80%81%E6%93%8D%E4%BD%9C%E7%A0%81%E7%9A%84%E5%90%8E%E7%BC%80"><span class="toc-number">3.1.</span> <span class="toc-text">1. 前缀、操作数的方向、操作码的后缀</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%EF%BC%8C%E8%BF%90%E7%AE%97%E6%8C%87%E4%BB%A4"><span class="toc-number">3.2.</span> <span class="toc-text">2，运算指令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%EF%BC%8C%E6%8B%B7%E8%B4%9D%E6%8C%87%E4%BB%A4"><span class="toc-number">4.</span> <span class="toc-text">3，拷贝指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%EF%BC%8C%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E6%8C%87%E4%BB%A4"><span class="toc-number">5.</span> <span class="toc-text">4，流程控制指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AT-T-%E6%B1%87%E7%BC%96%E6%8C%87%E7%A4%BA%E7%AC%A6-Assembler-Directive"><span class="toc-number">6.</span> <span class="toc-text">AT&amp;T 汇编指示符 Assembler Directive</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%BC%8C-byte-%E8%A1%A8%E8%BE%BE%E5%BC%8F%EF%BC%88expression-rs%EF%BC%89"><span class="toc-number">6.1.</span> <span class="toc-text">1，.byte 表达式（expression_rs）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%EF%BC%8C-word-%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">6.2.</span> <span class="toc-text">2，.word 表达式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%EF%BC%8C-file-%E5%AD%97%E7%AC%A6%EF%BC%88string%EF%BC%89"><span class="toc-number">6.3.</span> <span class="toc-text">3，.file 字符（string）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%EF%BC%8C-text-%E5%B0%8F%E8%8A%82%EF%BC%88subsection%EF%BC%89"><span class="toc-number">6.4.</span> <span class="toc-text">4，.text 小节（subsection）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5%EF%BC%8C-code16"><span class="toc-number">6.5.</span> <span class="toc-text">5，.code16</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6%EF%BC%8C-globl"><span class="toc-number">6.6.</span> <span class="toc-text">6，.globl</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7%EF%BC%8C-fill-repeat-size-value"><span class="toc-number">6.7.</span> <span class="toc-text">7，.fill repeat , size , value</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%92%8C%E9%93%BE%E6%8E%A5"><span class="toc-number">7.</span> <span class="toc-text">编译和链接</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/21/zsh/" title="zsh">zsh</a><time datetime="2024-03-21T03:34:44.000Z" title="发表于 2024-03-21 11:34:44">2024-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/" title="Unity3D 入门"><img src="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/20231231095827.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity3D 入门"/></a><div class="content"><a class="title" href="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/" title="Unity3D 入门">Unity3D 入门</a><time datetime="2023-12-30T15:01:48.000Z" title="发表于 2023-12-30 23:01:48">2023-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/28/Neo4j/" title="Neo4j"><img src="/2023/12/28/Neo4j/20231231100111.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Neo4j"/></a><div class="content"><a class="title" href="/2023/12/28/Neo4j/" title="Neo4j">Neo4j</a><time datetime="2023-12-28T13:48:35.000Z" title="发表于 2023-12-28 21:48:35">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Git-FQA/" title="Git FQA">Git FQA</a><time datetime="2023-12-28T13:35:43.000Z" title="发表于 2023-12-28 21:35:43">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/26/Fast-API/" title="Fast API">Fast API</a><time datetime="2023-12-26T02:07:14.000Z" title="发表于 2023-12-26 10:07:14">2023-12-26</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2025 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

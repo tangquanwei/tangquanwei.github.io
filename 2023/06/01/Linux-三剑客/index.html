@@ -1,0 +1,285 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Linux 三剑客 | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="正则表达式菜鸟 MDN    re 含义    * 匹配前面的子表达式零次或多次   . 匹配除换行符（\n、\r）之外的任何单个字符   ? 匹配前面的子表达式零次或一次   + 匹配前面的子表达式一次或多次   ^ 匹配输入字符串的开始位置   $ 匹配输入字符串的结束位置   [] 匹配所包含的任意一个字符   [^] 匹配未包含的任意字符   \ 将下一个字符标记为一个特殊字符、或一个原义">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 三剑客">
+<meta property="og:url" content="http://tangquanwei.github.io/2023/06/01/Linux-%E4%B8%89%E5%89%91%E5%AE%A2/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="正则表达式菜鸟 MDN    re 含义    * 匹配前面的子表达式零次或多次   . 匹配除换行符（\n、\r）之外的任何单个字符   ? 匹配前面的子表达式零次或一次   + 匹配前面的子表达式一次或多次   ^ 匹配输入字符串的开始位置   $ 匹配输入字符串的结束位置   [] 匹配所包含的任意一个字符   [^] 匹配未包含的任意字符   \ 将下一个字符标记为一个特殊字符、或一个原义">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/images/maomi.png">
+<meta property="article:published_time" content="2023-05-31T23:07:51.000Z">
+<meta property="article:modified_time" content="2023-12-30T14:28:03.000Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/images/maomi.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Linux 三剑客",
+  "url": "http://tangquanwei.github.io/2023/06/01/Linux-%E4%B8%89%E5%89%91%E5%AE%A2/",
+  "image": "http://tangquanwei.github.io/images/maomi.png",
+  "datePublished": "2023-05-31T23:07:51.000Z",
+  "dateModified": "2023-12-30T14:28:03.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Quanwei",
+      "url": "http://tangquanwei.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/2023/06/01/Linux-%E4%B8%89%E5%89%91%E5%AE%A2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Linux 三剑客',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">78</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/p1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a><a class="nav-page-title" href="/"><span class="site-name">Linux 三剑客</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Linux 三剑客</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-05-31T23:07:51.000Z" title="发表于 2023-06-01 07:07:51">2023-06-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-12-30T14:28:03.000Z" title="更新于 2023-12-30 22:28:03">2023-12-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h2><p><a target="_blank" rel="noopener" href="https://www.runoob.com/regexp/regexp-metachar.html">菜鸟</a></p>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/standard/base-types/regular-expression-language-quick-reference">MDN</a></p>
+<table>
+<thead>
+<tr>
+<th>re</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>*</td>
+<td>匹配前面的子表达式零次或多次</td>
+</tr>
+<tr>
+<td>.</td>
+<td>匹配除换行符（\n、\r）之外的任何单个字符</td>
+</tr>
+<tr>
+<td>?</td>
+<td>匹配前面的子表达式零次或一次</td>
+</tr>
+<tr>
+<td>+</td>
+<td>匹配前面的子表达式一次或多次</td>
+</tr>
+<tr>
+<td>^</td>
+<td>匹配输入字符串的开始位置</td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配输入字符串的结束位置</td>
+</tr>
+<tr>
+<td>[]</td>
+<td>匹配所包含的任意一个字符</td>
+</tr>
+<tr>
+<td>[^]</td>
+<td>匹配未包含的任意字符</td>
+</tr>
+<tr>
+<td>\</td>
+<td>将下一个字符标记为一个特殊字符、或一个原义字符、或一个向后引用、或一个八进制转义符</td>
+</tr>
+<tr>
+<td>{n}</td>
+<td>n 是一个非负整数。匹配确定的 n 次</td>
+</tr>
+<tr>
+<td>{n,m}</td>
+<td>m 和 n 均为非负整数，其中n &lt;&#x3D; m。匹配 [n, m] 次</td>
+</tr>
+<tr>
+<td>x|y</td>
+<td>匹配 x 或 y</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>修饰符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>i</td>
+<td>ignore - 不区分大小写</td>
+</tr>
+<tr>
+<td>g</td>
+<td>global - 全局匹配</td>
+</tr>
+<tr>
+<td>m</td>
+<td>multi line - 多行匹配</td>
+</tr>
+<tr>
+<td>s</td>
+<td>特殊字符圆点 . 中包含换行符 \n</td>
+</tr>
+</tbody></table>
+<h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><pre><code>grep [OPTION...] PATTERNS [FILE...]
+</code></pre>
+<h2 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h2><p><a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-comm-awk.html">菜鸟</a></p>
+<pre><code>awk — pattern scanning and processing language
+
+awk &#39;&#123;[pattern] action&#125;&#39; &#123;filenames&#125; 
+
+2 this is a test
+3 Do you like awk
+This&#39;s a test
+10 There are orange,apple,mongo
+
+awk &#39;&#123;print $1,$4&#125;&#39; log.txt
+awk -F, &#39;&#123;print $1,$2&#125;&#39;   log.txt # 使用&quot;,&quot;分割
+awk -F[ ,] &#39;&#123;print $1,$2&#125;&#39;   log.txt # 使用多个分隔符.先使用空格分割，然后对分割结果再使用&quot;,&quot;分割
+awk &#39;BEGIN&#123;&#125;END&#123;&#125;&#39; log.txt
+</code></pre>
+<h2 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h2><pre><code>sed [option][action] filename
+
+-n 输出处理过的
+-e 多条命令
+-i 修改源文件
+
+a 行后追加
+c 行替换
+i 行前插入
+d 删除
+p 打印
+s 替换
+n,m 行选择
+</code></pre>
+<h2 id="另外"><a href="#另外" class="headerlink" title="另外"></a>另外</h2><h3 id="cut"><a href="#cut" class="headerlink" title="cut"></a>cut</h3><pre><code>-f 列
+-d 分隔符
+-c 字符
+</code></pre>
+<h3 id="sort"><a href="#sort" class="headerlink" title="sort"></a>sort</h3><pre><code>-f 忽略大小写
+-n 数值
+-r 反向
+-t 分隔符(\t)
+-k 字符范围
+</code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io/2023/06/01/Linux-%E4%B8%89%E5%89%91%E5%AE%A2/">http://tangquanwei.github.io/2023/06/01/Linux-%E4%B8%89%E5%89%91%E5%AE%A2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a></div><div class="post-share"><div class="social-share" data-image="/images/maomi.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2023/05/28/Java-%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A1%86%E6%9E%B6/" title="Java 数据库框架"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Java 数据库框架</div></div><div class="info-2"><div class="info-item-1">Java 数据库访问框架JDBCJDBC（Java Database Connectivity）是Java语言中用于连接和操作数据库的API。JDBC提供了一组标准接口，使得Java程序可以与各种关系型数据库进行交互，如Oracle、MySQL、SQL Server等。 JDBC的工作原理是通过驱动程序（Driver）来实现与数据库的连接。驱动程序是一个Java类库，它包含了与特定数据库通信所需的代码和协议。在使用JDBC时，需要先加载相应的驱动程序，然后通过驱动程序建立与数据库的连接，最后执行SQL语句或存储过程等操作。 JDBC的主要功能包括：  建立与数据库的连接：通过DriverManager类的getConnection()方法建立与数据库的连接。  执行SQL语句：通过Statement或PreparedStatement对象执行SQL语句，如查询数据、插入数据、更新数据等。  处理结果集：通过ResultSet对象处理查询结果集，如获取查询结果、遍历结果集等。  事务管理：通过Connection对象控制事务的提交、回滚等操作。   JDBC是Java...</div></div></div></a><a class="pagination-related" href="/2023/06/02/Java-%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7/" title="Java 语言特性"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Java 语言特性</div></div><div class="info-2"><div class="info-item-1">基本特性Java语言的特性包括：  简单易学：Java语言的语法与C++类似，但是去掉了一些复杂的特性，使得Java更加容易学习和使用。  面向对象：Java是一种纯面向对象的编程语言，所有的数据类型都是对象，所有的操作都是方法调用。  平台无关性：Java程序可以在不同的平台上运行，只需要安装相应的JVM即可。  安全性：Java提供了严格的安全机制，防止恶意代码对系统造成破坏。  自动内存管理：Java自动进行垃圾回收，程序员不需要手动管理内存。  多线程支持：Java提供了多线程支持，可以方便地实现并发编程。  异常处理：Java提供了异常处理机制，可以有效地处理程序中出现的错误。  开放性：Java是一种开放的编程语言，有大量的开源库和框架可供使用。  高性能：Java虚拟机（JVM）可以将字节码转换为本地机器码执行，具有较高的性能。  动态性：Java支持动态加载和卸载类，可以在运行时动态地修改程序行为。   版本的新特性Java历代版本的新特性如下： Java 1.0：Java语言首次发布，包括基本的面向对象特性和网络编程API。 Java...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2023/06/08/Archlinux-BspWM-%E5%A4%96%E6%8E%A5%E6%98%BE%E7%A4%BA%E5%99%A8/" title="Archlinux BspWM 外接显示器"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-06-08</div><div class="info-item-2">Archlinux BspWM 外接显示器</div></div><div class="info-2"><div class="info-item-1">了解123man xrandr # 查看帮助xrandr # 获取显示器接口信息  显示配置非必要 1vim /etc/X11/xorg.conf.d/10-monitor.conf  12345678910111213Section &quot;Monitor&quot;        Identifier &quot;eDP-1-1&quot;        Option &quot;Primary&quot; &quot;true&quot;        Option &quot;DPMS&quot; &quot;true&quot;        Option &quot;PreferredMode&quot; &quot;1920x1080_60.00&quot;EndSectionSection &quot;Monitor&quot;        Identifier &quot;HDMI-0&quot;        Option &quot;DPMS&quot; &quot;true&quot;        Option...</div></div></div></a><a class="pagination-related" href="/2023/04/04/Archlinux-Mail/" title="Archlinux Mail"><img class="cover" src="/2023/04/04/Archlinux-Mail/mail.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-04</div><div class="info-item-2">Archlinux Mail</div></div><div class="info-2"><div class="info-item-1">Archlinux Mail安装1sudo pacman -S s-nail  编辑配置文件sudo vim &#x2F;etc&#x2F;mail.rc 12345set from=&quot;&lt;USERNAME&gt;@qq.com&quot;set smtp-auth=loginset mta=smtps://&lt;USERNAME&gt;:&lt;QQ邮箱授权码&gt;@smtp.qq.com:465	#smtp服务器端口是465set v15-compat	#必须要set nss-config-dir=/root/.certs  获得邮箱的SSL证书并存放到本地最后一行的nss-config-dir就是制定的存放QQ邮箱SSL证书的位置 手动的获取QQ邮箱的证书保存到本地指定的目录里以备调用和验证 12345678su rootmkdir -p /root/.certs/echo -n | openssl s_client -connect smtp.qq.com:465 | sed -ne &#x27;/-BEGIN CERTIFICATE-/,/-END...</div></div></div></a><a class="pagination-related" href="/2022/09/24/Archlinux-%E5%85%A5%E9%97%A8/" title="Arch linux"><img class="cover" src="/2022/09/24/Archlinux-%E5%85%A5%E9%97%A8/arch.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-24</div><div class="info-item-2">Arch linux</div></div><div class="info-2"><div class="info-item-1">安装软件  使用 pacman 安装、删除、升级  安装指定的包1pacman -S &lt;包名_1&gt; &lt;包名_2&gt; ... 安装一个本地包(不从源里下载）1pacman -U /path/to/package/package_name-version.pkg.tar.zst 安装一个远程包（不在 pacman 配置的源里面）1pacman -U &lt;http://www.example.com/repo/example.pkg.tar.zst&gt; 删除单个软件包，保留其全部已经安装的依赖关系1pacman -R package_name 删除指定软件包，及其所有没有被其他已安装软件包使用的依赖关系1pacman -Rs package_name 上面这条命令在移除包含其他所需包的组时有时候会拒绝运行。这种情况下可以尝试1pacman -Rsu package_name 升级所有软件包1pacman -Syu 查询包数据库1pacman 使用 -Q 参数查询本地软件包数据库， -S 查询同步数据库，以及 -F查询文件数据库 pacman...</div></div></div></a><a class="pagination-related" href="/2023/06/08/Archlinux-%E8%A7%A6%E6%91%B8%E6%9D%BF%E8%B0%83%E6%95%99/" title="ArchLinux 触摸板调教"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-06-08</div><div class="info-item-2">ArchLinux 触摸板调教</div></div><div class="info-2"><div class="info-item-1">开始之前OS：Archlinux WM：bspwm  安装触摸板驱动sudo pacman -S xf86-input-libinput 配置文件 1sudo vim /etc/X11/xorg.conf.d/30-touchpad.conf  1234567Section &quot;InputClass&quot;    Identifier &quot;touchpad&quot;    Driver &quot;libinput&quot;    MatchIsTouchpad &quot;on&quot;    Option &quot;Tapping&quot; &quot;on&quot;    Option &quot;TappingButtonMap&quot; &quot;lmr&quot;EndSection  写入配置之后记得重新启动一下 配置触摸板手势安装配置 libinput-gestures 1sudo pacman -S...</div></div></div></a><a class="pagination-related" href="/2023/02/08/Archlinux-%E8%BD%AF%E4%BB%B6/" title="Archlinux 软件"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-08</div><div class="info-item-2">Archlinux 软件</div></div><div class="info-2"><div class="info-item-1">软件桌面环境bspwm 窗口管理器sxhkd 响应快捷键feh 壁纸picom 窗口特效polybar 状态栏rofi (dmenu) app启动dunst 通知管理器xf86-input-libinput 触控板手势zsh shell 基础软件neovim 文本编辑器kitty 终端模拟器fcitx 中文输入法vs code 文本编辑器&amp;IDEnautilus 文件管理器firefox 浏览器google-chrome 浏览器flameshot 截屏redshift 护眼git 版本控制 开发工具intellij-idea-ultimate-editionnodejsopen-jdk JDKconda python包、环境管理docker 容器postman 接口测试blender 3D建模virtualbox 虚拟机dbeaver-ue 数据库连接 即时通讯linux-qq QQdeepin-wine-wechat...</div></div></div></a><a class="pagination-related" href="/2022/09/24/Docker-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" title="docker 最佳实践"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-24</div><div class="info-item-2">docker 最佳实践</div></div><div class="info-2"><div class="info-item-1">DockerDocker镜像  搜索 cocker search ubuntu  拉取 docker pull ubuntu  运行 docker run -it –name ubuntu-test ubuntu &#x2F;bin&#x2F;bash  后台运行 docker run -itd  ubuntu &#x2F;bin&#x2F;bash   参数：   -i: 交互式操作。  -t: 终端。  -d: 参数默认不会进入容器，想要进入容器需要使用指令 docker exec  ubuntu: ubuntu 镜像。  &#x2F;bin&#x2F;bash：放在镜像名后的是命令，这里是交互式 Shell &#x2F;bin&#x2F;bash。 在使用 -d 参数时，容器启动后会进入后台。此时想要进入容器，可以通过以下指令进入：   docker attach &lt;容器 ID&gt; or   docker exec -it &lt;容器 ID&gt; &#x2F;bin&#x2F;bash #...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">78</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">正则表达式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#grep"><span class="toc-number">2.</span> <span class="toc-text">grep</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#awk"><span class="toc-number">3.</span> <span class="toc-text">awk</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sed"><span class="toc-number">4.</span> <span class="toc-text">sed</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%A6%E5%A4%96"><span class="toc-number">5.</span> <span class="toc-text">另外</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#cut"><span class="toc-number">5.1.</span> <span class="toc-text">cut</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sort"><span class="toc-number">5.2.</span> <span class="toc-text">sort</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/21/zsh/" title="zsh">zsh</a><time datetime="2024-03-21T03:34:44.000Z" title="发表于 2024-03-21 11:34:44">2024-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/" title="Unity3D 入门"><img src="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/20231231095827.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unity3D 入门"/></a><div class="content"><a class="title" href="/2023/12/30/Unity3D-%E5%85%A5%E9%97%A8/" title="Unity3D 入门">Unity3D 入门</a><time datetime="2023-12-30T15:01:48.000Z" title="发表于 2023-12-30 23:01:48">2023-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/28/Neo4j/" title="Neo4j"><img src="/2023/12/28/Neo4j/20231231100111.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Neo4j"/></a><div class="content"><a class="title" href="/2023/12/28/Neo4j/" title="Neo4j">Neo4j</a><time datetime="2023-12-28T13:48:35.000Z" title="发表于 2023-12-28 21:48:35">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/28/Git-FQA/" title="Git FQA">Git FQA</a><time datetime="2023-12-28T13:35:43.000Z" title="发表于 2023-12-28 21:35:43">2023-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/26/Fast-API/" title="Fast API">Fast API</a><time datetime="2023-12-26T02:07:14.000Z" title="发表于 2023-12-26 10:07:14">2023-12-26</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2025 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
