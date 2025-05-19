@@ -150,3 +150,18 @@ yay -S unzip-natspec
 ```bash
 unzip -O cp936 <filename>.zip
 ```
+
+## 双显示器
+
+置外接显示器检测
+
+将参数nvidia-drm.modeset=1加入到/etc/default/grub文件中的GRUB_CMDLINE_LINUX_DEFAULT末尾，如下，命令一定不要输错了，不然无法开机，如果出现无法开机的情况，请用启动盘启动将修改的文件还原。
+
+```
+GRUB_CMDLINE_LINUX_DEFAULT="quiet apparmor=1 security=apparmor udev.log_priority=3 nvidia-drm.modeset=1"
+```
+命令行输入(系统管理员模式)
+```bash
+grub-mkconfig > /boot/grub/grub.cfg
+```
+（重启生效）

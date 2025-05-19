@@ -2,10 +2,10 @@
 title: Neo4j
 tags: Neo4j
 date: 2023-12-28 21:48:35
-cover:
+cover: 20231231100111.png
 ---
 
-# Neo4j
+## Neo4j
 
 Neo4j 是一个高性能的NoSQL图形数据库，它使用图形结构来存储数据，
 并支持通过Cypher查询语言进行数据查询。
@@ -42,9 +42,11 @@ docker run \
 ### 数据库操作示例
 
 1. **创建数据库**：在Neo4j Browser中，执行以下命令创建一个新的数据库。
+
    ```bash
    CREATE DATABASE mydatabase;
    ```
+
 2. **切换数据库**：切换到刚刚创建的数据库。
    ```bash
    USE DATABASE mydatabase;

@@ -6,9 +6,7 @@ tags:
 - Docker
 cover: 2023-06-10-21-22-01.png
 ---
-
 # MongoDB 安装和使用
-
 
 ## 使用 Docker 安装
 
@@ -25,7 +23,7 @@ mkdir -p ~/.mongodb/db
 docker run --name mongo -d -p 27017:27017 --privileged=true \
  -e MONGO_INITDB_ROOT_USERNAME=root \
  -e MONGO_INITDB_ROOT_PASSWORD=021009 \
- -v ~/.mongodb/db:/data/db mongo 
+ -v ~/docker/mongodb/db:/data/db mongo 
 ```
 
 ### Connect to the MongoDB Deployment with mongosh
@@ -38,9 +36,7 @@ docker exec -it mongo mongosh
 
 ![](2023-06-10-20-54-19.png)
 
-
 ## mongo 体系结构
-
 
 | SQL术语/概念 | MongoDB术语/概念 | 解释/说明                           |
 | ------------ | ---------------- | ----------------------------------- |
@@ -51,7 +47,6 @@ docker exec -it mongo mongosh
 | index        | index            | 索引                                |
 | table        | joins            | 表连接,MongoDB不支持                |
 | primary key  | primary key      | 主键,MongoDB自动将_id字段设置为主键 |
-
 
 ## 数据库(Database)
 
@@ -90,7 +85,6 @@ docker exec -it mongo mongosh
 
     { "name":"quanwei"}
 
-
     文档中的键/值对是有序的。
     文档中的值不仅可以是在双引号里面的字符串，还可以是其他几种数据类型（甚至可以是整个嵌入的文档)。
     MongoDB区分类型和大小写。
@@ -124,22 +118,27 @@ docker exec -it mongo mongosh
 ## "DDL"
 
 创建数据库：
+
 ```bash
 use <DATABASE_NAME>
 ```
+
 有则切换，无则创建
 
 删除数据库：
+
 ```bash
 db.dropDatabase()
 ```
 
 创建集合：
+
 ```bash
 db.createCollection(name, options)
 ```
 
 删除集合:
+
 ```bash
 db.<collection_name>.drop()
 ```
@@ -157,6 +156,7 @@ db.collection.insertMany()
 ```
 
 ### 更新已存在的文档：
+
 ```sql
 db.collection.update(
    <query>,
@@ -168,6 +168,7 @@ db.collection.update(
    }
 )
 ```
+
     query : update的查询条件，类似sql update查询内where后面的。
     update : update的对象和一些更新的操作符（如$,$inc...）等，也可以理解为sql update查询内set后面的
     upsert : 可选，这个参数的意思是，如果不存在update的记录，是否插入objNew,true为插入，默认是false，不插入。
@@ -175,7 +176,9 @@ db.collection.update(
     writeConcern :可选，抛出异常的级别。
 
 ### 替换已有文档
+
 _id 主键存在就更新，不存在就插入：
+
 ```sql
 db.collection.save(
    <document>,
@@ -184,7 +187,6 @@ db.collection.save(
    }
 )
 ```
-
 
 ### 删除文档:
 
@@ -207,11 +209,12 @@ db.collection.remove(
 ```bash
 db.collection.find(query, projection)
 ```
+
     query ：可选，使用查询操作符指定查询条件
     projection ：可选，使用投影操作符指定返回的键。查询时返回文档中所有键值， 只需省略该参数即可（默认省略）。
 
-
 ## 用户
+
 ```js
 db.createUser({
   user:"quanwei",
@@ -228,6 +231,7 @@ db.createUser({
   ] 
   })
 ```
+
 use admin
 db.auth("quanwei","021009")
 db.auth("root","021009")
