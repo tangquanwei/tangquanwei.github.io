@@ -1,0 +1,294 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>QUANWEI - 记录生活中的点点滴滴</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="幸得识卿桃花面，从此阡陌多暖春">
+<meta property="og:type" content="website">
+<meta property="og:title" content="QUANWEI">
+<meta property="og:url" content="http://tangquanwei.github.io/page/4/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="幸得识卿桃花面，从此阡陌多暖春">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/images/maomi.png">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="LIFE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/images/maomi.png"><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/page/4/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'QUANWEI',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">92</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/images/banner.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">QUANWEI</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/07/04/Docker-MySQL/" title="Docker MySQL">Docker MySQL</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-07-04T07:46:43.000Z" title="发表于 2023-07-04 15:46:43">2023-07-04</time></span></div><div class="content">123456789docker run \  --name mysql-8 \  -d \  -p 3306:3306 \  --restart unless-stopped \  -v ~/.mysql/log:/var/log/mysql \  -v ~/.mysql/data:/var/lib/mysql \  -e MYSQL_ROOT_PASSWORD=021009 \  mysql:8.0.31  12345678910int：整型double：浮点型，例如double(5,2)表示最多5位，其中必须有2位小数，即最大值为999.99；char：固定长度字符串类型；    char(10)     &#x27;aaa       &#x27;  占10位varchar：可变长度字符串类型； varchar(10)  &#x27;aaa&#x27;  占3为text：字符串类型；blob：字节类型；date：日期类型，格式为：yyyy-MM-dd；time：时间类型，格式为：hh:mm:sstimestamp：时间戳类型 yyyy-MM-dd hh:mm:ss ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2023/07/01/Blender/" title="Blender"><img class="post-bg" src="/2023/07/01/Blender/image.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Blender"></a></div><div class="recent-post-info"><a class="article-title" href="/2023/07/01/Blender/" title="Blender">Blender</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-07-01T02:55:42.000Z" title="发表于 2023-07-01 10:55:42">2023-07-01</time></span></div><div class="content">BlenderBlender集成了完整的3D创作工具,...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2023/06/23/GraphQL-Apollo/" title="GraphQL Apollo"><img class="post-bg" src="/2023/06/23/GraphQL-Apollo/2023-06-23-09-26-28.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GraphQL Apollo"></a></div><div class="recent-post-info"><a class="article-title" href="/2023/06/23/GraphQL-Apollo/" title="GraphQL Apollo">GraphQL Apollo</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-06-23T00:52:19.000Z" title="发表于 2023-06-23 08:52:19">2023-06-23</time></span></div><div class="content">Step 1: 创建项目1234mkdir graphql-examplecd graphql-examplenpm init --yes &amp;&amp; npm pkg set type=&quot;module&quot;  Step 2: 安装依赖12npm install @apollo/index graphql  使用JS 1touch index.js  修改 package.json 添加启动 12345678&#123;  // ...etc.  &quot;type&quot;: &quot;module&quot;,  &quot;scripts&quot;: &#123;    &quot;start&quot;: &quot;node index.js&quot;  &#125;  // other dependencies&#125;  Step 3: 定义 GraphQL schemaindex.js 12345678910111213141516171819202122import &#123; ApolloServer &#125;...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2023/06/21/RESTful-API/" title="RESTful API"><img class="post-bg" src="/2023/06/21/RESTful-API/2023-06-21-21-23-36.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="RESTful API"></a></div><div class="recent-post-info"><a class="article-title" href="/2023/06/21/RESTful-API/" title="RESTful API">RESTful API</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-06-21T13:22:36.000Z" title="发表于 2023-06-21 21:22:36">2023-06-21</time></span></div><div class="content">什么是 RESTful APIRESTful API 是一种软件架构风格、设计风格，可以让软件更加清晰，更简洁，更有层次，可维护性更好 REST 是 Representational State Transfer 的缩写  即表现层状态转移,uri只是描述那里有数据,而数据怎么解释原来由服务端决定,现在REST API中由客户端决定,即资源的表现层状态由服务端转移到了客户端 如何使用RESTful API 请求请求 = 动词 + 宾语  动词 使用五种 HTTP 方法，对应 CRUD 操作 宾语 URL 应该全部使用名词复数 过滤信息（Filtering） 如果记录数量很多，API应该提供参数，过滤返回结果。?limit&#x3D;10 指定返回记录的数量 ?offset&#x3D;10...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2023/06/21/GraphQL/" title="GraphQL"><img class="post-bg" src="/2023/06/21/GraphQL/2023-06-21-20-17-07.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GraphQL"></a></div><div class="recent-post-info"><a class="article-title" href="/2023/06/21/GraphQL/" title="GraphQL">GraphQL</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-06-21T12:13:22.000Z" title="发表于 2023-06-21 20:13:22">2023-06-21</time></span></div><div class="content">GraphQL一种用于 API 的查询语言GraphQL 既是一种用于 API 的查询语言也是一个满足你数据查询的运行时。 GraphQL 对你的 API 中的数据提供了一套易于理解的完整描述，使得客户端能够准确地获得它需要的数据，而且没有任何冗余，也让 API 更容易地随着时间推移而演进，还能用于构建强大的开发者工具。 描述你的数据 12345type Project &#123;  name: String  tagline: String  contributors: [User] &#125;  请求你所要的数据 12345&#123;  project(name: &quot;GraphQL&quot;) &#123;    tagline  &#125;&#125;  得到可预测的结果 12345&#123;  &quot;project&quot;: &#123;    &quot;tagline&quot;: &quot;A query language for APIs&quot;  &#125;&#125;  特点请求你所要的数据不多不少 向你的 API...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/06/13/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/" title="软件测试">软件测试</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-06-13T10:05:15.000Z" title="发表于 2023-06-13 18:05:15">2023-06-13</time></span></div><div class="content">软件测试概念我认为概念是推理的基础,认识概念才能正确的运用相关技术  软件测试是什么  一种发现软件缺陷的的活动 评估软件的特性或能力,确定其是否达到预期  为什么要软件测试  为了保证软件质量  关于软件测试的两种观点   测试是为了证伪(Myers)  假设程序是错误的,证明其正确  测试是为了证明软件是正确的(Bill Hetzel)  假设程序是正确的    什么是软件质量  即产品所满足的特性 这些特性可能是用户的需求,产品固有的性质或者是行业标准所规定的  内部质量  主要是代码,极其相关的特性  外部质量  主要是产品的功能  使用质量  从场景和用户的角度出发分析质量  软件缺陷  从内部看: 软件设计,开发,维护的不合理 从外部看: 软件功能的失效或违背 软件测试分类按阶段分:  需求评审: 需求 SRS 是否完整,正确,清晰 设计评审: 设计结果是否符合需求 单元测试: 函数,类,模块 集成测试: 几个完成的单元作为系统一起测试 系统测试: 测试整个系统(软件,硬件) 验收测试: 用户参与,在用户环境,使用用户数据作测试 alpha测试:...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/06/12/Linux-%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/" title="Linux 复习">Linux 复习</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-06-12T10:13:33.000Z" title="发表于 2023-06-12 18:13:33">2023-06-12</time></span></div><div class="content"> 选择题(15分)  新建文件 : touch mkdircat echo vimrm mv  简答题(16分)  yum 本地源配置 手动添加用户,系统变化的6个地方: /etc/passwd /etc/shadow /etc/gpasswd /etc/gshadow /home/.. /var/spool/mail   操作题(48分)  权限 字母数字 chmod cron cut sed awk su -  sudo su 描述 改变用户名,组名usermod  硬链接,软链接,如何建立,作用 打包,压缩 增删改查 touch\mkdir rm -rf vi find\grep  别名 alias  Shell 编程(16分)  1234567891011121314151617181920212223242526#!/bin/bash# # 输入用户名,数量,密码 # 创建对应数量的用户并设置初始密码# # 提醒读入read -p &quot;input username&quot; nameread -p &quot;input number of...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2023/06/12/Linux-%E5%B0%8F%E6%8A%80%E5%B7%A7/" title="Linux 小技巧"><img class="post-bg" src="/2023/06/12/Linux-%E5%B0%8F%E6%8A%80%E5%B7%A7/2023-06-12-18-11-54.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux 小技巧"></a></div><div class="recent-post-info"><a class="article-title" href="/2023/06/12/Linux-%E5%B0%8F%E6%8A%80%E5%B7%A7/" title="Linux 小技巧">Linux 小技巧</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-06-12T09:49:23.000Z" title="发表于 2023-06-12 17:49:23">2023-06-12</time></span></div><div class="content">这篇记录一些我在学习和使用 Linux 过程中发现的小技巧,所谓技巧就是说不用它也可以,但是用了会更简单  有时候需要后面的表达式先执行,就可以用  1express1 $(express2)  $(…)和${…}的区别: $()：它表示命令替换操作符。在$()内部包含一个命令，它会执行该命令并将其输出作为字符串返回。例如，$(date)会执行date命令并将当前日期和时间的字符串表示形式作为字符串返回。这个字符串可以被赋值给一个变量，或者被传递给其它命令进行进一步处理。  $&#123;&#125;：它表示变量替换操作符。在$&#123;&#125;内部指定一个变量名，它会将该变量的值替换为该字符串。例如，$&#123;HOME&#125;会将HOME环境变量的值替换为一个字符串，该字符串代表当前用户的主目录路径。这个字符串也可以被赋值给一个变量，或者被传递给其它命令进行进一步处理。   计算  1$((express))  </div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/06/11/Webscoket-%E6%A0%B8%E5%BF%83/" title="Webscoket 核心">Webscoket 核心</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-06-11T03:17:03.000Z" title="发表于 2023-06-11 11:17:03">2023-06-11</time></span></div><div class="content">Webscoket 核心是什么一种服务端&#x2F;浏览器端双向推送技术 为什么因为 HTTP 协议有一个缺陷：通信只能由客户端发起 怎么用构造函数（返回一个 WebSocket 对象） 1WebSocket(url[, protocols])     Constant Value    WebSocket.CONNECTING 0   WebSocket.OPEN 1   WebSocket.CLOSING 2   WebSocket.CLOSED 3      属性 解释    binaryType 使用二进制的数据类型连接。   bufferedAmount 只读 未发送至服务器的字节数。   extensions 只读 服务器选择的扩展。   onclose 用于指定连接关闭后的回调函数。   onerror 用于指定连接失败后的回调函数。   onmessage 用于指定当从服务器接受到信息时的回调函数。   onopen 用于指定连接成功后的回调函数。   protocol 只读 服务器选择的下属协议。   readyState 只读...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2023/06/10/MongoDB/" title="MongoDB 安装和使用"><img class="post-bg" src="/2023/06/10/MongoDB/2023-06-10-21-22-01.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MongoDB 安装和使用"></a></div><div class="recent-post-info"><a class="article-title" href="/2023/06/10/MongoDB/" title="MongoDB 安装和使用">MongoDB 安装和使用</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-06-10T12:25:49.000Z" title="发表于 2023-06-10 20:25:49">2023-06-10</time></span></div><div class="content">MongoDB 安装和使用使用 Docker 安装Pull the MongoDB Docker Image1docker pull mongo  Run the Image as a Container12345mkdir -p ~/.mongodb/dbdocker run --name mongo -d -p 27017:27017 --privileged=true \ -e MONGO_INITDB_ROOT_USERNAME=root \ -e MONGO_INITDB_ROOT_PASSWORD=021009 \ -v ~/docker/mongodb/db:/data/db mongo   Connect to the MongoDB Deployment with mongoshOpen an interactive container instance of mongo and connect to the deployment with mongosh. 1docker exec -it mongo mongosh   mongo...</div></div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/3/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/#content-inner">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/#content-inner">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/#content-inner">10</a><a class="extend next" rel="next" href="/page/5/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">92</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议"><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（2）：实例和各种代理协议"/></a><div class="content"><a class="title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议">Clash 的运行原理（2）：实例和各种代理协议</a><time datetime="2026-05-30T09:47:26.000Z" title="发表于 2026-05-30 17:47:26">2026-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/clash1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"/></a><div class="content"><a class="title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流">Clash 的运行原理（1）：从虚拟网卡到 DNS 分流</a><time datetime="2026-05-30T09:30:42.000Z" title="发表于 2026-05-30 17:30:42">2026-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/28/ONNX/" title="ONNX"><img src="/2026/05/28/ONNX/image.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ONNX"/></a><div class="content"><a class="title" href="/2026/05/28/ONNX/" title="ONNX">ONNX</a><time datetime="2026-05-28T01:46:52.000Z" title="发表于 2026-05-28 09:46:52">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/28/%E8%9E%8D%E5%90%88%E7%AE%97%E5%AD%90/" title="融合算子">融合算子</a><time datetime="2026-05-28T01:35:06.000Z" title="发表于 2026-05-28 09:35:06">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/28/GEMM/" title="GEMM">GEMM</a><time datetime="2026-05-28T01:31:38.000Z" title="发表于 2026-05-28 09:31:38">2026-05-28</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/FastAPI/" style="font-size: 1.1em; color: #999">FastAPI</a> <a href="/tags/MySQL/" style="font-size: 1.1em; color: #999">MySQL</a> <a href="/tags/PostgreSQL/" style="font-size: 1.21em; color: #999ea4">PostgreSQL</a> <a href="/tags/Neo4j/" style="font-size: 1.1em; color: #999">Neo4j</a> <a href="/tags/OpenGauss/" style="font-size: 1.1em; color: #999">OpenGauss</a> <a href="/tags/KeyCloak/" style="font-size: 1.1em; color: #999">KeyCloak</a> <a href="/tags/%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BB/" style="font-size: 1.1em; color: #999">如何阅读</a> <a href="/tags/Netty/" style="font-size: 1.1em; color: #999">Netty</a> <a href="/tags/Clash/" style="font-size: 1.16em; color: #999b9e">Clash</a> <a href="/tags/LLM/" style="font-size: 1.21em; color: #999ea4">LLM</a> <a href="/tags/HPC/" style="font-size: 1.21em; color: #999ea4">HPC</a> <a href="/tags/RESTful/" style="font-size: 1.1em; color: #999">RESTful</a> <a href="/tags/Elasticsearch/" style="font-size: 1.1em; color: #999">Elasticsearch</a> <a href="/tags/Python/" style="font-size: 1.16em; color: #999b9e">Python</a> <a href="/tags/Docker/" style="font-size: 1.33em; color: #99a2af">Docker</a> <a href="/tags/Git/" style="font-size: 1.21em; color: #999ea4">Git</a> <a href="/tags/Gitlab/" style="font-size: 1.1em; color: #999">Gitlab</a> <a href="/tags/Blender/" style="font-size: 1.1em; color: #999">Blender</a> <a href="/tags/PL-SQL/" style="font-size: 1.39em; color: #99a4b4">PL/SQL</a> <a href="/tags/React/" style="font-size: 1.21em; color: #999ea4">React</a> <a href="/tags/GraphQL/" style="font-size: 1.16em; color: #999b9e">GraphQL</a> <a href="/tags/Identity/" style="font-size: 1.1em; color: #999">Identity</a> <a href="/tags/3D/" style="font-size: 1.1em; color: #999">3D</a> <a href="/tags/ASM/" style="font-size: 1.1em; color: #999">ASM</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 1.16em; color: #999b9e">网站</a> <a href="/tags/Linux/" style="font-size: 1.5em; color: #99a9bf">Linux</a> <a href="/tags/Tokenizer/" style="font-size: 1.1em; color: #999">Tokenizer</a> <a href="/tags/WebSocket/" style="font-size: 1.1em; color: #999">WebSocket</a> <a href="/tags/zsh/" style="font-size: 1.1em; color: #999">zsh</a> <a href="/tags/Database/" style="font-size: 1.5em; color: #99a9bf">Database</a> <a href="/tags/Data-Structure/" style="font-size: 1.27em; color: #99a0a9">Data Structure</a> <a href="/tags/Oracle/" style="font-size: 1.44em; color: #99a7ba">Oracle</a> <a href="/tags/WebScoket/" style="font-size: 1.1em; color: #999">WebScoket</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 1.21em; color: #999ea4">网络</a> <a href="/tags/AT-T/" style="font-size: 1.1em; color: #999">AT&T</a> <a href="/tags/Jenkins/" style="font-size: 1.1em; color: #999">Jenkins</a> <a href="/tags/RAG/" style="font-size: 1.1em; color: #999">RAG</a> <a href="/tags/Vim/" style="font-size: 1.1em; color: #999">Vim</a> <a href="/tags/LINUX/" style="font-size: 1.1em; color: #999">LINUX</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" style="font-size: 1.1em; color: #999">线性代数</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      <a class="card-more-btn" href="/archives/"
+            title="查看更多">
+            <i class="fas fa-angle-right"></i>
+          </a>
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/05/">
+            <span class="card-archive-list-date">
+              五月 2026
+            </span>
+            <span class="card-archive-list-count">5</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/06/">
+            <span class="card-archive-list-date">
+              六月 2025
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/05/">
+            <span class="card-archive-list-date">
+              五月 2025
+            </span>
+            <span class="card-archive-list-count">4</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/07/">
+            <span class="card-archive-list-date">
+              七月 2024
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/05/">
+            <span class="card-archive-list-date">
+              五月 2024
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/03/">
+            <span class="card-archive-list-date">
+              三月 2024
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/12/">
+            <span class="card-archive-list-date">
+              十二月 2023
+            </span>
+            <span class="card-archive-list-count">5</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/10/">
+            <span class="card-archive-list-date">
+              十月 2023
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">92</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-06-01T05:55:24.986Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2026 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: str => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: subtitleType => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        btf.getScript('https://cdn.jsdelivr.net/npm/typed.js/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  },
+  processSubtitle: (content, extraContents = []) => {
+    if (true) {
+      const sub = [].slice()
+
+      if (extraContents.length > 0) {
+        sub.unshift(...extraContents)
+      }
+
+      if (typeof content === 'string') {
+        sub.unshift(content)
+      } else if (Array.isArray(content)) {
+        sub.unshift(...content)
+      }
+
+      sub.length > 0 && typedJSFn.init(sub)
+    } else {
+      document.getElementById('subtitle').textContent = typeof content === 'string' ? content :
+        (Array.isArray(content) && content.length > 0 ? content[0] : '')
+    }
+  }
+}
+btf.addGlobalFn('pjaxSendOnce', () => { typed.destroy() }, 'typedDestroy')
+</script><script>function subtitleType () {
+  btf.getScript('https://sdk.jinrishici.com/v2/browser/jinrishici.js')
+    .then(() => {
+      jinrishici.load(result => {
+        if (result && result.data && result.data.content) {
+          typedJSFn.processSubtitle(result.data.content)
+        } else {
+          throw new Error('Failed to parse the return value of Jinrishici API')
+        }
+      })
+    })
+    .catch(err => {
+      console.error('Failed to get the Jinrishici API:', err)
+      typedJSFn.processSubtitle(0)
+    })
+}
+typedJSFn.run(subtitleType)
+</script></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

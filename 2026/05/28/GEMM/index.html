@@ -1,0 +1,287 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>GEMM | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="GEMM 是 General Matrix Multiply，中文通常叫通用矩阵乘法。它是深度学习里最核心的计算形式之一。 它的标准形式是： C &#x3D; \alpha A B + \beta C 其中： 1234A: m × k 矩阵B: k × n 矩阵C: m × n 矩阵α, β: 标量  如果忽略 $\alpha$、$\beta$，最常见的理解就是： 1C &#x3D; A @ B  也就是矩">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GEMM">
+<meta property="og:url" content="http://tangquanwei.github.io/2026/05/28/GEMM/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="GEMM 是 General Matrix Multiply，中文通常叫通用矩阵乘法。它是深度学习里最核心的计算形式之一。 它的标准形式是： C &#x3D; \alpha A B + \beta C 其中： 1234A: m × k 矩阵B: k × n 矩阵C: m × n 矩阵α, β: 标量  如果忽略 $\alpha$、$\beta$，最常见的理解就是： 1C &#x3D; A @ B  也就是矩">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/images/maomi.png">
+<meta property="article:published_time" content="2026-05-28T01:31:38.000Z">
+<meta property="article:modified_time" content="2026-06-01T01:05:16.551Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="HPC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/images/maomi.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "GEMM",
+  "url": "http://tangquanwei.github.io/2026/05/28/GEMM/",
+  "image": "http://tangquanwei.github.io/images/maomi.png",
+  "datePublished": "2026-05-28T01:31:38.000Z",
+  "dateModified": "2026-06-01T01:05:16.551Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Quanwei",
+      "url": "http://tangquanwei.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/2026/05/28/GEMM/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'GEMM',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">92</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/p1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a><a class="nav-page-title" href="/"><span class="site-name">GEMM</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">GEMM</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-28T01:31:38.000Z" title="发表于 2026-05-28 09:31:38">2026-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-06-01T01:05:16.551Z" title="更新于 2026-06-01 09:05:16">2026-06-01</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>GEMM</strong> 是 <strong>General Matrix Multiply</strong>，中文通常叫<strong>通用矩阵乘法</strong>。它是深度学习里最核心的计算形式之一。</p>
+<p>它的标准形式是：</p>
+<p>C &#x3D; \alpha A B + \beta C</p>
+<p>其中：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">A: m × k 矩阵</span><br><span class="line">B: k × n 矩阵</span><br><span class="line">C: m × n 矩阵</span><br><span class="line">α, β: 标量</span><br></pre></td></tr></table></figure>
+
+<p>如果忽略 $\alpha$、$\beta$，最常见的理解就是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C = A @ B</span><br></pre></td></tr></table></figure>
+
+<p>也就是矩阵乘矩阵。</p>
+<hr>
+<h2 id="1-GEMM-为什么重要"><a href="#1-GEMM-为什么重要" class="headerlink" title="1. GEMM 为什么重要"></a>1. GEMM 为什么重要</h2><p>神经网络里的很多算子，最后都可以转成 GEMM。</p>
+<p>例如全连接层 &#x2F; Linear 层：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y = x @ W + b</span><br></pre></td></tr></table></figure>
+
+<p>如果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x: batch × hidden</span><br><span class="line">W: hidden × output</span><br></pre></td></tr></table></figure>
+
+<p>那么：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y: batch × output</span><br></pre></td></tr></table></figure>
+
+<p>这本质就是 GEMM，加上一个 bias。</p>
+<p>Transformer 里的 Q、K、V 投影也是 GEMM：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Q = X @ Wq</span><br><span class="line">K = X @ Wk</span><br><span class="line">V = X @ Wv</span><br></pre></td></tr></table></figure>
+
+<p>MLP 也是 GEMM：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">H = GELU(X @ W1 + b1)</span><br><span class="line">Y = H @ W2 + b2</span><br></pre></td></tr></table></figure>
+
+<p>Attention 里也有 GEMM：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scores = Q @ K.transpose(-<span class="number">1</span>, -<span class="number">2</span>)</span><br><span class="line">output = softmax(scores) @ V</span><br></pre></td></tr></table></figure>
+
+<p>所以 LLM 推理的大部分时间都花在矩阵乘法上。</p>
+<hr>
+<h2 id="2-GEMM-和-Linear-层的关系"><a href="#2-GEMM-和-Linear-层的关系" class="headerlink" title="2. GEMM 和 Linear 层的关系"></a>2. GEMM 和 Linear 层的关系</h2><p>PyTorch 里写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.nn.Linear(in_features, out_features)</span><br></pre></td></tr></table></figure>
+
+<p>底层大致是：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">out = <span class="built_in">input</span> @ weight.T + bias</span><br></pre></td></tr></table></figure>
+
+<p>这就是 GEMM + bias add。</p>
+<p>比如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">input:  [batch_size, hidden_size]</span><br><span class="line">weight: [out_features, hidden_size]</span><br><span class="line">output: [batch_size, out_features]</span><br></pre></td></tr></table></figure>
+
+<p>实际矩阵乘法是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">input @ weight.T</span><br></pre></td></tr></table></figure>
+
+<p>也就是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[batch_size, hidden_size] × [hidden_size, out_features]</span><br><span class="line">= [batch_size, out_features]</span><br></pre></td></tr></table></figure>
+
+<p>在 LLM 里，这种计算极多。</p>
+<hr>
+<h2 id="3-GEMM-和卷积的关系"><a href="#3-GEMM-和卷积的关系" class="headerlink" title="3. GEMM 和卷积的关系"></a>3. GEMM 和卷积的关系</h2><p>卷积也经常可以转成 GEMM。</p>
+<p>比如 2D convolution：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Conv2D(input, kernel)</span><br></pre></td></tr></table></figure>
+
+<p>可以通过 <code>im2col</code> 把输入局部窗口展开成矩阵，然后把卷积核也展开成矩阵，最后做矩阵乘法。</p>
+<p>也就是说：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">卷积 ≈ im2col + GEMM</span><br></pre></td></tr></table></figure>
+
+<p>当然现代 GPU 上不一定真的显式做 <code>im2col</code>，很多高性能卷积 kernel 会隐式完成这个过程，但核心思想仍然和矩阵乘法密切相关。</p>
+<hr>
+<h2 id="4-GEMM-为什么适合-GPU"><a href="#4-GEMM-为什么适合-GPU" class="headerlink" title="4. GEMM 为什么适合 GPU"></a>4. GEMM 为什么适合 GPU</h2><p>矩阵乘法非常适合 GPU，因为它有三个特点：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 计算密集</span><br><span class="line">2. 数据访问模式规则</span><br><span class="line">3. 可以切成很多 tile 并行计算</span><br></pre></td></tr></table></figure>
+
+<p>例如计算：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C = A @ B</span><br></pre></td></tr></table></figure>
+
+<p>每个 <code>C[i, j]</code> 都是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A 的第 i 行 和 B 的第 j 列 的点积</span><br></pre></td></tr></table></figure>
+
+<p>不同的 <code>C[i, j]</code> 可以并行计算。GPU 可以把矩阵切成很多小块，也就是 tile，让不同线程块负责不同 tile。</p>
+<p>在 NVIDIA GPU 上，FP16&#x2F;BF16&#x2F;INT8&#x2F;FP8 GEMM 还可以用 Tensor Core 加速。这就是为什么 LLM 推理里经常强调：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FP16 GEMM</span><br><span class="line">BF16 GEMM</span><br><span class="line">INT8 GEMM</span><br><span class="line">FP8 GEMM</span><br></pre></td></tr></table></figure>
+
+<p>这些都是为了让矩阵乘法跑得更快。</p>
+<hr>
+<h2 id="5-GEMM-和-TensorRT-的关系"><a href="#5-GEMM-和-TensorRT-的关系" class="headerlink" title="5. GEMM 和 TensorRT 的关系"></a>5. GEMM 和 TensorRT 的关系</h2><p>TensorRT 里很多 layer 最终都会映射到高性能 GEMM kernel。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MatMul</span><br><span class="line">FullyConnected</span><br><span class="line">Linear</span><br><span class="line">QKV projection</span><br><span class="line">MLP projection</span><br><span class="line">Attention score calculation</span><br></pre></td></tr></table></figure>
+
+<p>TensorRT 会做几件事：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. 选择合适的 GEMM 实现</span><br><span class="line">2. 选择数据 layout</span><br><span class="line">3. 使用 Tensor Core</span><br><span class="line">4. 融合 bias、activation、scale 等 epilogue</span><br><span class="line">5. 针对具体 shape 选择 tactic</span><br></pre></td></tr></table></figure>
+
+<p>比如原始图是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MatMul → Add Bias → GELU</span><br></pre></td></tr></table></figure>
+
+<p>TensorRT 可能变成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Fused GEMM + Bias + GELU</span><br></pre></td></tr></table></figure>
+
+<p>也就是 GEMM 算完后，不把中间结果先写回显存，而是在 GEMM 的输出阶段直接做 bias 和 GELU。</p>
+<p>这就是之前说的 <strong>GEMM epilogue fusion</strong>。</p>
+<hr>
+<h2 id="6-一个具体例子"><a href="#6-一个具体例子" class="headerlink" title="6. 一个具体例子"></a>6. 一个具体例子</h2><p>假设有一个 Linear 层：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = torch.randn(<span class="number">8</span>, <span class="number">4096</span>)</span><br><span class="line">w = torch.randn(<span class="number">4096</span>, <span class="number">11008</span>)</span><br><span class="line">y = x @ w</span><br></pre></td></tr></table></figure>
+
+<p>这里：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A = x: 8 × 4096</span><br><span class="line">B = w: 4096 × 11008</span><br><span class="line">C = y: 8 × 11008</span><br></pre></td></tr></table></figure>
+
+<p>这就是一个 GEMM。</p>
+<p>它的计算量大约是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2 × m × n × k</span><br><span class="line">= 2 × 8 × 11008 × 4096</span><br><span class="line">≈ 721 million FLOPs</span><br></pre></td></tr></table></figure>
+
+<p>为什么是乘 2？因为矩阵乘法里每一步通常有一次乘法和一次加法：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a * b + acc</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="7-GEMM、GEMV、Batched-GEMM-的区别"><a href="#7-GEMM、GEMV、Batched-GEMM-的区别" class="headerlink" title="7. GEMM、GEMV、Batched GEMM 的区别"></a>7. GEMM、GEMV、Batched GEMM 的区别</h2><p>GEMM 是矩阵乘矩阵：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[m, k] × [k, n] → [m, n]</span><br></pre></td></tr></table></figure>
+
+<p>GEMV 是矩阵乘向量：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[m, k] × [k] → [m]</span><br></pre></td></tr></table></figure>
+
+<p>Batched GEMM 是一批矩阵乘法：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[batch, m, k] × [batch, k, n] → [batch, m, n]</span><br></pre></td></tr></table></figure>
+
+<p>LLM prefill 阶段通常 GEMM 很大，GPU 利用率较高。<br>LLM decode 阶段 batch 小、seq 每次只生成一个 token，很多计算更接近 GEMV 或小 GEMM，所以 GPU 利用率容易下降。这也是为什么 TensorRT-LLM、vLLM、continuous batching、paged attention 这些系统要特别优化 decode 阶段。</p>
+<hr>
+<h2 id="8-一句话总结"><a href="#8-一句话总结" class="headerlink" title="8. 一句话总结"></a>8. 一句话总结</h2><p>GEMM 就是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通用矩阵乘法 C = αAB + βC</span><br></pre></td></tr></table></figure>
+
+<p>它是 Linear、Attention、MLP、部分 Conv 的底层核心计算。深度学习推理加速很大程度上就是在优化 GEMM：让它用 Tensor Core、更低精度、更好的 layout、更少的显存读写，以及把 bias、activation、quant&#x2F;dequant 等操作融合进 GEMM 的输出阶段。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io/2026/05/28/GEMM/">http://tangquanwei.github.io/2026/05/28/GEMM/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/HPC/">HPC</a></div><div class="post-share"><div class="social-share" data-image="/images/maomi.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/06/11/Haskell%20Monad/" title="用 Python 解释 Haskell Monad"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">用 Python 解释 Haskell Monad</div></div><div class="info-2"><div class="info-item-1">假设你已经会使用一门简单的编程语言 Python 从一个具体问题开始你写过这种代码吗： 123456789user = get_user(id)if user is None:    return Noneprofile = get_profile(user)if profile is None:    return Nonescore = get_score(profile)if score is None:    return None  每一步都可能失败，所以每一步之后都要检查。这段代码的真实逻辑只有三行，但被错误处理淹没了。 Monad 要解决的正是这类问题 如何把”带有某种额外语境的计算”优雅地串联起来。  三个层次来理解第一层：Monad 是一种设计模式 先忘掉范畴论。Monad 就是一个包装盒，加上两个操作：  return（或 pure）：把一个普通值放进盒子 &gt;&gt;=（bind）：把盒子里的值取出来，交给下一个函数，返回新的盒子  12普通值  →  return  →  [盒子][盒子]  →  &gt;&gt;= f  → ...</div></div></div></a><a class="pagination-related" href="/2026/05/28/%E8%9E%8D%E5%90%88%E7%AE%97%E5%AD%90/" title="融合算子"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">融合算子</div></div><div class="info-2"><div class="info-item-1">融合算子本质上是：把计算图中多个连续的小算子合并成一个更大的算子或一个 GPU kernel，让它们一次性执行，减少中间结果写回显存、减少 kernel launch、减少 layout 转换，从而提高推理性能。 在 TensorRT、TVM、XLA、TorchInductor、ONNX Runtime、TensorRT-LLM 里，算子融合都是核心优化。  1. 为什么要融合算子GPU 推理不只是“算力瓶颈”，很多时候是： 1读显存 → 算一点 → 写显存 → 再读显存 → 再算一点 → 再写显存  例如： 1Conv → BatchNorm → ReLU  如果不融合，大概是： 12345678910111213kernel 1: Conv  input 从显存读入  weight 从显存读入  conv 输出写回显存kernel 2: BatchNorm  conv 输出再从显存读入  BN 参数读入  BN 输出写回显存kernel 3: ReLU  BN 输出再从显存读入  ReLU 输出写回显存  问题有两个： 第一，中间 tensor 反复读写显存。第二，每个...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/05/28/ONNX/" title="ONNX"><img class="cover" src="/2026/05/28/ONNX/image.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-28</div><div class="info-item-2">ONNX</div></div><div class="info-2"><div class="info-item-1">ONNX 可以理解为机器学习模型的中间表示格式：训练时可以用 PyTorch、TensorFlow、scikit-learn 等框架，部署时把模型导出成 .onnx，再交给 ONNX Runtime、TensorRT、OpenVINO、CoreML、DirectML 等后端执行。  1. ONNX 是什么ONNX，全称 Open Neural Network Exchange，是一个开放的 AI 模型格式。它定义了三类核心内容：计算图模型、内置算子、标准数据类型；官方也明确说当前重点主要是 inference&#x2F;scoring，而不是完整训练框架替代品。(GitHub) 一句话概括：  ONNX 是模型交换格式和推理部署 IR。  典型链路是： 1234567PyTorch / TensorFlow / sklearn        ↓ export / convert      model.onnx        ↓ runtime / compilerONNX Runtime / TensorRT / OpenVINO / CoreML / TVM / custom...</div></div></div></a><a class="pagination-related" href="/2026/05/28/%E8%9E%8D%E5%90%88%E7%AE%97%E5%AD%90/" title="融合算子"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-28</div><div class="info-item-2">融合算子</div></div><div class="info-2"><div class="info-item-1">融合算子本质上是：把计算图中多个连续的小算子合并成一个更大的算子或一个 GPU kernel，让它们一次性执行，减少中间结果写回显存、减少 kernel launch、减少 layout 转换，从而提高推理性能。 在 TensorRT、TVM、XLA、TorchInductor、ONNX Runtime、TensorRT-LLM 里，算子融合都是核心优化。  1. 为什么要融合算子GPU 推理不只是“算力瓶颈”，很多时候是： 1读显存 → 算一点 → 写显存 → 再读显存 → 再算一点 → 再写显存  例如： 1Conv → BatchNorm → ReLU  如果不融合，大概是： 12345678910111213kernel 1: Conv  input 从显存读入  weight 从显存读入  conv 输出写回显存kernel 2: BatchNorm  conv 输出再从显存读入  BN 参数读入  BN 输出写回显存kernel 3: ReLU  BN 输出再从显存读入  ReLU 输出写回显存  问题有两个： 第一，中间 tensor 反复读写显存。第二，每个...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">92</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-GEMM-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%87%8D%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">1. GEMM 为什么重要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-GEMM-%E5%92%8C-Linear-%E5%B1%82%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">2.</span> <span class="toc-text">2. GEMM 和 Linear 层的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-GEMM-%E5%92%8C%E5%8D%B7%E7%A7%AF%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">3.</span> <span class="toc-text">3. GEMM 和卷积的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-GEMM-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%82%E5%90%88-GPU"><span class="toc-number">4.</span> <span class="toc-text">4. GEMM 为什么适合 GPU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-GEMM-%E5%92%8C-TensorRT-%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">5.</span> <span class="toc-text">5. GEMM 和 TensorRT 的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E4%B8%80%E4%B8%AA%E5%85%B7%E4%BD%93%E4%BE%8B%E5%AD%90"><span class="toc-number">6.</span> <span class="toc-text">6. 一个具体例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-GEMM%E3%80%81GEMV%E3%80%81Batched-GEMM-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">7.</span> <span class="toc-text">7. GEMM、GEMV、Batched GEMM 的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%80%BB%E7%BB%93"><span class="toc-number">8.</span> <span class="toc-text">8. 一句话总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议"><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（2）：实例和各种代理协议"/></a><div class="content"><a class="title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议">Clash 的运行原理（2）：实例和各种代理协议</a><time datetime="2026-05-30T09:47:26.000Z" title="发表于 2026-05-30 17:47:26">2026-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/clash1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"/></a><div class="content"><a class="title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流">Clash 的运行原理（1）：从虚拟网卡到 DNS 分流</a><time datetime="2026-05-30T09:30:42.000Z" title="发表于 2026-05-30 17:30:42">2026-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/28/ONNX/" title="ONNX"><img src="/2026/05/28/ONNX/image.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ONNX"/></a><div class="content"><a class="title" href="/2026/05/28/ONNX/" title="ONNX">ONNX</a><time datetime="2026-05-28T01:46:52.000Z" title="发表于 2026-05-28 09:46:52">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/28/%E8%9E%8D%E5%90%88%E7%AE%97%E5%AD%90/" title="融合算子">融合算子</a><time datetime="2026-05-28T01:35:06.000Z" title="发表于 2026-05-28 09:35:06">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/28/GEMM/" title="GEMM">GEMM</a><time datetime="2026-05-28T01:31:38.000Z" title="发表于 2026-05-28 09:31:38">2026-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2026 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

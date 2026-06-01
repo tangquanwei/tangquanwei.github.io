@@ -1,0 +1,407 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Clash 的运行原理（1）：从虚拟网卡到 DNS 分流 | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Clash 的运行原理：从虚拟网卡到 DNS 分流   摘要Clash 是一个运行在本机或网关上的规则化代理转发引擎。它把应用程序或系统网络栈产生的流量接入本地，再通过 DNS 模块、规则引擎和策略组判断流量应该直连、拒绝，还是通过某个远程代理节点转发出去。 Clash 可以理解为以下几个模块的组合： 123456流量入口 Inbound+ DNS 解析与 fake-ip 映射+ 规则匹配引擎+">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流">
+<meta property="og:url" content="http://tangquanwei.github.io/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="Clash 的运行原理：从虚拟网卡到 DNS 分流   摘要Clash 是一个运行在本机或网关上的规则化代理转发引擎。它把应用程序或系统网络栈产生的流量接入本地，再通过 DNS 模块、规则引擎和策略组判断流量应该直连、拒绝，还是通过某个远程代理节点转发出去。 Clash 可以理解为以下几个模块的组合： 123456流量入口 Inbound+ DNS 解析与 fake-ip 映射+ 规则匹配引擎+">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/clash1.png">
+<meta property="article:published_time" content="2026-05-30T09:30:42.000Z">
+<meta property="article:modified_time" content="2026-06-01T01:05:16.523Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="Clash">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/clash1.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Clash 的运行原理（1）：从虚拟网卡到 DNS 分流",
+  "url": "http://tangquanwei.github.io/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/",
+  "image": "http://tangquanwei.github.io/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/clash1.png",
+  "datePublished": "2026-05-30T09:30:42.000Z",
+  "dateModified": "2026-06-01T01:05:16.523Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Quanwei",
+      "url": "http://tangquanwei.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Clash 的运行原理（1）：从虚拟网卡到 DNS 分流',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">92</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(2026/05/30/Clash工作原理/clash1.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a><a class="nav-page-title" href="/"><span class="site-name">Clash 的运行原理（1）：从虚拟网卡到 DNS 分流</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Clash 的运行原理（1）：从虚拟网卡到 DNS 分流</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-30T09:30:42.000Z" title="发表于 2026-05-30 17:30:42">2026-05-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-06-01T01:05:16.523Z" title="更新于 2026-06-01 09:05:16">2026-06-01</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Clash-的运行原理：从虚拟网卡到-DNS-分流"><a href="#Clash-的运行原理：从虚拟网卡到-DNS-分流" class="headerlink" title="Clash 的运行原理：从虚拟网卡到 DNS 分流"></a>Clash 的运行原理：从虚拟网卡到 DNS 分流</h1><base href="Clash工作原理/">
+
+<p><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/clash1.png" alt="alt text"></p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>Clash 是一个运行在本机或网关上的规则化代理转发引擎。它把应用程序或系统网络栈产生的流量接入本地，再通过 DNS 模块、规则引擎和策略组判断流量应该直连、拒绝，还是通过某个远程代理节点转发出去。</p>
+<p>Clash 可以理解为以下几个模块的组合：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">流量入口 Inbound</span><br><span class="line">+ DNS 解析与 fake-ip 映射</span><br><span class="line">+ 规则匹配引擎</span><br><span class="line">+ 策略组选择器</span><br><span class="line">+ 多协议出站 Outbound</span><br><span class="line">+ 远程代理服务器或直连出口</span><br></pre></td></tr></table></figure>
+
+<p>它和传统 VPN 的主要区别在于：传统 VPN 通常把整台设备的 IP 流量放进一个加密隧道，而 Clash 更强调<strong>按规则分流</strong>。同一台设备上，国内网站可以直连，海外网站可以走代理，广告域名可以拒绝，公司内网可以走 WireGuard，游戏 UDP 可以走 Hysteria 或 TUIC。Clash 的价值是把复杂网络流量按域名、IP、端口、进程、地理位置和协议特征进行精细路由。</p>
+<hr>
+<h2 id="1-先区分几个概念：VPN、代理、Clash"><a href="#1-先区分几个概念：VPN、代理、Clash" class="headerlink" title="1. 先区分几个概念：VPN、代理、Clash"></a>1. 先区分几个概念：VPN、代理、Clash</h2><p>日常语境里，很多人会把 Clash、Trojan、Shadowsocks、VLESS 统称为“VPN”。严格来说，这个说法并不准确。</p>
+<p><strong>VPN</strong>，即 Virtual Private Network，虚拟专用网络，通常在网络层创建加密隧道，把设备接入一个远程网络。典型协议包括 WireGuard、OpenVPN、IPSec、L2TP 等。它们的作用更像是<strong>把你的设备接入另一张网络</strong>。</p>
+<p><strong>代理</strong>，Proxy，则更像是<strong>让另一个服务器代你发起连接</strong>。浏览器、应用程序或者 Clash 把目标地址交给代理服务器，代理服务器再连接真实目标。典型代理协议包括 HTTP Proxy、SOCKS5、Shadowsocks、Trojan、VMess、VLESS、Hysteria、TUIC 等。</p>
+<p><strong>Clash</strong> 不是一个具体的代理协议。它是一个代理客户端内核或规则路由器，支持多种协议作为出站方式。它可以接收本地流量，然后根据规则选择不同的出站。</p>
+<p>可以这样理解：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Trojan / Shadowsocks / VLESS / Hysteria 是“路”。</span><br><span class="line">Clash 是“交通调度系统”。</span><br><span class="line">规则文件是“交通规则”。</span><br><span class="line">代理节点是“远程出口”。</span><br><span class="line">TUN 是“把系统流量接进调度系统的虚拟网卡”。</span><br></pre></td></tr></table></figure>
+
+<p>普通网络访问路径是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">App / 浏览器</span><br><span class="line">  ↓</span><br><span class="line">系统网络栈</span><br><span class="line">  ↓</span><br><span class="line">真实网卡 Wi-Fi / Ethernet</span><br><span class="line">  ↓</span><br><span class="line">路由器 / 运营商</span><br><span class="line">  ↓</span><br><span class="line">目标网站</span><br></pre></td></tr></table></figure>
+
+<p>开启 Clash 后，路径变成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">App / 浏览器</span><br><span class="line">  ↓</span><br><span class="line">本地 Clash 入站端口或 TUN 虚拟网卡</span><br><span class="line">  ↓</span><br><span class="line">Clash 规则引擎</span><br><span class="line">  ↓</span><br><span class="line">DIRECT / PROXY / REJECT / 某个具体节点</span><br><span class="line">  ↓</span><br><span class="line">直连或远程代理服务器</span><br><span class="line">  ↓</span><br><span class="line">目标网站</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-网络基础：理解-Clash-之前必须知道的术语"><a href="#2-网络基础：理解-Clash-之前必须知道的术语" class="headerlink" title="2. 网络基础：理解 Clash 之前必须知道的术语"></a>2. 网络基础：理解 Clash 之前必须知道的术语</h2><h3 id="2-1-IP-包"><a href="#2-1-IP-包" class="headerlink" title="2.1 IP 包"></a>2.1 IP 包</h3><p>IP 包是网络层的数据单位。一个 IP 包至少包含源 IP、目标 IP、协议类型和负载数据。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">源 IP：192.168.1.10</span><br><span class="line">目标 IP：8.8.8.8</span><br><span class="line">协议：TCP</span><br><span class="line">负载：TCP 数据段</span><br></pre></td></tr></table></figure>
+
+<p>在互联网中，路由器主要根据目标 IP 地址决定下一跳。TUN 虚拟网卡处理的就是这一层的数据，所以 TUN 属于三层虚拟网卡。</p>
+<h3 id="2-2-TCP"><a href="#2-2-TCP" class="headerlink" title="2.2 TCP"></a>2.2 TCP</h3><p>TCP，即 Transmission Control Protocol，传输控制协议。它提供面向连接、可靠、有序的数据传输。</p>
+<p>TCP 的特点是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">需要建立连接</span><br><span class="line">保证数据到达</span><br><span class="line">保证顺序</span><br><span class="line">丢包会重传</span><br><span class="line">有拥塞控制</span><br></pre></td></tr></table></figure>
+
+<p>HTTP&#x2F;1.1、HTTP&#x2F;2、传统 HTTPS、大部分代理协议都可以基于 TCP 运行。</p>
+<p>一次 TCP 连接大致经历：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">三次握手 → 数据传输 → 四次挥手或重置连接</span><br></pre></td></tr></table></figure>
+
+<p>TCP 适合网页访问、文件下载、API 请求等需要可靠传输的场景，但在高延迟、高丢包网络中，性能可能明显下降。</p>
+<h3 id="2-3-UDP"><a href="#2-3-UDP" class="headerlink" title="2.3 UDP"></a>2.3 UDP</h3><p>UDP，即 User Datagram Protocol，用户数据报协议。它是无连接协议，不保证可靠性，也不保证顺序。</p>
+<p>UDP 的特点是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">不需要连接握手</span><br><span class="line">开销低</span><br><span class="line">延迟小</span><br><span class="line">不保证到达</span><br><span class="line">不自动重传</span><br></pre></td></tr></table></figure>
+
+<p>DNS、QUIC、HTTP&#x2F;3、游戏、语音通话、视频通话、WireGuard、Hysteria、TUIC 都大量使用 UDP。</p>
+<p>UDP 不等于“不可靠应用”。QUIC、WireGuard 这类协议会在 UDP 之上自己实现加密、可靠性或会话管理。</p>
+<h3 id="2-4-DNS"><a href="#2-4-DNS" class="headerlink" title="2.4 DNS"></a>2.4 DNS</h3><p>DNS，即 Domain Name System，域名系统。它负责把域名转换成 IP 地址。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">www.google.com → 142.250.x.x</span><br><span class="line">www.baidu.com  → 110.242.x.x</span><br></pre></td></tr></table></figure>
+
+<p>应用访问网站之前，通常需要先做 DNS 查询。对 Clash 来说，DNS 非常关键，因为很多规则是基于域名的，而不是基于 IP 的。</p>
+<p>如果 DNS 没有被 Clash 正确接管，就可能出现两个问题：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. DNS 泄漏：域名查询仍然发给本地运营商 DNS。</span><br><span class="line">2. 分流错误：Clash 只看到 IP，看不到原始域名，规则匹配精度下降。</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-TLS"><a href="#2-5-TLS" class="headerlink" title="2.5 TLS"></a>2.5 TLS</h3><p>TLS，即 Transport Layer Security，传输层安全协议。HTTPS 本质上就是 HTTP over TLS。</p>
+<p>TLS 提供：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">加密：第三方无法直接读取内容</span><br><span class="line">完整性：数据不能被悄悄篡改</span><br><span class="line">身份认证：通过证书验证服务器身份</span><br></pre></td></tr></table></figure>
+
+<p>Trojan、VLESS + TLS、Hysteria、TUIC、HTTPS 代理等都和 TLS 有密切关系。</p>
+<p>注意：普通 Clash 代理并不会解密浏览器和目标网站之间的 HTTPS 内容。它通常只能看到目标域名、目标 IP、端口、连接时间、流量大小和规则命中情况。除非额外启用 MITM 证书和 HTTPS 解密，否则它不能直接读取 HTTPS 页面正文、密码或表单内容。</p>
+<h3 id="2-6-HTTP-和-HTTPS"><a href="#2-6-HTTP-和-HTTPS" class="headerlink" title="2.6 HTTP 和 HTTPS"></a>2.6 HTTP 和 HTTPS</h3><p>HTTP 是 Web 应用层协议。HTTPS 是 HTTP 加上 TLS 加密。</p>
+<p>普通 HTTP 代理可以直接代理 HTTP 请求。对于 HTTPS，HTTP 代理通常使用 CONNECT 方法建立 TCP 隧道：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">浏览器 → HTTP 代理：CONNECT example.com:443</span><br><span class="line">HTTP 代理 → example.com:443 建立 TCP 连接</span><br><span class="line">浏览器和 example.com 在这条隧道里完成 TLS 握手</span><br></pre></td></tr></table></figure>
+
+<p>此时 HTTP 代理只是转发字节流，并不理解 TLS 里面的网页内容。</p>
+<h3 id="2-7-QUIC-和-HTTP-3"><a href="#2-7-QUIC-和-HTTP-3" class="headerlink" title="2.7 QUIC 和 HTTP&#x2F;3"></a>2.7 QUIC 和 HTTP&#x2F;3</h3><p>QUIC 是基于 UDP 的现代传输协议，集成了 TLS 加密、流复用、拥塞控制和连接迁移。HTTP&#x2F;3 就运行在 QUIC 之上。</p>
+<p>Hysteria 和 TUIC 都属于基于 QUIC 思路的代理协议。它们使用 UDP 作为底层传输，在弱网、高延迟或高丢包场景中可能比传统 TCP 代理表现更好。</p>
+<p>但这也带来限制：如果网络环境屏蔽或限速 UDP，Hysteria、TUIC、WireGuard 这类协议就可能表现很差，甚至无法连接。</p>
+<hr>
+<h2 id="3-虚拟网卡是什么"><a href="#3-虚拟网卡是什么" class="headerlink" title="3. 虚拟网卡是什么"></a>3. 虚拟网卡是什么</h2><p>虚拟网卡是操作系统中由软件创建的网络接口。它看起来像一块真实网卡，但不对应物理硬件。</p>
+<p>真实网卡包括：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Wi-Fi 网卡</span><br><span class="line">以太网网卡</span><br><span class="line">蓝牙网络适配器</span><br></pre></td></tr></table></figure>
+
+<p>虚拟网卡包括：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">TUN / TAP 网卡</span><br><span class="line">VPN 虚拟适配器</span><br><span class="line">WireGuard 虚拟网卡</span><br><span class="line">Docker 网桥</span><br><span class="line">VMware / VirtualBox 虚拟网卡</span><br><span class="line">Clash TUN 创建的虚拟接口</span><br></pre></td></tr></table></figure>
+
+<p>在系统看来，虚拟网卡也可以有接口名、IP 地址、路由规则、DNS 设置和 MTU。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Wi-Fi      192.168.1.10</span><br><span class="line">TUN        198.18.0.1</span><br><span class="line">Docker0    172.17.0.1</span><br><span class="line">WireGuard  10.8.0.2</span><br></pre></td></tr></table></figure>
+
+<p>虚拟网卡的作用是让软件有机会接管网络流量。系统网络栈把数据包发给虚拟网卡，用户态程序再从虚拟网卡读取这些数据包，决定如何处理。</p>
+<p>以 Clash TUN 为例：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">App</span><br><span class="line">  ↓</span><br><span class="line">系统网络栈</span><br><span class="line">  ↓</span><br><span class="line">TUN 虚拟网卡</span><br><span class="line">  ↓</span><br><span class="line">Clash 读取 IP 包</span><br><span class="line">  ↓</span><br><span class="line">规则判断</span><br><span class="line">  ↓</span><br><span class="line">直连 / 代理 / 拒绝</span><br></pre></td></tr></table></figure>
+
+<p>没有虚拟网卡时，Clash 通常只能依赖 HTTP&#x2F;SOCKS 系统代理。有些软件不遵守系统代理设置，就会绕过 Clash。开启 TUN 后，Clash 可以从更底层接管系统流量，因此体验更接近传统 VPN。</p>
+<hr>
+<h2 id="4-TUN-和-TAP：两个常见虚拟网卡类型"><a href="#4-TUN-和-TAP：两个常见虚拟网卡类型" class="headerlink" title="4. TUN 和 TAP：两个常见虚拟网卡类型"></a>4. TUN 和 TAP：两个常见虚拟网卡类型</h2><p>TUN 和 TAP 都是虚拟网络设备，但工作层级不同。</p>
+<h3 id="4-1-TUN"><a href="#4-1-TUN" class="headerlink" title="4.1 TUN"></a>4.1 TUN</h3><p>TUN 通常来自 network tunnel，即网络隧道。它是三层虚拟网卡，处理的是 IP 包。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TUN = network tunnel</span><br><span class="line">工作层级：Layer 3 / 网络层</span><br><span class="line">处理对象：IP packet / IP 包</span><br><span class="line">典型用途：VPN、Clash TUN、WireGuard、OpenVPN 路由模式</span><br></pre></td></tr></table></figure>
+
+<p>TUN 看到的是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">IP: 192.168.1.10 → 8.8.8.8</span><br><span class="line">TCP: source port 51234 → destination port 443</span><br></pre></td></tr></table></figure>
+
+<p>Clash TUN 主要关心 IP、端口、TCP&#x2F;UDP 协议、DNS 映射和规则匹配，所以 TUN 非常适合这类代理分流场景。</p>
+<h3 id="4-2-TAP"><a href="#4-2-TAP" class="headerlink" title="4.2 TAP"></a>4.2 TAP</h3><p>TAP 通常表示 network tap，即网络分接或接入。它是二层虚拟网卡，处理的是以太网帧。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TAP = network tap</span><br><span class="line">工作层级：Layer 2 / 数据链路层</span><br><span class="line">处理对象：Ethernet frame / 以太网帧</span><br><span class="line">典型用途：虚拟机桥接、虚拟局域网、OpenVPN 桥接模式</span><br></pre></td></tr></table></figure>
+
+<p>TAP 看到的是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Ethernet: MAC A → MAC B</span><br><span class="line">里面再包着 IP 数据</span><br></pre></td></tr></table></figure>
+
+<p>简单说：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TUN 模拟三层 IP 设备。</span><br><span class="line">TAP 模拟二层以太网设备。</span><br></pre></td></tr></table></figure>
+
+<p>Clash 更常用 TUN，因为 Clash 主要做 IP 层流量接管和规则分流，不需要模拟完整的二层局域网。</p>
+<hr>
+<h2 id="5-Clash-的整体架构"><a href="#5-Clash-的整体架构" class="headerlink" title="5. Clash 的整体架构"></a>5. Clash 的整体架构</h2><p>Clash 的运行可以拆成五个核心部分：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. Inbound：流量如何进入 Clash</span><br><span class="line">2. DNS：域名如何解析，以及如何保留域名信息</span><br><span class="line">3. Rule：请求如何匹配规则</span><br><span class="line">4. Proxy Group：命中规则后如何选择节点</span><br><span class="line">5. Outbound：流量如何从 Clash 发出去</span><br></pre></td></tr></table></figure>
+
+<p>完整链路如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">浏览器 / App</span><br><span class="line">  ↓</span><br><span class="line">系统代理端口、SOCKS5 端口、TUN 虚拟网卡或透明代理入口</span><br><span class="line">  ↓</span><br><span class="line">Clash Inbound</span><br><span class="line">  ↓</span><br><span class="line">DNS 模块 / fake-ip 映射</span><br><span class="line">  ↓</span><br><span class="line">规则匹配引擎</span><br><span class="line">  ↓</span><br><span class="line">策略组选择器</span><br><span class="line">  ↓</span><br><span class="line">具体出站：DIRECT / REJECT / Shadowsocks / Trojan / VLESS / Hysteria / WireGuard 等</span><br><span class="line">  ↓</span><br><span class="line">目标网站</span><br></pre></td></tr></table></figure>
+
+<p>这也是为什么 Clash 配置文件通常包括以下几块：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">mixed-port:</span> <span class="number">7890</span></span><br><span class="line"><span class="attr">allow-lan:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">mode:</span> <span class="string">rule</span></span><br><span class="line"><span class="attr">log-level:</span> <span class="string">info</span></span><br><span class="line"></span><br><span class="line"><span class="attr">dns:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">enhanced-mode:</span> <span class="string">fake-ip</span></span><br><span class="line">  <span class="attr">nameserver:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">https://dns.google/dns-query</span></span><br><span class="line"></span><br><span class="line"><span class="attr">proxies:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">node-1</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">trojan</span></span><br><span class="line">    <span class="attr">server:</span> <span class="string">example.com</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">443</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">xxx</span></span><br><span class="line"></span><br><span class="line"><span class="attr">proxy-groups:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">PROXY</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">select</span></span><br><span class="line">    <span class="attr">proxies:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">node-1</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DIRECT</span></span><br><span class="line"></span><br><span class="line"><span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,google.com,PROXY</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">GEOIP,CN,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">MATCH,PROXY</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="6-Clash-的入站：流量如何进入-Clash"><a href="#6-Clash-的入站：流量如何进入-Clash" class="headerlink" title="6. Clash 的入站：流量如何进入 Clash"></a>6. Clash 的入站：流量如何进入 Clash</h2><p>Inbound 是流量进入 Clash 的入口。常见方式有系统代理、SOCKS5、Mixed Port、TUN 和透明代理。</p>
+<h3 id="6-1-HTTP-代理入口"><a href="#6-1-HTTP-代理入口" class="headerlink" title="6.1 HTTP 代理入口"></a>6.1 HTTP 代理入口</h3><p>HTTP 代理入口主要服务于支持 HTTP Proxy 的应用。浏览器或系统代理设置会把 HTTP&#x2F;HTTPS 请求交给 Clash。</p>
+<p>对于 HTTP 请求，代理可以看到完整请求目标。对于 HTTPS 请求，通常通过 CONNECT 方法建立隧道。</p>
+<p>路径如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">浏览器</span><br><span class="line">  ↓</span><br><span class="line">127.0.0.1:7890 HTTP Proxy</span><br><span class="line">  ↓</span><br><span class="line">Clash</span><br><span class="line">  ↓</span><br><span class="line">规则判断</span><br><span class="line">  ↓</span><br><span class="line">远程代理或直连</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-SOCKS5-入口"><a href="#6-2-SOCKS5-入口" class="headerlink" title="6.2 SOCKS5 入口"></a>6.2 SOCKS5 入口</h3><p>SOCKS5 是更通用的代理接口。它不局限于 HTTP，可以表达“连接某个域名&#x2F;IP 和端口”。</p>
+<p>路径如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">App</span><br><span class="line">  ↓</span><br><span class="line">127.0.0.1:7891 SOCKS5</span><br><span class="line">  ↓</span><br><span class="line">Clash</span><br><span class="line">  ↓</span><br><span class="line">规则判断</span><br><span class="line">  ↓</span><br><span class="line">出站</span><br></pre></td></tr></table></figure>
+
+<p>SOCKS5 本身不负责加密。它只是本地应用和代理客户端之间的通用代理协议。如果 SOCKS5 只监听在 127.0.0.1，本地链路不加密通常问题不大；如果暴露到局域网或公网，就需要谨慎处理认证和访问控制。</p>
+<h3 id="6-3-Mixed-Port"><a href="#6-3-Mixed-Port" class="headerlink" title="6.3 Mixed Port"></a>6.3 Mixed Port</h3><p>Mixed Port 是 Clash 常用入口，可以同时接受 HTTP 和 SOCKS5 请求。</p>
+<p>例如：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">mixed-port:</span> <span class="number">7890</span></span><br></pre></td></tr></table></figure>
+
+<p>这样应用可以把 <code>127.0.0.1:7890</code> 当作 HTTP 代理，也可以当作 SOCKS5 代理使用，具体由协议握手自动识别。</p>
+<h3 id="6-4-TUN-模式"><a href="#6-4-TUN-模式" class="headerlink" title="6.4 TUN 模式"></a>6.4 TUN 模式</h3><p>TUN 模式创建虚拟网卡，把系统网络层流量导入 Clash。</p>
+<p>路径如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">App</span><br><span class="line">  ↓</span><br><span class="line">系统网络栈</span><br><span class="line">  ↓</span><br><span class="line">TUN 虚拟网卡</span><br><span class="line">  ↓</span><br><span class="line">Clash</span><br><span class="line">  ↓</span><br><span class="line">规则判断</span><br><span class="line">  ↓</span><br><span class="line">DIRECT / PROXY / REJECT</span><br></pre></td></tr></table></figure>
+
+<p>TUN 的优势是覆盖面更广。不遵守系统代理的软件、命令行工具、部分游戏和 UDP 流量，都有机会被接管。</p>
+<p>但 TUN 也更复杂，涉及：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">虚拟网卡权限</span><br><span class="line">系统路由表</span><br><span class="line">DNS 劫持</span><br><span class="line">fake-ip 映射</span><br><span class="line">MTU 设置</span><br><span class="line">防火墙规则</span><br><span class="line">UDP 支持</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-5-透明代理"><a href="#6-5-透明代理" class="headerlink" title="6.5 透明代理"></a>6.5 透明代理</h3><p>透明代理常见于 Linux、OpenWrt、旁路由和软路由环境。它通过 iptables、nftables、tproxy 或路由规则把局域网设备的流量重定向到 Clash。</p>
+<p>路径如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">局域网设备</span><br><span class="line">  ↓</span><br><span class="line">路由器</span><br><span class="line">  ↓</span><br><span class="line">iptables / nftables / tproxy</span><br><span class="line">  ↓</span><br><span class="line">Clash</span><br><span class="line">  ↓</span><br><span class="line">规则判断</span><br><span class="line">  ↓</span><br><span class="line">出站</span><br></pre></td></tr></table></figure>
+
+<p>透明代理的特点是终端设备不需要主动设置代理，路由器层面统一接管。但配置复杂度更高，DNS 和 UDP 处理尤其容易出问题。</p>
+<hr>
+<h2 id="7-Clash-的-DNS-模块"><a href="#7-Clash-的-DNS-模块" class="headerlink" title="7. Clash 的 DNS 模块"></a>7. Clash 的 DNS 模块</h2><p>DNS 是 Clash 分流准确性的关键。</p>
+<p>假设应用访问：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.google.com</span><br></pre></td></tr></table></figure>
+
+<p>它首先需要知道 <code>www.google.com</code> 的 IP。如果 DNS 查询绕过 Clash，那么 Clash 可能只看到一个 IP 地址，而不知道这个 IP 原来对应 <code>www.google.com</code>。这样基于域名的规则就无法准确匹配。</p>
+<h3 id="7-1-DNS-泄漏"><a href="#7-1-DNS-泄漏" class="headerlink" title="7.1 DNS 泄漏"></a>7.1 DNS 泄漏</h3><p>DNS 泄漏指的是：网页流量走了代理，但域名查询仍然发给本地运营商或其他未预期的 DNS 服务器。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">网页数据：浏览器 → Clash → 代理服务器 → Google</span><br><span class="line">DNS 查询：系统 → 运营商 DNS → 查询 google.com</span><br></pre></td></tr></table></figure>
+
+<p>这样运营商虽然看不到 HTTPS 内容，但仍然能看到你查询了哪些域名。</p>
+<h3 id="7-2-fake-ip-模式"><a href="#7-2-fake-ip-模式" class="headerlink" title="7.2 fake-ip 模式"></a>7.2 fake-ip 模式</h3><p>fake-ip 是 Clash 中非常重要的 DNS 增强模式。</p>
+<p>普通 DNS：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">应用问：google.com 的 IP 是多少？</span><br><span class="line">DNS 回答：142.250.x.x</span><br><span class="line">应用连接：142.250.x.x</span><br></pre></td></tr></table></figure>
+
+<p>fake-ip 模式：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">应用问：google.com 的 IP 是多少？</span><br><span class="line">Clash 回答：198.18.0.23 这样的假 IP</span><br><span class="line">应用连接：198.18.0.23</span><br><span class="line">Clash 查映射表：198.18.0.23 → google.com</span><br></pre></td></tr></table></figure>
+
+<p>fake-ip 的价值在于：它让 Clash 在 IP 层流量中保留域名语义。</p>
+<p>如果 Clash 只看到真实 IP，它可能只能用 IP 规则判断。如果 Clash 能通过 fake-ip 映射恢复域名，就可以继续使用：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DOMAIN</span><br><span class="line">DOMAIN-SUFFIX</span><br><span class="line">DOMAIN-KEYWORD</span><br><span class="line">GEOSITE</span><br></pre></td></tr></table></figure>
+
+<p>这些规则通常比纯 IP 规则更准确。</p>
+<p>可以把 fake-ip 理解成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用一个假的 IP 地址作为“域名标签”，让后续连接仍然能追溯回原始域名。</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-3-redir-host-模式"><a href="#7-3-redir-host-模式" class="headerlink" title="7.3 redir-host 模式"></a>7.3 redir-host 模式</h3><p>redir-host 模式返回真实 IP，而不是假 IP。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">google.com → 142.250.x.x</span><br></pre></td></tr></table></figure>
+
+<p>它更接近传统 DNS 行为，兼容性通常较好。但在 TUN 或透明代理场景中，如果域名信息丢失，分流精度可能不如 fake-ip。</p>
+<p>简单比较：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fake-ip：</span><br><span class="line">优点：域名规则匹配准确，适合 TUN 和透明代理。</span><br><span class="line">缺点：部分软件不兼容假 IP，需要 fake-ip-filter。</span><br><span class="line"></span><br><span class="line">redir-host：</span><br><span class="line">优点：返回真实 IP，兼容性较好。</span><br><span class="line">缺点：复杂分流场景下可能丢失域名语义。</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-4-fake-ip-filter"><a href="#7-4-fake-ip-filter" class="headerlink" title="7.4 fake-ip-filter"></a>7.4 fake-ip-filter</h3><p>部分软件不能接受 fake-ip。比如某些局域网服务、系统连通性检测、游戏、银行应用或特殊客户端，可能会把 fake-ip 缓存下来，导致连接异常。</p>
+<p>这时需要配置 fake-ip-filter，让这些域名走真实解析：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">fake-ip-filter:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;*.lan&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;*.local&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;localhost.ptlogin2.qq.com&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;+.msftconnecttest.com&quot;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="8-Clash-的规则引擎"><a href="#8-Clash-的规则引擎" class="headerlink" title="8. Clash 的规则引擎"></a>8. Clash 的规则引擎</h2><p>规则引擎是 Clash 的大脑。它决定每一条连接最终走哪里。</p>
+<p>常见规则类型包括：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">DOMAIN：精确匹配某个域名</span><br><span class="line">DOMAIN-SUFFIX：匹配域名后缀</span><br><span class="line">DOMAIN-KEYWORD：匹配域名关键词</span><br><span class="line">GEOIP：根据目标 IP 所属地区匹配</span><br><span class="line">IP-CIDR：匹配 IP 地址段</span><br><span class="line">SRC-IP-CIDR：匹配源 IP 地址段</span><br><span class="line">DST-PORT：匹配目标端口</span><br><span class="line">PROCESS-NAME：匹配进程名</span><br><span class="line">MATCH：兜底规则</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,baidu.com,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,google.com,PROXY</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,ads,REJECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">GEOIP,CN,DIRECT</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">MATCH,PROXY</span></span><br></pre></td></tr></table></figure>
+
+<p>含义是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">baidu.com 及其子域名直连</span><br><span class="line">google.com 及其子域名走 PROXY 策略组</span><br><span class="line">域名中包含 ads 的请求拒绝</span><br><span class="line">中国大陆 IP 直连</span><br><span class="line">其他所有请求默认走 PROXY</span><br></pre></td></tr></table></figure>
+
+<p>规则通常从上到下匹配，第一条命中后停止。</p>
+<p>例如访问 <code>www.google.com</code>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">是否匹配 baidu.com？否</span><br><span class="line">是否匹配 google.com？是</span><br><span class="line">结果：PROXY</span><br></pre></td></tr></table></figure>
+
+<p>访问 <code>www.baidu.com</code>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">是否匹配 baidu.com？是</span><br><span class="line">结果：DIRECT</span><br></pre></td></tr></table></figure>
+
+<p>如果前面都没命中，就落入：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="string">MATCH,PROXY</span></span><br></pre></td></tr></table></figure>
+
+<p>这就是默认策略。</p>
+<hr>
+<h2 id="9-策略组：Clash-如何选择节点"><a href="#9-策略组：Clash-如何选择节点" class="headerlink" title="9. 策略组：Clash 如何选择节点"></a>9. 策略组：Clash 如何选择节点</h2><p>规则的结果不一定是具体节点，也可以是策略组。策略组负责从多个节点或动作中选择一个。</p>
+<h3 id="9-1-select"><a href="#9-1-select" class="headerlink" title="9.1 select"></a>9.1 select</h3><p>select 是手动选择。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">proxy-groups:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">PROXY</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">select</span></span><br><span class="line">    <span class="attr">proxies:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">node-1</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">node-2</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">node-3</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DIRECT</span></span><br></pre></td></tr></table></figure>
+
+<p>用户可以在面板里手动选择当前使用哪个节点。</p>
+<h3 id="9-2-url-test"><a href="#9-2-url-test" class="headerlink" title="9.2 url-test"></a>9.2 url-test</h3><p>url-test 会定期访问一个测试 URL，选择延迟较低的节点。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">proxy-groups:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">AUTO</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">url-test</span></span><br><span class="line">    <span class="attr">proxies:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">node-1</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">node-2</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">node-3</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">http://www.gstatic.com/generate_204</span></span><br><span class="line">    <span class="attr">interval:</span> <span class="number">300</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：url-test 测的是到测试地址的延迟，不代表所有网站都快。节点访问某个测试 URL 很快，不等于访问 YouTube、GitHub、OpenAI 或游戏服务器都快。</p>
+<h3 id="9-3-fallback"><a href="#9-3-fallback" class="headerlink" title="9.3 fallback"></a>9.3 fallback</h3><p>fallback 按顺序测试节点，选择第一个可用节点。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node-1 可用 → 用 node-1</span><br><span class="line">node-1 不可用，node-2 可用 → 用 node-2</span><br></pre></td></tr></table></figure>
+
+<p>适合主备切换。</p>
+<h3 id="9-4-load-balance"><a href="#9-4-load-balance" class="headerlink" title="9.4 load-balance"></a>9.4 load-balance</h3><p>load-balance 把不同连接分配到多个节点。</p>
+<p>它不是把一个 TCP 连接拆成多条链路叠加带宽。对单个连接而言，通常仍然只走一个节点。它更适合多连接场景。</p>
+<hr>
+<h2 id="10-Clash-的出站：流量最终如何出去"><a href="#10-Clash-的出站：流量最终如何出去" class="headerlink" title="10. Clash 的出站：流量最终如何出去"></a>10. Clash 的出站：流量最终如何出去</h2><p>Outbound 是流量从 Clash 发出的方式。常见出站有：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">DIRECT</span><br><span class="line">REJECT</span><br><span class="line">SOCKS5</span><br><span class="line">HTTP</span><br><span class="line">Shadowsocks</span><br><span class="line">Trojan</span><br><span class="line">VMess</span><br><span class="line">VLESS</span><br><span class="line">Hysteria</span><br><span class="line">TUIC</span><br><span class="line">WireGuard</span><br></pre></td></tr></table></figure>
+
+<h3 id="10-1-DIRECT"><a href="#10-1-DIRECT" class="headerlink" title="10.1 DIRECT"></a>10.1 DIRECT</h3><p>DIRECT 表示直连。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">本机 → 目标网站</span><br></pre></td></tr></table></figure>
+
+<p>适合国内网站、局域网、公司内网、本地服务等。</p>
+<h3 id="10-2-REJECT"><a href="#10-2-REJECT" class="headerlink" title="10.2 REJECT"></a>10.2 REJECT</h3><p>REJECT 表示拒绝连接。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">本机 → Clash → 拒绝</span><br></pre></td></tr></table></figure>
+
+<p>常用于广告、追踪域名、恶意域名或不想访问的服务。</p>
+<h3 id="10-3-PROXY"><a href="#10-3-PROXY" class="headerlink" title="10.3 PROXY"></a>10.3 PROXY</h3><p>PROXY 通常不是一个具体协议，而是一个策略组名称。它可以指向 Trojan、Shadowsocks、VLESS、Hysteria 等具体节点。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">本机 → Clash → 远程代理服务器 → 目标网站</span><br></pre></td></tr></table></figure>
+
+<p>目标网站看到的是代理服务器 IP，而不是本机公网 IP。</p>
+<h2 id="11-总结"><a href="#11-总结" class="headerlink" title="11. 总结"></a>11. 总结</h2><p><strong>Clash 是一个规则化、多协议的本地代理转发引擎</strong>。</p>
+<p>它的关键能力包括：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">通过系统代理、SOCKS5、TUN 或透明代理接管流量</span><br><span class="line">通过 DNS 和 fake-ip 保留域名语义</span><br><span class="line">通过规则引擎决定直连、代理或拒绝</span><br><span class="line">通过策略组在多个节点之间选择</span><br><span class="line">通过不同协议连接远程代理服务器</span><br><span class="line">在代理和直连之间做精细分流</span><br></pre></td></tr></table></figure>
+
+
+
+<p>一句话概括：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Clash = 流量接入 + DNS 控制 + 规则分流 + 策略选择 + 多协议出站。</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">http://tangquanwei.github.io/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Clash/">Clash</a><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C/">网络</a></div><div class="post-share"><div class="social-share" data-image="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/clash1.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/05/28/ONNX/" title="ONNX"><img class="cover" src="/2026/05/28/ONNX/image.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">ONNX</div></div><div class="info-2"><div class="info-item-1">ONNX 可以理解为机器学习模型的中间表示格式：训练时可以用 PyTorch、TensorFlow、scikit-learn 等框架，部署时把模型导出成 .onnx，再交给 ONNX Runtime、TensorRT、OpenVINO、CoreML、DirectML 等后端执行。  1. ONNX 是什么ONNX，全称 Open Neural Network Exchange，是一个开放的 AI 模型格式。它定义了三类核心内容：计算图模型、内置算子、标准数据类型；官方也明确说当前重点主要是 inference&#x2F;scoring，而不是完整训练框架替代品。(GitHub) 一句话概括：  ONNX 是模型交换格式和推理部署 IR。  典型链路是： 1234567PyTorch / TensorFlow / sklearn        ↓ export / convert      model.onnx        ↓ runtime / compilerONNX Runtime / TensorRT / OpenVINO / CoreML / TVM / custom...</div></div></div></a><a class="pagination-related" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议"><img class="cover" src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Clash 的运行原理（2）：实例和各种代理协议</div></div><div class="info-2"><div class="info-item-1"> 1. 一次 HTTPS 请求在 Clash 中的完整生命周期以访问 https://www.google.com 为例。 第一步：应用发起 DNS 查询浏览器要访问： 1www.google.com  它先请求 DNS 解析。 第二步：Clash DNS 返回 fake-ip如果开启 fake-ip，Clash 可能返回： 1www.google.com → 198.18.0.23  同时 Clash 记录映射： 1198.18.0.23 → www.google.com  第三步：浏览器连接 fake-ip浏览器以为 198.18.0.23 就是目标地址，于是建立 TCP 连接。 第四步：连接进入 Clash由于系统代理、TUN 或透明代理规则，这条连接进入 Clash。Clash 查映射表，知道： 1198.18.0.23 实际对应 www.google.com  第五步：规则匹配Clash 检查规则： 1- DOMAIN-SUFFIX,google.com,PROXY  命中后，决定走 PROXY 策略组。 第六步：策略组选择节点假设当前 PROXY 选择的是...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议"><img class="cover" src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-30</div><div class="info-item-2">Clash 的运行原理（2）：实例和各种代理协议</div></div><div class="info-2"><div class="info-item-1"> 1. 一次 HTTPS 请求在 Clash 中的完整生命周期以访问 https://www.google.com 为例。 第一步：应用发起 DNS 查询浏览器要访问： 1www.google.com  它先请求 DNS 解析。 第二步：Clash DNS 返回 fake-ip如果开启 fake-ip，Clash 可能返回： 1www.google.com → 198.18.0.23  同时 Clash 记录映射： 1198.18.0.23 → www.google.com  第三步：浏览器连接 fake-ip浏览器以为 198.18.0.23 就是目标地址，于是建立 TCP 连接。 第四步：连接进入 Clash由于系统代理、TUN 或透明代理规则，这条连接进入 Clash。Clash 查映射表，知道： 1198.18.0.23 实际对应 www.google.com  第五步：规则匹配Clash 检查规则： 1- DOMAIN-SUFFIX,google.com,PROXY  命中后，决定走 PROXY 策略组。 第六步：策略组选择节点假设当前 PROXY 选择的是...</div></div></div></a><a class="pagination-related" href="/2023/05/22/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/" title="网络编程模型"><img class="cover" src="/2023/05/22/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/2023-05-22-22-34-09.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-22</div><div class="info-item-2">网络编程模型</div></div><div class="info-2"><div class="info-item-1">网络编程模型网络编程模型的核心： 服务器如何管理连接  服务器如何处理请求   以上两个设计点最终都和操作系统的 I&#x2F;O 模型及进程模型相关 I/O模型：阻塞 、非阻塞、同步 、异步   进程模型：单进程、 多进程、多线程  PPC (Process per Connection)  父进程接受连接（图中accept） 父进程“fork”子进程（图中fork） 子进程处理连接的读写请求（图中子进程read、业务处理、write） 子进程关闭连接（图中子进程中的close）  PPC 模式实现简单，比较适合服务器的连接数没那么多的情况(eg. pgsql) 而互联网兴起后，服务器的并发和访问量从几十剧增到成千上万，这种模式的弊端就凸显出来了，主要体现在如下几个方面: ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">92</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Clash-%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86%EF%BC%9A%E4%BB%8E%E8%99%9A%E6%8B%9F%E7%BD%91%E5%8D%A1%E5%88%B0-DNS-%E5%88%86%E6%B5%81"><span class="toc-number">1.</span> <span class="toc-text">Clash 的运行原理：从虚拟网卡到 DNS 分流</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">1.1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%85%88%E5%8C%BA%E5%88%86%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5%EF%BC%9AVPN%E3%80%81%E4%BB%A3%E7%90%86%E3%80%81Clash"><span class="toc-number">1.2.</span> <span class="toc-text">1. 先区分几个概念：VPN、代理、Clash</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%EF%BC%9A%E7%90%86%E8%A7%A3-Clash-%E4%B9%8B%E5%89%8D%E5%BF%85%E9%A1%BB%E7%9F%A5%E9%81%93%E7%9A%84%E6%9C%AF%E8%AF%AD"><span class="toc-number">1.3.</span> <span class="toc-text">2. 网络基础：理解 Clash 之前必须知道的术语</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-IP-%E5%8C%85"><span class="toc-number">1.3.1.</span> <span class="toc-text">2.1 IP 包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-TCP"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.2 TCP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-UDP"><span class="toc-number">1.3.3.</span> <span class="toc-text">2.3 UDP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-DNS"><span class="toc-number">1.3.4.</span> <span class="toc-text">2.4 DNS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-TLS"><span class="toc-number">1.3.5.</span> <span class="toc-text">2.5 TLS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-HTTP-%E5%92%8C-HTTPS"><span class="toc-number">1.3.6.</span> <span class="toc-text">2.6 HTTP 和 HTTPS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-QUIC-%E5%92%8C-HTTP-3"><span class="toc-number">1.3.7.</span> <span class="toc-text">2.7 QUIC 和 HTTP&#x2F;3</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%99%9A%E6%8B%9F%E7%BD%91%E5%8D%A1%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.4.</span> <span class="toc-text">3. 虚拟网卡是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-TUN-%E5%92%8C-TAP%EF%BC%9A%E4%B8%A4%E4%B8%AA%E5%B8%B8%E8%A7%81%E8%99%9A%E6%8B%9F%E7%BD%91%E5%8D%A1%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.5.</span> <span class="toc-text">4. TUN 和 TAP：两个常见虚拟网卡类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-TUN"><span class="toc-number">1.5.1.</span> <span class="toc-text">4.1 TUN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-TAP"><span class="toc-number">1.5.2.</span> <span class="toc-text">4.2 TAP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Clash-%E7%9A%84%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="toc-number">1.6.</span> <span class="toc-text">5. Clash 的整体架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-Clash-%E7%9A%84%E5%85%A5%E7%AB%99%EF%BC%9A%E6%B5%81%E9%87%8F%E5%A6%82%E4%BD%95%E8%BF%9B%E5%85%A5-Clash"><span class="toc-number">1.7.</span> <span class="toc-text">6. Clash 的入站：流量如何进入 Clash</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-HTTP-%E4%BB%A3%E7%90%86%E5%85%A5%E5%8F%A3"><span class="toc-number">1.7.1.</span> <span class="toc-text">6.1 HTTP 代理入口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-SOCKS5-%E5%85%A5%E5%8F%A3"><span class="toc-number">1.7.2.</span> <span class="toc-text">6.2 SOCKS5 入口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-Mixed-Port"><span class="toc-number">1.7.3.</span> <span class="toc-text">6.3 Mixed Port</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-TUN-%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.7.4.</span> <span class="toc-text">6.4 TUN 模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86"><span class="toc-number">1.7.5.</span> <span class="toc-text">6.5 透明代理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-Clash-%E7%9A%84-DNS-%E6%A8%A1%E5%9D%97"><span class="toc-number">1.8.</span> <span class="toc-text">7. Clash 的 DNS 模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-DNS-%E6%B3%84%E6%BC%8F"><span class="toc-number">1.8.1.</span> <span class="toc-text">7.1 DNS 泄漏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-fake-ip-%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.8.2.</span> <span class="toc-text">7.2 fake-ip 模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-redir-host-%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.8.3.</span> <span class="toc-text">7.3 redir-host 模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-4-fake-ip-filter"><span class="toc-number">1.8.4.</span> <span class="toc-text">7.4 fake-ip-filter</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-Clash-%E7%9A%84%E8%A7%84%E5%88%99%E5%BC%95%E6%93%8E"><span class="toc-number">1.9.</span> <span class="toc-text">8. Clash 的规则引擎</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E7%AD%96%E7%95%A5%E7%BB%84%EF%BC%9AClash-%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E8%8A%82%E7%82%B9"><span class="toc-number">1.10.</span> <span class="toc-text">9. 策略组：Clash 如何选择节点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-select"><span class="toc-number">1.10.1.</span> <span class="toc-text">9.1 select</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-url-test"><span class="toc-number">1.10.2.</span> <span class="toc-text">9.2 url-test</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-3-fallback"><span class="toc-number">1.10.3.</span> <span class="toc-text">9.3 fallback</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-4-load-balance"><span class="toc-number">1.10.4.</span> <span class="toc-text">9.4 load-balance</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-Clash-%E7%9A%84%E5%87%BA%E7%AB%99%EF%BC%9A%E6%B5%81%E9%87%8F%E6%9C%80%E7%BB%88%E5%A6%82%E4%BD%95%E5%87%BA%E5%8E%BB"><span class="toc-number">1.11.</span> <span class="toc-text">10. Clash 的出站：流量最终如何出去</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#10-1-DIRECT"><span class="toc-number">1.11.1.</span> <span class="toc-text">10.1 DIRECT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-2-REJECT"><span class="toc-number">1.11.2.</span> <span class="toc-text">10.2 REJECT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-3-PROXY"><span class="toc-number">1.11.3.</span> <span class="toc-text">10.3 PROXY</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-%E6%80%BB%E7%BB%93"><span class="toc-number">1.12.</span> <span class="toc-text">11. 总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议"><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（2）：实例和各种代理协议"/></a><div class="content"><a class="title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议">Clash 的运行原理（2）：实例和各种代理协议</a><time datetime="2026-05-30T09:47:26.000Z" title="发表于 2026-05-30 17:47:26">2026-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/clash1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"/></a><div class="content"><a class="title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流">Clash 的运行原理（1）：从虚拟网卡到 DNS 分流</a><time datetime="2026-05-30T09:30:42.000Z" title="发表于 2026-05-30 17:30:42">2026-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/28/ONNX/" title="ONNX"><img src="/2026/05/28/ONNX/image.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ONNX"/></a><div class="content"><a class="title" href="/2026/05/28/ONNX/" title="ONNX">ONNX</a><time datetime="2026-05-28T01:46:52.000Z" title="发表于 2026-05-28 09:46:52">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/28/%E8%9E%8D%E5%90%88%E7%AE%97%E5%AD%90/" title="融合算子">融合算子</a><time datetime="2026-05-28T01:35:06.000Z" title="发表于 2026-05-28 09:35:06">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/28/GEMM/" title="GEMM">GEMM</a><time datetime="2026-05-28T01:31:38.000Z" title="发表于 2026-05-28 09:31:38">2026-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2026 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

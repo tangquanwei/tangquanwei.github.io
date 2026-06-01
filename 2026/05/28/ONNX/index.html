@@ -1,0 +1,270 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ONNX | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="ONNX 可以理解为机器学习模型的中间表示格式：训练时可以用 PyTorch、TensorFlow、scikit-learn 等框架，部署时把模型导出成 .onnx，再交给 ONNX Runtime、TensorRT、OpenVINO、CoreML、DirectML 等后端执行。  1. ONNX 是什么ONNX，全称 Open Neural Network Exchange，是一个开放的 AI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ONNX">
+<meta property="og:url" content="http://tangquanwei.github.io/2026/05/28/ONNX/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="ONNX 可以理解为机器学习模型的中间表示格式：训练时可以用 PyTorch、TensorFlow、scikit-learn 等框架，部署时把模型导出成 .onnx，再交给 ONNX Runtime、TensorRT、OpenVINO、CoreML、DirectML 等后端执行。  1. ONNX 是什么ONNX，全称 Open Neural Network Exchange，是一个开放的 AI">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/2026/05/28/ONNX/image.png">
+<meta property="article:published_time" content="2026-05-28T01:46:52.000Z">
+<meta property="article:modified_time" content="2026-06-01T05:53:14.552Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="HPC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/2026/05/28/ONNX/image.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ONNX",
+  "url": "http://tangquanwei.github.io/2026/05/28/ONNX/",
+  "image": "http://tangquanwei.github.io/2026/05/28/ONNX/image.png",
+  "datePublished": "2026-05-28T01:46:52.000Z",
+  "dateModified": "2026-06-01T05:53:14.552Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Quanwei",
+      "url": "http://tangquanwei.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/2026/05/28/ONNX/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ONNX',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">92</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(2026/05/28/ONNX/image.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a><a class="nav-page-title" href="/"><span class="site-name">ONNX</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">ONNX</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-28T01:46:52.000Z" title="发表于 2026-05-28 09:46:52">2026-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-06-01T05:53:14.552Z" title="更新于 2026-06-01 13:53:14">2026-06-01</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>ONNX 可以理解为<strong>机器学习模型的中间表示格式</strong>：训练时可以用 PyTorch、TensorFlow、scikit-learn 等框架，部署时把模型导出成 <code>.onnx</code>，再交给 ONNX Runtime、TensorRT、OpenVINO、CoreML、DirectML 等后端执行。</p>
+<p><img src="/ONNX/image.png" alt="alt text"></p>
+<h2 id="1-ONNX-是什么"><a href="#1-ONNX-是什么" class="headerlink" title="1. ONNX 是什么"></a>1. ONNX 是什么</h2><p>ONNX，全称 Open Neural Network Exchange，是一个开放的 AI 模型格式。它定义了三类核心内容：<strong>计算图模型、内置算子、标准数据类型</strong>；官方也明确说当前重点主要是 inference&#x2F;scoring，而不是完整训练框架替代品。(<a target="_blank" rel="noopener" href="https://github.com/onnx/onnx" title="GitHub - onnx/onnx: Open standard for machine learning interoperability · GitHub">GitHub</a>)</p>
+<p>一句话概括：</p>
+<blockquote>
+<p>ONNX 是模型交换格式和推理部署 IR。</p>
+</blockquote>
+<p>典型链路是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PyTorch / TensorFlow / sklearn</span><br><span class="line">        ↓ export / convert</span><br><span class="line">      model.onnx</span><br><span class="line">        ↓ runtime / compiler</span><br><span class="line">ONNX Runtime / TensorRT / OpenVINO / CoreML / TVM / custom backend</span><br><span class="line">        ↓</span><br><span class="line">CPU / GPU / NPU / Edge device / Browser / Server</span><br></pre></td></tr></table></figure>
+
+<p>它解决的问题是：<strong>训练框架与部署后端解耦</strong>。不一定要在生产环境里安装完整 PyTorch；可以把模型固化成 ONNX 图，然后用更轻量、更接近硬件的 runtime 执行。</p>
+<h2 id="2-onnx-文件里面有什么"><a href="#2-onnx-文件里面有什么" class="headerlink" title="2. .onnx 文件里面有什么"></a>2. <code>.onnx</code> 文件里面有什么</h2><p><code>.onnx</code> 本质上是一个 protobuf 序列化文件，核心对象是 <code>ModelProto</code>。可以把它理解成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ModelProto</span><br><span class="line">├── ir_version</span><br><span class="line">├── opset_import</span><br><span class="line">├── producer_name / producer_version</span><br><span class="line">├── graph: GraphProto</span><br><span class="line">│   ├── input</span><br><span class="line">│   ├── output</span><br><span class="line">│   ├── initializer</span><br><span class="line">│   ├── node</span><br><span class="line">│   └── value_info</span><br><span class="line">└── metadata_props</span><br></pre></td></tr></table></figure>
+
+<p>最关键的是 <code>graph</code>。ONNX 图由节点、边、输入、输出、权重常量组成。每个 node 调用一个 operator，例如 <code>Conv</code>、<code>Relu</code>、<code>MatMul</code>、<code>LayerNormalization</code>、<code>Gather</code>、<code>Softmax</code>。节点通过名字连接：一个节点的输出名可以成为后续节点的输入名。官方 IR 规范要求图中 node output 遵循 single static assignment，也就是每个输出名在同一图内唯一；节点依赖不能形成环；顶层节点列表需要按拓扑顺序排列。(<a target="_blank" rel="noopener" href="https://onnx.ai/onnx/repo-docs/IR.html" title="Open Neural Network Exchange Intermediate Representation (ONNX IR) Specification - ONNX 1.22.0 documentation">ONNX</a>)</p>
+<p>几个重要字段：</p>
+<p><code>input</code> 是模型对外暴露的输入，例如 <code>pixel_values</code>、<code>input_ids</code>、<code>attention_mask</code>。</p>
+<p><code>output</code> 是模型对外暴露的输出，例如 <code>logits</code>、<code>last_hidden_state</code>、<code>embeddings</code>。</p>
+<p><code>initializer</code> 通常存模型权重，比如卷积核、Linear 层权重、bias、LayerNorm 参数。官方规范也说明，若一个名字同时出现在 initializer 和 graph input 中，runtime 可以允许调用者覆盖该值；不希望被调用者覆盖的常量应只放在 initializer 中。(<a target="_blank" rel="noopener" href="https://onnx.ai/onnx/repo-docs/IR.html" title="Open Neural Network Exchange Intermediate Representation (ONNX IR) Specification - ONNX 1.22.0 documentation">ONNX</a>)</p>
+<p><code>node</code> 是计算步骤。每个 node 主要包含 <code>op_type</code>、<code>domain</code>、<code>input</code>、<code>output</code>、<code>attribute</code>。其中 <code>op_type</code> 是算子名，<code>attribute</code> 是静态参数，例如 <code>Conv</code> 的 <code>kernel_shape</code>、<code>pads</code>、<code>strides</code>。(<a target="_blank" rel="noopener" href="https://onnx.ai/onnx/repo-docs/IR.html" title="Open Neural Network Exchange Intermediate Representation (ONNX IR) Specification - ONNX 1.22.0 documentation">ONNX</a>)</p>
+<h2 id="3-ONNX-Graph-的直观例子"><a href="#3-ONNX-Graph-的直观例子" class="headerlink" title="3. ONNX Graph 的直观例子"></a>3. ONNX Graph 的直观例子</h2><p>一个简单 CNN 导出后可能类似这样：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">input</span><br><span class="line">  ↓</span><br><span class="line">Conv(weight=W1, bias=b1)</span><br><span class="line">  ↓</span><br><span class="line">Relu</span><br><span class="line">  ↓</span><br><span class="line">MaxPool</span><br><span class="line">  ↓</span><br><span class="line">Flatten</span><br><span class="line">  ↓</span><br><span class="line">Gemm(weight=W2, bias=b2)</span><br><span class="line">  ↓</span><br><span class="line">Softmax</span><br><span class="line">  ↓</span><br><span class="line">output</span><br></pre></td></tr></table></figure>
+
+<p>这里 <code>Conv</code>、<code>Relu</code>、<code>MaxPool</code>、<code>Flatten</code>、<code>Gemm</code>、<code>Softmax</code> 是 ONNX operators；<code>W1</code>、<code>b1</code>、<code>W2</code>、<code>b2</code> 多半存在 <code>initializer</code> 里。</p>
+<p>对 Transformer 来说，ONNX 图会更大，常见节点包括：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Gather / Shape / Reshape / Transpose / MatMul / Add / Softmax / LayerNormalization / Cast / Slice / Concat</span><br></pre></td></tr></table></figure>
+
+<p>多模态模型导出后也通常拆成多个 ONNX：例如 vision encoder 一个 ONNX，text encoder 一个 ONNX，fusion&#x2F;head 一个 ONNX。这样更容易做缓存、并行、量化和跨设备部署。</p>
+<h2 id="4-Opset-是什么"><a href="#4-Opset-是什么" class="headerlink" title="4. Opset 是什么"></a>4. Opset 是什么</h2><p><code>opset</code> 是 ONNX 里非常关键的版本机制。它不是 ONNX 包版本，而是<strong>算子集合版本</strong>。同一个算子在不同 opset 下，输入、属性、类型约束、广播规则、边界行为可能不同。官方 operator 文档会列出每个算子的参数、示例和逐版本变化历史。(<a target="_blank" rel="noopener" href="https://onnx.ai/onnx/operators/" title="ONNX Operators - ONNX 1.22.0 documentation">ONNX</a>)</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">opset_import: ai.onnx version 17</span><br></pre></td></tr></table></figure>
+
+<p>表示这个模型使用 <code>ai.onnx</code> domain 下第 17 版算子语义。</p>
+<p>实践里经常遇到的问题是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">导出端支持 opset 18</span><br><span class="line">推理端只支持 opset 17</span><br><span class="line">→ runtime 加载失败或某些算子不支持</span><br></pre></td></tr></table></figure>
+
+<p>所以导出 ONNX 时，不能只看能不能导出成功，还要确认目标 runtime 支持哪些 opset 和哪些 operator kernel。</p>
+<h2 id="5-ONNX-Runtime-的执行方式"><a href="#5-ONNX-Runtime-的执行方式" class="headerlink" title="5. ONNX Runtime 的执行方式"></a>5. ONNX Runtime 的执行方式</h2><p>ONNX Runtime 是最常用的 ONNX 推理引擎之一。它通过 Execution Provider，简称 EP，把图中的节点或子图分配给不同硬件后端执行。官方文档说明，EP 机制用于对接 CPU、GPU、FPGA、NPU 等硬件加速库，并且 provider 列表有优先级；例如 <code>[&#39;CUDAExecutionProvider&#39;, &#39;CPUExecutionProvider&#39;]</code> 表示 CUDA 能跑的节点优先跑 CUDA，不能跑的回退到 CPU。(<a target="_blank" rel="noopener" href="https://onnxruntime.ai/docs/execution-providers/" title="Execution Providers | onnxruntime">ONNX Runtime</a>)</p>
+<p>典型 Python 推理代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> onnxruntime <span class="keyword">as</span> ort</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">session = ort.InferenceSession(</span><br><span class="line">    <span class="string">&quot;model.onnx&quot;</span>,</span><br><span class="line">    providers=[<span class="string">&quot;CUDAExecutionProvider&quot;</span>, <span class="string">&quot;CPUExecutionProvider&quot;</span>]</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">inputs = &#123;</span><br><span class="line">    <span class="string">&quot;input&quot;</span>: np.random.randn(<span class="number">1</span>, <span class="number">3</span>, <span class="number">224</span>, <span class="number">224</span>).astype(np.float32)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">outputs = session.run(<span class="literal">None</span>, inputs)</span><br></pre></td></tr></table></figure>
+
+<p>这里 <code>session.run(None, inputs)</code> 表示取所有模型输出。如果只想取某些输出，可以把 <code>None</code> 换成输出名列表。</p>
+<h2 id="6-PyTorch-导出-ONNX"><a href="#6-PyTorch-导出-ONNX" class="headerlink" title="6. PyTorch 导出 ONNX"></a>6. PyTorch 导出 ONNX</h2><p>PyTorch 官方当前推荐的基础形式是使用 <code>torch.onnx.export(..., dynamo=True)</code> 导出 ONNX。(<a target="_blank" rel="noopener" href="https://docs.pytorch.org/tutorials/beginner/onnx/export_simple_model_to_onnx_tutorial.html?utm_source=chatgpt.com" title="Export a PyTorch model to ONNX #">PyTorch Documentation</a>)</p>
+<p>示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">model.<span class="built_in">eval</span>()</span><br><span class="line">dummy = torch.randn(<span class="number">1</span>, <span class="number">3</span>, <span class="number">224</span>, <span class="number">224</span>)</span><br><span class="line"></span><br><span class="line">torch.onnx.export(</span><br><span class="line">    model,</span><br><span class="line">    (dummy,),</span><br><span class="line">    <span class="string">&quot;model.onnx&quot;</span>,</span><br><span class="line">    input_names=[<span class="string">&quot;image&quot;</span>],</span><br><span class="line">    output_names=[<span class="string">&quot;logits&quot;</span>],</span><br><span class="line">    dynamic_axes=&#123;</span><br><span class="line">        <span class="string">&quot;image&quot;</span>: &#123;<span class="number">0</span>: <span class="string">&quot;batch&quot;</span>&#125;,</span><br><span class="line">        <span class="string">&quot;logits&quot;</span>: &#123;<span class="number">0</span>: <span class="string">&quot;batch&quot;</span>&#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    opset_version=<span class="number">17</span>,</span><br><span class="line">    dynamo=<span class="literal">True</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>关键点：</p>
+<p><code>model.eval()</code> 必须做，否则 Dropout、BatchNorm 等行为可能仍处于训练模式。</p>
+<p><code>dummy</code> 决定导出时的 tracing&#x2F;example input 形状。</p>
+<p><code>dynamic_axes</code> 用于支持动态 batch 或动态序列长度。不设置时，很多维度会被固化。</p>
+<p><code>opset_version</code> 要根据目标 runtime 选择，不是越新越好。</p>
+<p><code>dynamo=True</code> 是 PyTorch 新导出路径的一部分，但具体可用性仍受 PyTorch 版本、模型结构和算子覆盖影响。</p>
+<h2 id="7-验证和检查-ONNX"><a href="#7-验证和检查-ONNX" class="headerlink" title="7. 验证和检查 ONNX"></a>7. 验证和检查 ONNX</h2><p>导出后建议至少做三件事：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> onnx</span><br><span class="line"></span><br><span class="line">model = onnx.load(<span class="string">&quot;model.onnx&quot;</span>)</span><br><span class="line">onnx.checker.check_model(model)</span><br><span class="line"></span><br><span class="line">inferred = onnx.shape_inference.infer_shapes(model)</span><br><span class="line">onnx.save(inferred, <span class="string">&quot;model_inferred.onnx&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><code>check_model</code> 检查结构是否合法。</p>
+<p><code>shape_inference</code> 尝试补全中间 tensor 的 shape&#x2F;type 信息，便于调试和后续优化。</p>
+<p>然后做数值对齐：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 比较 PyTorch 输出与 ONNX Runtime 输出</span></span><br><span class="line"><span class="comment"># np.testing.assert_allclose(torch_out, ort_out, rtol=1e-3, atol=1e-5)</span></span><br></pre></td></tr></table></figure>
+
+<p>对于分类模型，通常看 logits 最大差异、top-k 是否一致。对于 embedding 模型，建议看 cosine similarity。对于检测、分割、生成模型，要检查后处理是否也被包含在 ONNX 图中。</p>
+<h2 id="8-ONNX-优化"><a href="#8-ONNX-优化" class="headerlink" title="8. ONNX 优化"></a>8. ONNX 优化</h2><p>ONNX Runtime 支持图优化。官方文档把图优化描述为图级转换，范围从简单图简化、节点消除，到更复杂的节点融合和 layout 优化。(<a target="_blank" rel="noopener" href="https://onnxruntime.ai/docs/performance/model-optimizations/graph-optimizations.html?utm_source=chatgpt.com" title="Graph optimizations | onnxruntime">ONNX Runtime</a>)</p>
+<p>常见优化包括：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Constant Folding        常量折叠</span><br><span class="line">Dead Node Elimination   无用节点删除</span><br><span class="line">Conv + BN Fusion        卷积和 BatchNorm 融合</span><br><span class="line">MatMul + Add Fusion     Linear/Gemm 融合</span><br><span class="line">Attention Fusion        Transformer attention 模式融合</span><br><span class="line">Layout Optimization     NCHW/NHWC 等布局优化</span><br><span class="line">Quantization            FP32 → INT8</span><br><span class="line">FP16 / Mixed Precision  半精度或混合精度</span><br></pre></td></tr></table></figure>
+
+<p>ONNX Runtime 也提供 8-bit 量化 API，包括预处理、动态量化、静态量化和量化调试。(<a target="_blank" rel="noopener" href="https://onnxruntime.ai/docs/performance/model-optimizations/quantization.html?utm_source=chatgpt.com" title="Quantize ONNX models | onnxruntime">ONNX Runtime</a>)</p>
+<p>粗略选择：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CPU 推理：优先试 INT8 dynamic quantization，尤其是 Linear-heavy 模型。</span><br><span class="line">GPU 推理：优先试 FP16 / TensorRT / CUDA EP。</span><br><span class="line">边缘设备：优先看目标 NPU 支持哪些 ONNX ops 和量化格式。</span><br><span class="line">Transformer：优先使用 ORT transformer optimizer 或目标后端专门优化。</span><br></pre></td></tr></table></figure>
+
+<h2 id="9-ONNX-的优点"><a href="#9-ONNX-的优点" class="headerlink" title="9. ONNX 的优点"></a>9. ONNX 的优点</h2><p>ONNX 的核心优点是部署中立。训练框架可以和推理后端分离，生产环境不必绑定 PyTorch 或 TensorFlow。官方也强调 ONNX 的目标之一是让开发者在不同框架、工具、runtime 和 compiler 之间使用模型。(<a target="_blank" rel="noopener" href="https://onnx.ai/?utm_source=chatgpt.com" title="ONNX | Home">ONNX</a>)</p>
+<p>它也适合性能优化。ONNX 图是静态图，更容易做子图融合、常量折叠、算子替换、量化和硬件编译。</p>
+<p>它适合跨语言部署。Python 训练，C++&#x2F;C#&#x2F;Java&#x2F;Node&#x2F;mobile 侧推理都更方便。</p>
+<p>它适合边缘端。很多芯片厂商和推理加速库会优先支持 ONNX 或 ONNX-like IR。</p>
+<h2 id="10-ONNX-的局限"><a href="#10-ONNX-的局限" class="headerlink" title="10. ONNX 的局限"></a>10. ONNX 的局限</h2><p>ONNX 不是万能格式。最常见的问题是：</p>
+<p>第一，动态图和控制流不一定好导。PyTorch 里的 Python 控制流、动态 shape、复杂 list&#x2F;dict 操作、自定义 op，导出时可能失败或语义变化。</p>
+<p>第二，算子支持不完全。模型能导出，不代表目标 runtime 能跑。比如 ONNX Runtime CPU 能跑，不代表 TensorRT EP 或某个 NPU SDK 能跑。</p>
+<p>第三，前后处理容易遗漏。Tokenizer、image resize、NMS、decode、postprocess 经常在模型外部。如果部署端没有复刻一致，结果会偏。</p>
+<p>第四，数值不一定完全一致。不同 kernel、融合、精度、量化、layout 都可能引入差异。部署前必须做端到端数值回归。</p>
+<p>第五，大模型导出会遇到外部权重、动态 KV cache、算子覆盖、显存峰值、图过大等问题。LLM 或多模态大模型通常需要专门导出脚本和 runtime 优化，而不是简单 <code>torch.onnx.export</code> 一步完成。</p>
+<h2 id="11-在多模态-RAG-中怎么用"><a href="#11-在多模态-RAG-中怎么用" class="headerlink" title="11. 在多模态 RAG 中怎么用"></a>11. 在多模态 RAG 中怎么用</h2><p>如果是多模态 RAG，ONNX 通常用于这些位置：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">image encoder        CLIP / SigLIP / ViT encoder</span><br><span class="line">audio encoder        CLAP encoder</span><br><span class="line">text encoder         BGE / E5 / CLIP text encoder</span><br><span class="line">reranker             cross-encoder reranker</span><br><span class="line">OCR/layout model     text detection / recognition / layout analysis</span><br><span class="line">embedding service    CPU/GPU batch inference</span><br><span class="line">edge retrieval       本地端轻量 embedding</span><br></pre></td></tr></table></figure>
+
+<p>典型架构：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">PDF / Image / Video / Audio frame</span><br><span class="line">        ↓</span><br><span class="line">preprocess</span><br><span class="line">        ↓</span><br><span class="line">ONNX vision/audio/text encoder</span><br><span class="line">        ↓</span><br><span class="line">embedding</span><br><span class="line">        ↓</span><br><span class="line">vector index</span><br><span class="line">        ↓</span><br><span class="line">retrieval</span><br><span class="line">        ↓</span><br><span class="line">reranker ONNX</span><br><span class="line">        ↓</span><br><span class="line">LLM answer</span><br></pre></td></tr></table></figure>
+
+<p>对 RAG 系统而言，ONNX 的价值主要是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">降低推理依赖</span><br><span class="line">提升吞吐</span><br><span class="line">减小部署镜像</span><br><span class="line">便于 CPU/edge 部署</span><br><span class="line">方便做 INT8/FP16 优化</span><br><span class="line">统一 embedding/reranker 服务接口</span><br></pre></td></tr></table></figure>
+
+<h2 id="12-实战排错清单"><a href="#12-实战排错清单" class="headerlink" title="12. 实战排错清单"></a>12. 实战排错清单</h2><p>遇到 ONNX 问题时，按这个顺序查：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1. onnx.checker.check_model 是否通过</span><br><span class="line">2. input/output 名字是否正确</span><br><span class="line">3. 输入 dtype 是否一致，例如 float32 / int64</span><br><span class="line">4. 输入 shape 是否一致，尤其 batch、seq_len、channel order</span><br><span class="line">5. preprocessing 是否一致，例如 RGB/BGR、mean/std、resize、padding</span><br><span class="line">6. opset 是否被目标 runtime 支持</span><br><span class="line">7. 是否存在 unsupported op</span><br><span class="line">8. 是否有动态轴没声明</span><br><span class="line">9. PyTorch eval() 是否设置</span><br><span class="line">10. ONNX Runtime 输出是否与原框架 allclose</span><br><span class="line">11. 优化/量化前后是否数值漂移</span><br><span class="line">12. 目标硬件 EP 是否真的接管了主要节点</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> onnx</span><br><span class="line"><span class="keyword">import</span> onnxruntime <span class="keyword">as</span> ort</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">onnx_path = <span class="string">&quot;model.onnx&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. Check ONNX structure</span></span><br><span class="line">onnx_model = onnx.load(onnx_path)</span><br><span class="line">onnx.checker.check_model(onnx_model)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;[OK] ONNX checker passed.&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Create test input</span></span><br><span class="line">x = torch.randn(<span class="number">2</span>, <span class="number">3</span>, <span class="number">224</span>, <span class="number">224</span>).<span class="built_in">float</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. PyTorch output</span></span><br><span class="line">model.<span class="built_in">eval</span>()</span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    y_pt = model(x)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">isinstance</span>(y_pt, torch.Tensor):</span><br><span class="line">    y_pt = y_pt.detach().cpu().numpy()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    y_pt = y_pt[<span class="number">0</span>].detach().cpu().numpy()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. ONNX Runtime output</span></span><br><span class="line">sess = ort.InferenceSession(</span><br><span class="line">    onnx_path,</span><br><span class="line">    providers=[<span class="string">&quot;CPUExecutionProvider&quot;</span>]</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">input_name = sess.get_inputs()[<span class="number">0</span>].name</span><br><span class="line">y_onnx = sess.run(<span class="literal">None</span>, &#123;input_name: x.cpu().numpy()&#125;)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. Compare</span></span><br><span class="line">abs_diff = np.<span class="built_in">abs</span>(y_pt - y_onnx)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;shape pt:&quot;</span>, y_pt.shape)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;shape onnx:&quot;</span>, y_onnx.shape)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;max abs diff:&quot;</span>, abs_diff.<span class="built_in">max</span>())</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;mean abs diff:&quot;</span>, abs_diff.mean())</span><br><span class="line"></span><br><span class="line">np.testing.assert_allclose(y_pt, y_onnx, rtol=<span class="number">1e-4</span>, atol=<span class="number">1e-5</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;[OK] PyTorch and ONNX outputs match.&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="13-最小心智模型"><a href="#13-最小心智模型" class="headerlink" title="13. 最小心智模型"></a>13. 最小心智模型</h2><p>把 ONNX 记成这三层就够了：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ONNX = 静态计算图 + 标准算子语义 + 可移植权重容器</span><br></pre></td></tr></table></figure>
+
+<p>部署时真正执行它的是 runtime&#x2F;compiler：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ONNX file 只是模型描述</span><br><span class="line">ONNX Runtime / TensorRT / OpenVINO 才负责执行和优化</span><br></pre></td></tr></table></figure>
+
+<p>工程上最重要的不是“成功导出”，而是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">导出成功</span><br><span class="line">+ checker 通过</span><br><span class="line">+ runtime 加载通过</span><br><span class="line">+ 数值对齐通过</span><br><span class="line">+ 性能达标</span><br><span class="line">+ 目标硬件支持</span><br></pre></td></tr></table></figure>
+
+
+<hr>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io/2026/05/28/ONNX/">http://tangquanwei.github.io/2026/05/28/ONNX/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/HPC/">HPC</a></div><div class="post-share"><div class="social-share" data-image="/2026/05/28/ONNX/image.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/05/28/%E8%9E%8D%E5%90%88%E7%AE%97%E5%AD%90/" title="融合算子"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">融合算子</div></div><div class="info-2"><div class="info-item-1">融合算子本质上是：把计算图中多个连续的小算子合并成一个更大的算子或一个 GPU kernel，让它们一次性执行，减少中间结果写回显存、减少 kernel launch、减少 layout 转换，从而提高推理性能。 在 TensorRT、TVM、XLA、TorchInductor、ONNX Runtime、TensorRT-LLM 里，算子融合都是核心优化。  1. 为什么要融合算子GPU 推理不只是“算力瓶颈”，很多时候是： 1读显存 → 算一点 → 写显存 → 再读显存 → 再算一点 → 再写显存  例如： 1Conv → BatchNorm → ReLU  如果不融合，大概是： 12345678910111213kernel 1: Conv  input 从显存读入  weight 从显存读入  conv 输出写回显存kernel 2: BatchNorm  conv 输出再从显存读入  BN 参数读入  BN 输出写回显存kernel 3: ReLU  BN 输出再从显存读入  ReLU 输出写回显存  问题有两个： 第一，中间 tensor 反复读写显存。第二，每个...</div></div></div></a><a class="pagination-related" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"><img class="cover" src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/clash1.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Clash 的运行原理（1）：从虚拟网卡到 DNS 分流</div></div><div class="info-2"><div class="info-item-1">Clash 的运行原理：从虚拟网卡到 DNS 分流   摘要Clash 是一个运行在本机或网关上的规则化代理转发引擎。它把应用程序或系统网络栈产生的流量接入本地，再通过 DNS 模块、规则引擎和策略组判断流量应该直连、拒绝，还是通过某个远程代理节点转发出去。 Clash 可以理解为以下几个模块的组合： 123456流量入口 Inbound+ DNS 解析与 fake-ip 映射+ 规则匹配引擎+ 策略组选择器+ 多协议出站 Outbound+ 远程代理服务器或直连出口  它和传统 VPN 的主要区别在于：传统 VPN 通常把整台设备的 IP 流量放进一个加密隧道，而 Clash 更强调按规则分流。同一台设备上，国内网站可以直连，海外网站可以走代理，广告域名可以拒绝，公司内网可以走 WireGuard，游戏 UDP 可以走 Hysteria 或 TUIC。Clash 的价值是把复杂网络流量按域名、IP、端口、进程、地理位置和协议特征进行精细路由。  1. 先区分几个概念：VPN、代理、Clash日常语境里，很多人会把 Clash、Trojan、Shadowsocks、VLESS...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/05/28/GEMM/" title="GEMM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-28</div><div class="info-item-2">GEMM</div></div><div class="info-2"><div class="info-item-1">GEMM 是 General Matrix Multiply，中文通常叫通用矩阵乘法。它是深度学习里最核心的计算形式之一。 它的标准形式是： C &#x3D; \alpha A B + \beta C 其中： 1234A: m × k 矩阵B: k × n 矩阵C: m × n 矩阵α, β: 标量  如果忽略 $\alpha$、$\beta$，最常见的理解就是： 1C = A @ B  也就是矩阵乘矩阵。  1. GEMM 为什么重要神经网络里的很多算子，最后都可以转成 GEMM。 例如全连接层 &#x2F; Linear 层： 1y = x @ W + b  如果： 12x: batch × hiddenW: hidden × output  那么： 1y: batch × output  这本质就是 GEMM，加上一个 bias。 Transformer 里的 Q、K、V 投影也是 GEMM： 123Q = X @ WqK = X @ WkV = X @ Wv  MLP 也是 GEMM： 12H = GELU(X @ W1 + b1)Y = H @ W2 +...</div></div></div></a><a class="pagination-related" href="/2026/05/28/%E8%9E%8D%E5%90%88%E7%AE%97%E5%AD%90/" title="融合算子"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-28</div><div class="info-item-2">融合算子</div></div><div class="info-2"><div class="info-item-1">融合算子本质上是：把计算图中多个连续的小算子合并成一个更大的算子或一个 GPU kernel，让它们一次性执行，减少中间结果写回显存、减少 kernel launch、减少 layout 转换，从而提高推理性能。 在 TensorRT、TVM、XLA、TorchInductor、ONNX Runtime、TensorRT-LLM 里，算子融合都是核心优化。  1. 为什么要融合算子GPU 推理不只是“算力瓶颈”，很多时候是： 1读显存 → 算一点 → 写显存 → 再读显存 → 再算一点 → 再写显存  例如： 1Conv → BatchNorm → ReLU  如果不融合，大概是： 12345678910111213kernel 1: Conv  input 从显存读入  weight 从显存读入  conv 输出写回显存kernel 2: BatchNorm  conv 输出再从显存读入  BN 参数读入  BN 输出写回显存kernel 3: ReLU  BN 输出再从显存读入  ReLU 输出写回显存  问题有两个： 第一，中间 tensor 反复读写显存。第二，每个...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">92</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-ONNX-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text">1. ONNX 是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-onnx-%E6%96%87%E4%BB%B6%E9%87%8C%E9%9D%A2%E6%9C%89%E4%BB%80%E4%B9%88"><span class="toc-number">2.</span> <span class="toc-text">2. .onnx 文件里面有什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-ONNX-Graph-%E7%9A%84%E7%9B%B4%E8%A7%82%E4%BE%8B%E5%AD%90"><span class="toc-number">3.</span> <span class="toc-text">3. ONNX Graph 的直观例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Opset-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">4.</span> <span class="toc-text">4. Opset 是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-ONNX-Runtime-%E7%9A%84%E6%89%A7%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">5. ONNX Runtime 的执行方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-PyTorch-%E5%AF%BC%E5%87%BA-ONNX"><span class="toc-number">6.</span> <span class="toc-text">6. PyTorch 导出 ONNX</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E9%AA%8C%E8%AF%81%E5%92%8C%E6%A3%80%E6%9F%A5-ONNX"><span class="toc-number">7.</span> <span class="toc-text">7. 验证和检查 ONNX</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-ONNX-%E4%BC%98%E5%8C%96"><span class="toc-number">8.</span> <span class="toc-text">8. ONNX 优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-ONNX-%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-number">9.</span> <span class="toc-text">9. ONNX 的优点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-ONNX-%E7%9A%84%E5%B1%80%E9%99%90"><span class="toc-number">10.</span> <span class="toc-text">10. ONNX 的局限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-%E5%9C%A8%E5%A4%9A%E6%A8%A1%E6%80%81-RAG-%E4%B8%AD%E6%80%8E%E4%B9%88%E7%94%A8"><span class="toc-number">11.</span> <span class="toc-text">11. 在多模态 RAG 中怎么用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-%E5%AE%9E%E6%88%98%E6%8E%92%E9%94%99%E6%B8%85%E5%8D%95"><span class="toc-number">12.</span> <span class="toc-text">12. 实战排错清单</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-%E6%9C%80%E5%B0%8F%E5%BF%83%E6%99%BA%E6%A8%A1%E5%9E%8B"><span class="toc-number">13.</span> <span class="toc-text">13. 最小心智模型</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议"><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（2）：实例和各种代理协议"/></a><div class="content"><a class="title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议">Clash 的运行原理（2）：实例和各种代理协议</a><time datetime="2026-05-30T09:47:26.000Z" title="发表于 2026-05-30 17:47:26">2026-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/clash1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"/></a><div class="content"><a class="title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流">Clash 的运行原理（1）：从虚拟网卡到 DNS 分流</a><time datetime="2026-05-30T09:30:42.000Z" title="发表于 2026-05-30 17:30:42">2026-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/28/ONNX/" title="ONNX"><img src="/2026/05/28/ONNX/image.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ONNX"/></a><div class="content"><a class="title" href="/2026/05/28/ONNX/" title="ONNX">ONNX</a><time datetime="2026-05-28T01:46:52.000Z" title="发表于 2026-05-28 09:46:52">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/28/%E8%9E%8D%E5%90%88%E7%AE%97%E5%AD%90/" title="融合算子">融合算子</a><time datetime="2026-05-28T01:35:06.000Z" title="发表于 2026-05-28 09:35:06">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/28/GEMM/" title="GEMM">GEMM</a><time datetime="2026-05-28T01:31:38.000Z" title="发表于 2026-05-28 09:31:38">2026-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2026 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

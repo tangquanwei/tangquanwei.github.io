@@ -1,0 +1,525 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Clash 的运行原理（2）：实例和各种代理协议 | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1. 一次 HTTPS 请求在 Clash 中的完整生命周期以访问 https:&#x2F;&#x2F;www.google.com 为例。 第一步：应用发起 DNS 查询浏览器要访问： 1www.google.com  它先请求 DNS 解析。 第二步：Clash DNS 返回 fake-ip如果开启 fake-ip，Clash 可能返回： 1www.google.com → 198.18.0.23  同时 Cl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clash 的运行原理（2）：实例和各种代理协议">
+<meta property="og:url" content="http://tangquanwei.github.io/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="1. 一次 HTTPS 请求在 Clash 中的完整生命周期以访问 https:&#x2F;&#x2F;www.google.com 为例。 第一步：应用发起 DNS 查询浏览器要访问： 1www.google.com  它先请求 DNS 解析。 第二步：Clash DNS 返回 fake-ip如果开启 fake-ip，Clash 可能返回： 1www.google.com → 198.18.0.23  同时 Cl">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png">
+<meta property="article:published_time" content="2026-05-30T09:47:26.000Z">
+<meta property="article:modified_time" content="2026-06-01T01:05:16.508Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="Clash">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Clash 的运行原理（2）：实例和各种代理协议",
+  "url": "http://tangquanwei.github.io/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/",
+  "image": "http://tangquanwei.github.io/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png",
+  "datePublished": "2026-05-30T09:47:26.000Z",
+  "dateModified": "2026-06-01T01:05:16.508Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Quanwei",
+      "url": "http://tangquanwei.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Clash 的运行原理（2）：实例和各种代理协议',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">92</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(2026/05/30/Clash工作原理-实例和协议/clash2.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a><a class="nav-page-title" href="/"><span class="site-name">Clash 的运行原理（2）：实例和各种代理协议</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Clash 的运行原理（2）：实例和各种代理协议</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-30T09:47:26.000Z" title="发表于 2026-05-30 17:47:26">2026-05-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-06-01T01:05:16.508Z" title="更新于 2026-06-01 09:05:16">2026-06-01</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" alt="alt text"></p>
+<h2 id="1-一次-HTTPS-请求在-Clash-中的完整生命周期"><a href="#1-一次-HTTPS-请求在-Clash-中的完整生命周期" class="headerlink" title="1. 一次 HTTPS 请求在 Clash 中的完整生命周期"></a>1. 一次 HTTPS 请求在 Clash 中的完整生命周期</h2><p>以访问 <code>https://www.google.com</code> 为例。</p>
+<h3 id="第一步：应用发起-DNS-查询"><a href="#第一步：应用发起-DNS-查询" class="headerlink" title="第一步：应用发起 DNS 查询"></a>第一步：应用发起 DNS 查询</h3><p>浏览器要访问：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">www.google.com</span><br></pre></td></tr></table></figure>
+
+<p>它先请求 DNS 解析。</p>
+<h3 id="第二步：Clash-DNS-返回-fake-ip"><a href="#第二步：Clash-DNS-返回-fake-ip" class="headerlink" title="第二步：Clash DNS 返回 fake-ip"></a>第二步：Clash DNS 返回 fake-ip</h3><p>如果开启 fake-ip，Clash 可能返回：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">www.google.com → 198.18.0.23</span><br></pre></td></tr></table></figure>
+
+<p>同时 Clash 记录映射：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">198.18.0.23 → www.google.com</span><br></pre></td></tr></table></figure>
+
+<h3 id="第三步：浏览器连接-fake-ip"><a href="#第三步：浏览器连接-fake-ip" class="headerlink" title="第三步：浏览器连接 fake-ip"></a>第三步：浏览器连接 fake-ip</h3><p>浏览器以为 <code>198.18.0.23</code> 就是目标地址，于是建立 TCP 连接。</p>
+<h3 id="第四步：连接进入-Clash"><a href="#第四步：连接进入-Clash" class="headerlink" title="第四步：连接进入 Clash"></a>第四步：连接进入 Clash</h3><p>由于系统代理、TUN 或透明代理规则，这条连接进入 Clash。Clash 查映射表，知道：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">198.18.0.23 实际对应 www.google.com</span><br></pre></td></tr></table></figure>
+
+<h3 id="第五步：规则匹配"><a href="#第五步：规则匹配" class="headerlink" title="第五步：规则匹配"></a>第五步：规则匹配</h3><p>Clash 检查规则：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,google.com,PROXY</span></span><br></pre></td></tr></table></figure>
+
+<p>命中后，决定走 <code>PROXY</code> 策略组。</p>
+<h3 id="第六步：策略组选择节点"><a href="#第六步：策略组选择节点" class="headerlink" title="第六步：策略组选择节点"></a>第六步：策略组选择节点</h3><p>假设当前 <code>PROXY</code> 选择的是 <code>trojan-node-1</code>。</p>
+<p>Clash 使用 Trojan 协议连接远程服务器。</p>
+<h3 id="第七步：远程代理服务器连接目标网站"><a href="#第七步：远程代理服务器连接目标网站" class="headerlink" title="第七步：远程代理服务器连接目标网站"></a>第七步：远程代理服务器连接目标网站</h3><p>路径变为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">浏览器</span><br><span class="line">  ↕</span><br><span class="line">Clash</span><br><span class="line">  ↕ TLS / Trojan</span><br><span class="line">Trojan 服务器</span><br><span class="line">  ↕ HTTPS</span><br><span class="line">www.google.com</span><br></pre></td></tr></table></figure>
+
+<p>浏览器和 Google 之间的 HTTPS 内容仍然由浏览器和 Google 端到端加密。Trojan 服务器通常能看到连接目标，但不能直接读取 HTTPS 正文。</p>
+<hr>
+<h2 id="2-各种协议的异同与工作原理"><a href="#2-各种协议的异同与工作原理" class="headerlink" title="2. 各种协议的异同与工作原理"></a>2. 各种协议的异同与工作原理</h2><p>下面逐个解释 Clash 中常见的出站协议。</p>
+<hr>
+<h3 id="2-1-SOCKS5"><a href="#2-1-SOCKS5" class="headerlink" title="2.1 SOCKS5"></a>2.1 SOCKS5</h3><p>SOCKS5 是通用代理协议。它的职责是让客户端告诉代理服务器：请帮我连接某个目标地址和端口。</p>
+<p>典型流程：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">客户端 → SOCKS5 代理：我要连接 example.com:443</span><br><span class="line">SOCKS5 代理 → example.com:443 建立连接</span><br><span class="line">客户端 ↔ SOCKS5 代理 ↔ example.com 双向转发数据</span><br></pre></td></tr></table></figure>
+
+<p>SOCKS5 的特点：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">支持 TCP</span><br><span class="line">支持 UDP 转发机制</span><br><span class="line">可以传递域名或 IP</span><br><span class="line">本身不加密</span><br><span class="line">本身不伪装</span><br><span class="line">实现简单，兼容性好</span><br></pre></td></tr></table></figure>
+
+<p>在 Clash 中，SOCKS5 可以作为本地入站，也可以作为远程出站。</p>
+<p>SOCKS5 更像一个基础代理接口，而不是安全隧道。它是否安全，取决于它运行在哪条链路上。如果 SOCKS5 只在本机 <code>127.0.0.1</code> 使用，风险较低；如果远程 SOCKS5 没有加密地暴露在网络上，就容易被监听或滥用。</p>
+<hr>
+<h3 id="2-2-HTTP-代理"><a href="#2-2-HTTP-代理" class="headerlink" title="2.2 HTTP 代理"></a>2.2 HTTP 代理</h3><p>HTTP 代理主要服务于 Web 流量。</p>
+<p>对于普通 HTTP 请求：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">浏览器 → HTTP 代理 → 目标网站</span><br></pre></td></tr></table></figure>
+
+<p>对于 HTTPS 请求，通常使用 CONNECT 方法：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">浏览器 → HTTP 代理：CONNECT example.com:443</span><br><span class="line">HTTP 代理 → example.com:443</span><br><span class="line">浏览器 ↔ example.com 在隧道中完成 TLS 通信</span><br></pre></td></tr></table></figure>
+
+<p>HTTP 代理特点：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">标准化程度高</span><br><span class="line">浏览器和企业网络支持好</span><br><span class="line">适合 Web 场景</span><br><span class="line">本身不等于加密</span><br><span class="line">UDP 支持弱</span><br></pre></td></tr></table></figure>
+
+<p>HTTP 代理和 SOCKS5 都属于基础代理协议，不是为抗识别或复杂加密代理设计的。</p>
+<hr>
+<h3 id="2-3-Shadowsocks"><a href="#2-3-Shadowsocks" class="headerlink" title="2.3 Shadowsocks"></a>2.3 Shadowsocks</h3><p>Shadowsocks 是轻量加密代理协议，可以理解为“加密的 SOCKS 风格代理”。</p>
+<p>典型结构：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">App</span><br><span class="line">  ↓</span><br><span class="line">本地 ss-local / Clash</span><br><span class="line">  ↓ 加密连接</span><br><span class="line">Shadowsocks 服务器</span><br><span class="line">  ↓</span><br><span class="line">目标网站</span><br></pre></td></tr></table></figure>
+
+<p>本地客户端接收应用请求，使用预共享密码和加密算法把数据加密后发给远程服务器。远程服务器解密后，再连接目标网站。</p>
+<p>特点：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">轻量</span><br><span class="line">性能好</span><br><span class="line">实现广泛</span><br><span class="line">支持 TCP 和 UDP</span><br><span class="line">有 AEAD 加密模式</span><br><span class="line">伪装能力中等</span><br></pre></td></tr></table></figure>
+
+<p>Shadowsocks 的安全性主要依赖加密算法、密码强度、服务端实现和配置。现代配置通常使用 AEAD 类加密，提供机密性和完整性。</p>
+<p>它的缺点是流量形态不像标准 HTTPS。虽然内容加密，但协议特征可能和普通 HTTPS 不同。</p>
+<hr>
+<h3 id="2-4-Trojan"><a href="#2-4-Trojan" class="headerlink" title="2.4 Trojan"></a>2.4 Trojan</h3><p>Trojan 的核心思想是把代理流量隐藏在 TLS 连接里，使外观看起来更接近普通 HTTPS。</p>
+<p>典型路径：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Clash</span><br><span class="line">  ↓ TLS</span><br><span class="line">Trojan 服务器</span><br><span class="line">  ↓</span><br><span class="line">目标网站</span><br></pre></td></tr></table></figure>
+
+<p>Trojan 客户端与服务器建立 TLS 连接。TLS 建立后，客户端在加密通道内发送认证信息和代理请求。服务端验证通过后，代理流量；验证失败时，服务端可以表现得像一个普通 HTTPS 网站。</p>
+<p>特点：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">依赖 TLS</span><br><span class="line">流量形态接近 HTTPS</span><br><span class="line">配置相对直观</span><br><span class="line">需要域名和证书</span><br><span class="line">TCP 场景常见，部分实现支持 UDP</span><br></pre></td></tr></table></figure>
+
+<p>Trojan 和 Shadowsocks 的关键区别：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Shadowsocks：自有加密代理协议。</span><br><span class="line">Trojan：把代理流量放进 TLS，看起来更像 HTTPS。</span><br></pre></td></tr></table></figure>
+
+<p>Trojan 的实际隐蔽性取决于 TLS 指纹、证书配置、服务器行为、SNI、ALPN、回落网站等因素。不是只要叫 Trojan 就一定“完全像 HTTPS”。</p>
+<hr>
+<h3 id="2-5-VMess"><a href="#2-5-VMess" class="headerlink" title="2.5 VMess"></a>2.5 VMess</h3><p>VMess 是 V2Ray 生态中的代理协议，早期是 V2Ray 的主力协议。</p>
+<p>典型路径：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Clash / V2Ray 客户端</span><br><span class="line">  ↓ VMess over TCP / WebSocket / HTTP/2 / gRPC / TLS</span><br><span class="line">V2Ray 服务器</span><br><span class="line">  ↓</span><br><span class="line">目标网站</span><br></pre></td></tr></table></figure>
+
+<p>VMess 的特点是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">支持用户 ID 认证</span><br><span class="line">协议设计较复杂</span><br><span class="line">可以搭配多种传输层</span><br><span class="line">支持 TCP 和 UDP</span><br><span class="line">曾经非常常见</span><br></pre></td></tr></table></figure>
+
+<p>VMess 本身提供一定加密和认证，但在实际部署中经常和 TLS、WebSocket、gRPC 等传输层组合，以改善兼容性或伪装效果。</p>
+<p>它的缺点是协议复杂度较高，现代 Xray&#x2F;V2Ray 生态中很多新配置更倾向于 VLESS。</p>
+<hr>
+<h3 id="2-6-VLESS"><a href="#2-6-VLESS" class="headerlink" title="2.6 VLESS"></a>2.6 VLESS</h3><p>VLESS 可以理解为 VMess 的轻量化后继协议。它去掉了 VMess 中一些内建加密和冗余设计，把安全和伪装更多交给外层传输，如 TLS、XTLS、REALITY、gRPC、WebSocket 等。</p>
+<p>典型组合：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VLESS + TLS</span><br><span class="line">VLESS + TCP + XTLS Vision</span><br><span class="line">VLESS + REALITY</span><br><span class="line">VLESS + WebSocket + TLS</span><br><span class="line">VLESS + gRPC + TLS</span><br></pre></td></tr></table></figure>
+
+<p>VLESS 的特点：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">协议更轻</span><br><span class="line">低开销</span><br><span class="line">组合灵活</span><br><span class="line">本身不主打内建加密</span><br><span class="line">通常依赖 TLS / XTLS / REALITY 提供安全和伪装</span><br></pre></td></tr></table></figure>
+
+<p>理解 VLESS 时不能只看 VLESS 四个字。真正的安全性和流量形态取决于完整组合。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VLESS 裸跑：不推荐。</span><br><span class="line">VLESS + TLS：常见安全组合。</span><br><span class="line">VLESS + REALITY：更现代的 Xray 组合之一。</span><br></pre></td></tr></table></figure>
+
+<p>VLESS 的优势是灵活，但配置复杂度也更高。</p>
+<hr>
+<h3 id="2-7-Hysteria"><a href="#2-7-Hysteria" class="headerlink" title="2.7 Hysteria"></a>2.7 Hysteria</h3><p>Hysteria 是基于 QUIC&#x2F;UDP 思路的代理协议，目标之一是改善高延迟、高丢包网络中的传输表现。</p>
+<p>典型路径：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Clash</span><br><span class="line">  ↓ UDP / QUIC</span><br><span class="line">Hysteria 服务器</span><br><span class="line">  ↓</span><br><span class="line">目标网站</span><br></pre></td></tr></table></figure>
+
+<p>Hysteria 特点：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">基于 UDP / QUIC</span><br><span class="line">支持 TCP 和 UDP 代理</span><br><span class="line">内建加密</span><br><span class="line">多路复用</span><br><span class="line">可使用激进拥塞控制策略</span><br><span class="line">弱网吞吐表现可能较好</span><br></pre></td></tr></table></figure>
+
+<p>它适合 UDP 可用、但 TCP 线路质量差的场景。QUIC 在 UDP 上实现自己的会话、加密、流复用和拥塞控制，因此可以绕开部分 TCP 层面的性能问题。</p>
+<p>但它的限制也明显：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">如果 UDP 被封锁，可能不可用。</span><br><span class="line">如果 UDP 被限速，体验会下降。</span><br><span class="line">如果带宽参数配置不合理，可能造成拥塞或丢包。</span><br></pre></td></tr></table></figure>
+
+<p>Hysteria 不是“必然更快”，它更像是为特定网络环境优化的 QUIC 代理。</p>
+<hr>
+<h3 id="2-8-TUIC"><a href="#2-8-TUIC" class="headerlink" title="2.8 TUIC"></a>2.8 TUIC</h3><p>TUIC 也是基于 QUIC&#x2F;UDP 的代理协议，强调低延迟、0-RTT、流复用和 UDP 代理能力。</p>
+<p>典型路径：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Clash</span><br><span class="line">  ↓ UDP / QUIC</span><br><span class="line">TUIC 服务器</span><br><span class="line">  ↓</span><br><span class="line">目标网站</span><br></pre></td></tr></table></figure>
+
+<p>TUIC 特点：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">基于 QUIC</span><br><span class="line">支持 TCP 和 UDP 转发</span><br><span class="line">连接建立快</span><br><span class="line">支持多路复用</span><br><span class="line">适合 UDP 可用的网络</span><br></pre></td></tr></table></figure>
+
+<p>Hysteria 和 TUIC 的共同点：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">都基于 UDP/QUIC</span><br><span class="line">都支持代理 TCP 和 UDP</span><br><span class="line">都内建加密</span><br><span class="line">都依赖 UDP 网络质量</span><br></pre></td></tr></table></figure>
+
+<p>大致区别：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Hysteria 更强调弱网吞吐和拥塞控制。</span><br><span class="line">TUIC 更强调低延迟、简洁和快速连接建立。</span><br></pre></td></tr></table></figure>
+
+<p>如果网络环境对 UDP 不友好，二者都可能不如 Trojan、VLESS + TLS 这类 TCP&#x2F;TLS 协议稳定。</p>
+<hr>
+<h3 id="2-9-WireGuard"><a href="#2-9-WireGuard" class="headerlink" title="2.9 WireGuard"></a>2.9 WireGuard</h3><p>WireGuard 和前面这些协议不在同一个层级。它不是普通代理协议，而是三层 VPN 隧道协议。</p>
+<p>典型路径：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">App</span><br><span class="line">  ↓</span><br><span class="line">系统网络栈</span><br><span class="line">  ↓</span><br><span class="line">WireGuard 虚拟网卡</span><br><span class="line">  ↓ UDP 加密隧道</span><br><span class="line">WireGuard 对端</span><br><span class="line">  ↓</span><br><span class="line">目标网络 / 互联网</span><br></pre></td></tr></table></figure>
+
+<p>WireGuard 的核心特点：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">工作在三层</span><br><span class="line">处理 IP 包</span><br><span class="line">基于 UDP</span><br><span class="line">加密强</span><br><span class="line">性能好</span><br><span class="line">配置相对简洁</span><br><span class="line">适合远程组网、内网访问、站点互联</span><br></pre></td></tr></table></figure>
+
+<p>WireGuard 的路由机制通常基于 AllowedIPs，也就是某个 peer 允许承载哪些 IP 段。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AllowedIPs = 10.0.0.0/8</span><br></pre></td></tr></table></figure>
+
+<p>表示访问 <code>10.0.0.0/8</code> 这段内网地址时走该 WireGuard 对端。</p>
+<p>它和 Clash 常见代理协议的关键区别：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Shadowsocks / Trojan / VLESS：代理某些连接。</span><br><span class="line">WireGuard：转发 IP 包，构建三层加密网络。</span><br></pre></td></tr></table></figure>
+
+<p>WireGuard 非常适合远程办公和内网访问，但它默认不伪装成 HTTPS，也不主打抗识别。它的流量特征比较明确，且依赖 UDP。</p>
+<hr>
+<h2 id="3-常见协议横向对比"><a href="#3-常见协议横向对比" class="headerlink" title="3. 常见协议横向对比"></a>3. 常见协议横向对比</h2><table>
+<thead>
+<tr>
+<th>协议</th>
+<th>类型</th>
+<th>加密</th>
+<th>底层传输</th>
+<th>UDP 支持</th>
+<th>伪装能力</th>
+<th>典型用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SOCKS5</td>
+<td>基础代理</td>
+<td>无</td>
+<td>TCP，可支持 UDP</td>
+<td>有</td>
+<td>弱</td>
+<td>通用代理接口</td>
+</tr>
+<tr>
+<td>HTTP Proxy</td>
+<td>基础代理</td>
+<td>无，除非套 TLS</td>
+<td>TCP</td>
+<td>弱</td>
+<td>弱</td>
+<td>Web 代理、企业代理</td>
+</tr>
+<tr>
+<td>Shadowsocks</td>
+<td>加密代理</td>
+<td>有</td>
+<td>TCP&#x2F;UDP</td>
+<td>有</td>
+<td>中等</td>
+<td>轻量代理</td>
+</tr>
+<tr>
+<td>Trojan</td>
+<td>TLS 代理</td>
+<td>有</td>
+<td>TCP&#x2F;TLS</td>
+<td>有，取决于实现</td>
+<td>较强</td>
+<td>HTTPS 风格代理</td>
+</tr>
+<tr>
+<td>VMess</td>
+<td>V2Ray 协议</td>
+<td>有</td>
+<td>TCP&#x2F;WS&#x2F;gRPC&#x2F;TLS 等</td>
+<td>有</td>
+<td>取决于组合</td>
+<td>V2Ray 旧生态</td>
+</tr>
+<tr>
+<td>VLESS</td>
+<td>轻量代理协议</td>
+<td>依赖外层 TLS&#x2F;XTLS&#x2F;REALITY</td>
+<td>TCP&#x2F;WS&#x2F;gRPC&#x2F;REALITY 等</td>
+<td>有</td>
+<td>强，取决于组合</td>
+<td>Xray 新生态</td>
+</tr>
+<tr>
+<td>Hysteria</td>
+<td>QUIC 代理</td>
+<td>有</td>
+<td>UDP&#x2F;QUIC</td>
+<td>强</td>
+<td>中等</td>
+<td>弱网加速、UDP 可用场景</td>
+</tr>
+<tr>
+<td>TUIC</td>
+<td>QUIC 代理</td>
+<td>有</td>
+<td>UDP&#x2F;QUIC</td>
+<td>强</td>
+<td>中等</td>
+<td>低延迟 QUIC 代理</td>
+</tr>
+<tr>
+<td>WireGuard</td>
+<td>三层 VPN</td>
+<td>有</td>
+<td>UDP</td>
+<td>原生</td>
+<td>弱</td>
+<td>远程组网、内网访问</td>
+</tr>
+</tbody></table>
+<p>选择时可以按场景理解：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">只需要本地代理接口：SOCKS5 / HTTP</span><br><span class="line">想要轻量加密代理：Shadowsocks</span><br><span class="line">想让流量更像 HTTPS：Trojan</span><br><span class="line">使用 V2Ray 旧配置：VMess</span><br><span class="line">使用 Xray 新组合：VLESS</span><br><span class="line">UDP 可用且弱网严重：Hysteria / TUIC</span><br><span class="line">需要真正三层 VPN 和内网访问：WireGuard</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-Clash-与传统-VPN-的区别"><a href="#4-Clash-与传统-VPN-的区别" class="headerlink" title="4. Clash 与传统 VPN 的区别"></a>4. Clash 与传统 VPN 的区别</h2><p>传统 VPN 的典型路径：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">系统所有 IP 流量</span><br><span class="line">  ↓</span><br><span class="line">VPN 虚拟网卡</span><br><span class="line">  ↓</span><br><span class="line">VPN 加密隧道</span><br><span class="line">  ↓</span><br><span class="line">VPN 服务器</span><br><span class="line">  ↓</span><br><span class="line">互联网或远程内网</span><br></pre></td></tr></table></figure>
+
+<p>Clash 的典型路径：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">应用流量 / TUN 流量</span><br><span class="line">  ↓</span><br><span class="line">Clash</span><br><span class="line">  ↓</span><br><span class="line">规则引擎</span><br><span class="line">  ↓</span><br><span class="line">不同出站：DIRECT / REJECT / Trojan / VLESS / Hysteria / WireGuard</span><br></pre></td></tr></table></figure>
+
+<p>主要区别：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>传统 VPN</th>
+<th>Clash</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>核心定位</td>
+<td>网络隧道</td>
+<td>规则代理转发引擎</td>
+</tr>
+<tr>
+<td>工作层级</td>
+<td>通常三层或二层</td>
+<td>入站可应用层，也可 TUN 三层</td>
+</tr>
+<tr>
+<td>分流能力</td>
+<td>依赖路由表或客户端规则</td>
+<td>域名&#x2F;IP&#x2F;端口&#x2F;进程&#x2F;地区规则丰富</td>
+</tr>
+<tr>
+<td>出站协议</td>
+<td>通常单一 VPN 协议</td>
+<td>支持多种代理协议</td>
+</tr>
+<tr>
+<td>典型用途</td>
+<td>远程办公、组网、全局隧道</td>
+<td>科学分流、多节点代理、广告拦截</td>
+</tr>
+<tr>
+<td>是否接管全部流量</td>
+<td>通常是</td>
+<td>可选，取决于系统代理&#x2F;TUN&#x2F;透明代理</td>
+</tr>
+</tbody></table>
+<p>开启 TUN 后，Clash 的体验会更接近 VPN，但本质仍然是规则代理引擎，而不是单一 VPN 协议。</p>
+<hr>
+<h2 id="5-安全边界：谁能看到什么"><a href="#5-安全边界：谁能看到什么" class="headerlink" title="5. 安全边界：谁能看到什么"></a>5. 安全边界：谁能看到什么</h2><p>假设路径是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">你 → Clash → 代理服务器 → 目标网站</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-1-本地运营商能看到什么"><a href="#5-1-本地运营商能看到什么" class="headerlink" title="5.1 本地运营商能看到什么"></a>5.1 本地运营商能看到什么</h3><p>通常能看到：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">你连接了某个远程服务器</span><br><span class="line">连接时间</span><br><span class="line">流量大小</span><br><span class="line">部分 TLS/UDP 元数据</span><br></pre></td></tr></table></figure>
+
+<p>通常看不到：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">代理隧道内的具体网页内容</span><br><span class="line">HTTPS 页面正文</span><br><span class="line">密码和表单内容</span><br></pre></td></tr></table></figure>
+
+<p>但如果 DNS 泄漏，运营商仍可能看到你查询了哪些域名。</p>
+<h3 id="5-2-代理服务器能看到什么"><a href="#5-2-代理服务器能看到什么" class="headerlink" title="5.2 代理服务器能看到什么"></a>5.2 代理服务器能看到什么</h3><p>代理服务器通常能看到：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">你的真实 IP</span><br><span class="line">你要连接的目标域名或 IP</span><br><span class="line">连接时间</span><br><span class="line">流量大小</span><br></pre></td></tr></table></figure>
+
+<p>如果目标网站是 HTTPS，代理服务器通常不能直接看到 HTTPS 正文。但它仍然是重要信任边界，因为所有被代理的连接都经过它。</p>
+<h3 id="5-3-目标网站能看到什么"><a href="#5-3-目标网站能看到什么" class="headerlink" title="5.3 目标网站能看到什么"></a>5.3 目标网站能看到什么</h3><p>目标网站通常看到：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">代理服务器出口 IP</span><br><span class="line">浏览器指纹</span><br><span class="line">账号登录信息</span><br><span class="line">Cookie</span><br><span class="line">访问行为</span><br></pre></td></tr></table></figure>
+
+<p>目标网站通常看不到你的真实本地公网 IP，除非出现：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">WebRTC 泄漏</span><br><span class="line">规则误判导致直连</span><br><span class="line">DNS 泄漏</span><br><span class="line">代理中断后回退直连</span><br><span class="line">客户端配置错误</span><br><span class="line">账号身份关联</span><br></pre></td></tr></table></figure>
+
+<p>Clash 不是匿名系统。它主要解决流量转发、规则分流和链路加密问题，不等于 Tor 这类匿名网络。</p>
+<hr>
+<h2 id="6-常见问题与底层原因"><a href="#6-常见问题与底层原因" class="headerlink" title="6. 常见问题与底层原因"></a>6. 常见问题与底层原因</h2><h3 id="6-1-为什么开了-Clash，但某些软件没有走代理"><a href="#6-1-为什么开了-Clash，但某些软件没有走代理" class="headerlink" title="6.1 为什么开了 Clash，但某些软件没有走代理"></a>6.1 为什么开了 Clash，但某些软件没有走代理</h3><p>常见原因：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">软件不使用系统代理</span><br><span class="line">没有开启 TUN</span><br><span class="line">软件使用 UDP 或 QUIC</span><br><span class="line">规则命中了 DIRECT</span><br><span class="line">DNS 没有被 Clash 接管</span><br><span class="line">软件内置自己的 DNS 或网络栈</span><br></pre></td></tr></table></figure>
+
+<p>解决方向：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">开启 TUN</span><br><span class="line">检查规则命中</span><br><span class="line">检查 DNS 设置</span><br><span class="line">检查 UDP 支持</span><br><span class="line">关闭浏览器内置 DoH 或纳入 Clash 管理</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-为什么有些网站显示代理-IP，有些显示本地-IP"><a href="#6-2-为什么有些网站显示代理-IP，有些显示本地-IP" class="headerlink" title="6.2 为什么有些网站显示代理 IP，有些显示本地 IP"></a>6.2 为什么有些网站显示代理 IP，有些显示本地 IP</h3><p>因为规则不同。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">命中 DIRECT → 显示本地出口 IP</span><br><span class="line">命中 PROXY → 显示代理服务器 IP</span><br></pre></td></tr></table></figure>
+
+<p>Clash 的核心就是允许不同网站走不同出口。</p>
+<h3 id="6-3-为什么测速快但访问慢"><a href="#6-3-为什么测速快但访问慢" class="headerlink" title="6.3 为什么测速快但访问慢"></a>6.3 为什么测速快但访问慢</h3><p>测速通常只测某个测试 URL 的延迟，例如 <code>generate_204</code>。真实访问还受到：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">节点出口带宽</span><br><span class="line">节点到目标网站的链路</span><br><span class="line">目标网站 CDN 调度</span><br><span class="line">丢包率</span><br><span class="line">DNS 解析</span><br><span class="line">TLS 握手耗时</span><br><span class="line">拥塞控制</span><br><span class="line">规则选择</span><br></pre></td></tr></table></figure>
+
+<p>低延迟不等于高吞吐，也不等于所有网站都快。</p>
+<h3 id="6-4-为什么-fake-ip-会导致异常"><a href="#6-4-为什么-fake-ip-会导致异常" class="headerlink" title="6.4 为什么 fake-ip 会导致异常"></a>6.4 为什么 fake-ip 会导致异常</h3><p>部分软件不兼容假 IP，可能把 fake-ip 写入缓存、日志、证书校验或私有协议流程中。</p>
+<p>解决通常是配置 fake-ip-filter，让特定域名走真实解析。</p>
+<h3 id="6-5-为什么-UDP-应用不稳定"><a href="#6-5-为什么-UDP-应用不稳定" class="headerlink" title="6.5 为什么 UDP 应用不稳定"></a>6.5 为什么 UDP 应用不稳定</h3><p>可能原因：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">代理协议不支持 UDP</span><br><span class="line">节点服务端没开 UDP</span><br><span class="line">网络屏蔽 UDP</span><br><span class="line">TUN 没正确接管 UDP</span><br><span class="line">规则没有覆盖 UDP 连接</span><br><span class="line">QUIC 被阻断或绕过代理</span><br></pre></td></tr></table></figure>
+
+<p>有些配置会阻断 UDP 443，让浏览器从 HTTP&#x2F;3&#x2F;QUIC 回落到 TCP&#x2F;HTTPS，以便被更稳定地代理。</p>
+<hr>
+<h2 id="7-一个简化但完整的模型"><a href="#7-一个简化但完整的模型" class="headerlink" title="7. 一个简化但完整的模型"></a>7. 一个简化但完整的模型</h2><p>可以把 Clash 理解成一台<strong>本地软件路由器</strong>。</p>
+<p>它接收流量：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HTTP 代理入口</span><br><span class="line">SOCKS5 入口</span><br><span class="line">Mixed Port</span><br><span class="line">TUN 虚拟网卡</span><br><span class="line">透明代理入口</span><br></pre></td></tr></table></figure>
+
+<p>它识别目标：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">域名</span><br><span class="line">IP</span><br><span class="line">端口</span><br><span class="line">协议</span><br><span class="line">进程名</span><br><span class="line">DNS fake-ip 映射</span><br></pre></td></tr></table></figure>
+
+<p>它匹配规则：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DOMAIN</span><br><span class="line">DOMAIN-SUFFIX</span><br><span class="line">GEOIP</span><br><span class="line">IP-CIDR</span><br><span class="line">PROCESS-NAME</span><br><span class="line">MATCH</span><br></pre></td></tr></table></figure>
+
+<p>它选择策略：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DIRECT</span><br><span class="line">REJECT</span><br><span class="line">PROXY 策略组</span><br><span class="line">自动测速组</span><br><span class="line">故障转移组</span><br><span class="line">负载均衡组</span><br></pre></td></tr></table></figure>
+
+<p>它选择出站：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Shadowsocks</span><br><span class="line">Trojan</span><br><span class="line">VMess</span><br><span class="line">VLESS</span><br><span class="line">Hysteria</span><br><span class="line">TUIC</span><br><span class="line">WireGuard</span><br><span class="line">HTTP</span><br><span class="line">SOCKS5</span><br><span class="line">DIRECT</span><br></pre></td></tr></table></figure>
+
+<p>最后把流量送到目标网站。</p>
+<p>完整链路可以压缩为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">App</span><br><span class="line">  ↓</span><br><span class="line">Clash Inbound</span><br><span class="line">  ↓</span><br><span class="line">DNS / fake-ip</span><br><span class="line">  ↓</span><br><span class="line">Rule Engine</span><br><span class="line">  ↓</span><br><span class="line">Proxy Group</span><br><span class="line">  ↓</span><br><span class="line">Outbound Protocol</span><br><span class="line">  ↓</span><br><span class="line">Remote Server or Direct Internet</span><br><span class="line">  ↓</span><br><span class="line">Target Service</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="8-总结"><a href="#8-总结" class="headerlink" title="8. 总结"></a>8. 总结</h2><p>四条主线：</p>
+<p>第一，Clash 不是协议，而是调度器。Trojan、Shadowsocks、VLESS、Hysteria、TUIC、WireGuard 才是具体出站方式。</p>
+<p>第二，TUN 是三层虚拟网卡。它让 Clash 能从系统网络层接管更多应用的流量，而不只依赖系统代理。</p>
+<p>第三，DNS 是分流准确性的核心。fake-ip 的作用不是“制造假网络”，而是用假 IP 保留域名与连接之间的映射关系。</p>
+<p>第四，各种协议没有绝对优劣，只有适用场景。Shadowsocks 轻量，Trojan 像 HTTPS，VLESS 组合能力强，Hysteria&#x2F;TUIC 偏向 QUIC 弱网优化，WireGuard 适合三层 VPN 和远程组网。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/">http://tangquanwei.github.io/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Clash/">Clash</a><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C/">网络</a></div><div class="post-share"><div class="social-share" data-image="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"><img class="cover" src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/clash1.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Clash 的运行原理（1）：从虚拟网卡到 DNS 分流</div></div><div class="info-2"><div class="info-item-1">Clash 的运行原理：从虚拟网卡到 DNS 分流   摘要Clash 是一个运行在本机或网关上的规则化代理转发引擎。它把应用程序或系统网络栈产生的流量接入本地，再通过 DNS 模块、规则引擎和策略组判断流量应该直连、拒绝，还是通过某个远程代理节点转发出去。 Clash 可以理解为以下几个模块的组合： 123456流量入口 Inbound+ DNS 解析与 fake-ip 映射+ 规则匹配引擎+ 策略组选择器+ 多协议出站 Outbound+ 远程代理服务器或直连出口  它和传统 VPN 的主要区别在于：传统 VPN 通常把整台设备的 IP 流量放进一个加密隧道，而 Clash 更强调按规则分流。同一台设备上，国内网站可以直连，海外网站可以走代理，广告域名可以拒绝，公司内网可以走 WireGuard，游戏 UDP 可以走 Hysteria 或 TUIC。Clash 的价值是把复杂网络流量按域名、IP、端口、进程、地理位置和协议特征进行精细路由。  1. 先区分几个概念：VPN、代理、Clash日常语境里，很多人会把 Clash、Trojan、Shadowsocks、VLESS...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"><img class="cover" src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/clash1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-30</div><div class="info-item-2">Clash 的运行原理（1）：从虚拟网卡到 DNS 分流</div></div><div class="info-2"><div class="info-item-1">Clash 的运行原理：从虚拟网卡到 DNS 分流   摘要Clash 是一个运行在本机或网关上的规则化代理转发引擎。它把应用程序或系统网络栈产生的流量接入本地，再通过 DNS 模块、规则引擎和策略组判断流量应该直连、拒绝，还是通过某个远程代理节点转发出去。 Clash 可以理解为以下几个模块的组合： 123456流量入口 Inbound+ DNS 解析与 fake-ip 映射+ 规则匹配引擎+ 策略组选择器+ 多协议出站 Outbound+ 远程代理服务器或直连出口  它和传统 VPN 的主要区别在于：传统 VPN 通常把整台设备的 IP 流量放进一个加密隧道，而 Clash 更强调按规则分流。同一台设备上，国内网站可以直连，海外网站可以走代理，广告域名可以拒绝，公司内网可以走 WireGuard，游戏 UDP 可以走 Hysteria 或 TUIC。Clash 的价值是把复杂网络流量按域名、IP、端口、进程、地理位置和协议特征进行精细路由。  1. 先区分几个概念：VPN、代理、Clash日常语境里，很多人会把 Clash、Trojan、Shadowsocks、VLESS...</div></div></div></a><a class="pagination-related" href="/2023/05/22/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/" title="网络编程模型"><img class="cover" src="/2023/05/22/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/2023-05-22-22-34-09.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-22</div><div class="info-item-2">网络编程模型</div></div><div class="info-2"><div class="info-item-1">网络编程模型网络编程模型的核心： 服务器如何管理连接  服务器如何处理请求   以上两个设计点最终都和操作系统的 I&#x2F;O 模型及进程模型相关 I/O模型：阻塞 、非阻塞、同步 、异步   进程模型：单进程、 多进程、多线程  PPC (Process per Connection)  父进程接受连接（图中accept） 父进程“fork”子进程（图中fork） 子进程处理连接的读写请求（图中子进程read、业务处理、write） 子进程关闭连接（图中子进程中的close）  PPC 模式实现简单，比较适合服务器的连接数没那么多的情况(eg. pgsql) 而互联网兴起后，服务器的并发和访问量从几十剧增到成千上万，这种模式的弊端就凸显出来了，主要体现在如下几个方面: ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">92</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%B8%80%E6%AC%A1-HTTPS-%E8%AF%B7%E6%B1%82%E5%9C%A8-Clash-%E4%B8%AD%E7%9A%84%E5%AE%8C%E6%95%B4%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">1.</span> <span class="toc-text">1. 一次 HTTPS 请求在 Clash 中的完整生命周期</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%BA%94%E7%94%A8%E5%8F%91%E8%B5%B7-DNS-%E6%9F%A5%E8%AF%A2"><span class="toc-number">1.1.</span> <span class="toc-text">第一步：应用发起 DNS 查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9AClash-DNS-%E8%BF%94%E5%9B%9E-fake-ip"><span class="toc-number">1.2.</span> <span class="toc-text">第二步：Clash DNS 返回 fake-ip</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BF%9E%E6%8E%A5-fake-ip"><span class="toc-number">1.3.</span> <span class="toc-text">第三步：浏览器连接 fake-ip</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%EF%BC%9A%E8%BF%9E%E6%8E%A5%E8%BF%9B%E5%85%A5-Clash"><span class="toc-number">1.4.</span> <span class="toc-text">第四步：连接进入 Clash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E6%AD%A5%EF%BC%9A%E8%A7%84%E5%88%99%E5%8C%B9%E9%85%8D"><span class="toc-number">1.5.</span> <span class="toc-text">第五步：规则匹配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E6%AD%A5%EF%BC%9A%E7%AD%96%E7%95%A5%E7%BB%84%E9%80%89%E6%8B%A9%E8%8A%82%E7%82%B9"><span class="toc-number">1.6.</span> <span class="toc-text">第六步：策略组选择节点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%83%E6%AD%A5%EF%BC%9A%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%9E%E6%8E%A5%E7%9B%AE%E6%A0%87%E7%BD%91%E7%AB%99"><span class="toc-number">1.7.</span> <span class="toc-text">第七步：远程代理服务器连接目标网站</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%90%84%E7%A7%8D%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%BC%82%E5%90%8C%E4%B8%8E%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">2. 各种协议的异同与工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-SOCKS5"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 SOCKS5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-HTTP-%E4%BB%A3%E7%90%86"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 HTTP 代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-Shadowsocks"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 Shadowsocks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-Trojan"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 Trojan</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-VMess"><span class="toc-number">2.5.</span> <span class="toc-text">2.5 VMess</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-VLESS"><span class="toc-number">2.6.</span> <span class="toc-text">2.6 VLESS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-Hysteria"><span class="toc-number">2.7.</span> <span class="toc-text">2.7 Hysteria</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-8-TUIC"><span class="toc-number">2.8.</span> <span class="toc-text">2.8 TUIC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-9-WireGuard"><span class="toc-number">2.9.</span> <span class="toc-text">2.9 WireGuard</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E6%A8%AA%E5%90%91%E5%AF%B9%E6%AF%94"><span class="toc-number">3.</span> <span class="toc-text">3. 常见协议横向对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Clash-%E4%B8%8E%E4%BC%A0%E7%BB%9F-VPN-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">4.</span> <span class="toc-text">4. Clash 与传统 VPN 的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%AE%89%E5%85%A8%E8%BE%B9%E7%95%8C%EF%BC%9A%E8%B0%81%E8%83%BD%E7%9C%8B%E5%88%B0%E4%BB%80%E4%B9%88"><span class="toc-number">5.</span> <span class="toc-text">5. 安全边界：谁能看到什么</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E6%9C%AC%E5%9C%B0%E8%BF%90%E8%90%A5%E5%95%86%E8%83%BD%E7%9C%8B%E5%88%B0%E4%BB%80%E4%B9%88"><span class="toc-number">5.1.</span> <span class="toc-text">5.1 本地运营商能看到什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%83%BD%E7%9C%8B%E5%88%B0%E4%BB%80%E4%B9%88"><span class="toc-number">5.2.</span> <span class="toc-text">5.2 代理服务器能看到什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E7%9B%AE%E6%A0%87%E7%BD%91%E7%AB%99%E8%83%BD%E7%9C%8B%E5%88%B0%E4%BB%80%E4%B9%88"><span class="toc-number">5.3.</span> <span class="toc-text">5.3 目标网站能看到什么</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E5%BA%95%E5%B1%82%E5%8E%9F%E5%9B%A0"><span class="toc-number">6.</span> <span class="toc-text">6. 常见问题与底层原因</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E4%BA%86-Clash%EF%BC%8C%E4%BD%86%E6%9F%90%E4%BA%9B%E8%BD%AF%E4%BB%B6%E6%B2%A1%E6%9C%89%E8%B5%B0%E4%BB%A3%E7%90%86"><span class="toc-number">6.1.</span> <span class="toc-text">6.1 为什么开了 Clash，但某些软件没有走代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E4%BA%9B%E7%BD%91%E7%AB%99%E6%98%BE%E7%A4%BA%E4%BB%A3%E7%90%86-IP%EF%BC%8C%E6%9C%89%E4%BA%9B%E6%98%BE%E7%A4%BA%E6%9C%AC%E5%9C%B0-IP"><span class="toc-number">6.2.</span> <span class="toc-text">6.2 为什么有些网站显示代理 IP，有些显示本地 IP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%B5%8B%E9%80%9F%E5%BF%AB%E4%BD%86%E8%AE%BF%E9%97%AE%E6%85%A2"><span class="toc-number">6.3.</span> <span class="toc-text">6.3 为什么测速快但访问慢</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-%E4%B8%BA%E4%BB%80%E4%B9%88-fake-ip-%E4%BC%9A%E5%AF%BC%E8%87%B4%E5%BC%82%E5%B8%B8"><span class="toc-number">6.4.</span> <span class="toc-text">6.4 为什么 fake-ip 会导致异常</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-%E4%B8%BA%E4%BB%80%E4%B9%88-UDP-%E5%BA%94%E7%94%A8%E4%B8%8D%E7%A8%B3%E5%AE%9A"><span class="toc-number">6.5.</span> <span class="toc-text">6.5 为什么 UDP 应用不稳定</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8C%96%E4%BD%86%E5%AE%8C%E6%95%B4%E7%9A%84%E6%A8%A1%E5%9E%8B"><span class="toc-number">7.</span> <span class="toc-text">7. 一个简化但完整的模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E6%80%BB%E7%BB%93"><span class="toc-number">8.</span> <span class="toc-text">8. 总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议"><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（2）：实例和各种代理协议"/></a><div class="content"><a class="title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议">Clash 的运行原理（2）：实例和各种代理协议</a><time datetime="2026-05-30T09:47:26.000Z" title="发表于 2026-05-30 17:47:26">2026-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/clash1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"/></a><div class="content"><a class="title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流">Clash 的运行原理（1）：从虚拟网卡到 DNS 分流</a><time datetime="2026-05-30T09:30:42.000Z" title="发表于 2026-05-30 17:30:42">2026-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/28/ONNX/" title="ONNX"><img src="/2026/05/28/ONNX/image.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ONNX"/></a><div class="content"><a class="title" href="/2026/05/28/ONNX/" title="ONNX">ONNX</a><time datetime="2026-05-28T01:46:52.000Z" title="发表于 2026-05-28 09:46:52">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/28/%E8%9E%8D%E5%90%88%E7%AE%97%E5%AD%90/" title="融合算子">融合算子</a><time datetime="2026-05-28T01:35:06.000Z" title="发表于 2026-05-28 09:35:06">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/28/GEMM/" title="GEMM">GEMM</a><time datetime="2026-05-28T01:31:38.000Z" title="发表于 2026-05-28 09:31:38">2026-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2002 - 2026 By Quanwei</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
