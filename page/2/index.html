@@ -1,0 +1,294 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>QUANWEI - 记录生活中的点点滴滴</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="幸得识卿桃花面，从此阡陌多暖春">
+<meta property="og:type" content="website">
+<meta property="og:title" content="QUANWEI">
+<meta property="og:url" content="http://tangquanwei.github.io/page/2/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="幸得识卿桃花面，从此阡陌多暖春">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/images/maomi.png">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="LIFE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/images/maomi.png"><script type="application/ld+json"></script><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/page/2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'QUANWEI',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">59</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/images/banner.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">QUANWEI</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/03/25/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E7%9A%84-LSP-Language-Server-Protocol-%E8%AF%A6%E8%A7%A3/" title="编程语言的 LSP (Language Server Protocol) 详解">编程语言的 LSP (Language Server Protocol) 详解</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-03-25T03:45:59.000Z" title="发表于 2026-03-25 11:45:59">2026-03-25</time></span></div><div class="content">什么是LSP编程语言的 LSP (Language Server Protocol) 是一种标准化协议，用于将代码编辑器（客户端）与语言智能服务（服务器）解耦，通过 JSON-RPC 进行通信。 </div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2025/06/11/Haskell%20Monad/" title="用 Python 解释 Haskell Monad"><img class="post-bg" src="/2025/06/11/Haskell%20Monad/image1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="用 Python 解释 Haskell Monad"></a></div><div class="recent-post-info"><a class="article-title" href="/2025/06/11/Haskell%20Monad/" title="用 Python 解释 Haskell Monad">用 Python 解释 Haskell Monad</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-06-11T08:22:02.000Z" title="发表于 2025-06-11 16:22:02">2025-06-11</time></span></div><div class="content">假设你已经会使用一门简单的编程语言 Python 从一个具体问题开始你写过这种代码吗： 123456789user = get_user(id)if user is None:    return Noneprofile = get_profile(user)if profile is None:    return Nonescore = get_score(profile)if score is None:    return None  每一步都可能失败，所以每一步之后都要检查。这段代码的真实逻辑只有三行，但被错误处理淹没了。 Monad 要解决的正是这类问题 如何把”带有某种额外语境的计算”优雅地串联起来。  三个层次来理解第一层：Monad 是一种设计模式 先忘掉范畴论。Monad 就是一个包装盒，加上两个操作：  return（或 pure）：把一个普通值放进盒子 &gt;&gt;=（bind）：把盒子里的值取出来，交给下一个函数，返回新的盒子  12普通值  →  return  →  [盒子][盒子]  →  &gt;&gt;= f  →  [新盒子]  关键在于...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/05/19/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E5%BA%A6%E8%AE%A1%E7%AE%97/" title="文本相似度计算">文本相似度计算</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-05-19T12:26:55.000Z" title="发表于 2025-05-19 20:26:55">2025-05-19</time></span></div><div class="content">文本相似度计算 基准方法：文本-&gt;词-&gt;嵌入-&gt;平均池化-&gt;余弦相似度 Word Mover’s Distance rank_bm25  无监督短文本匹配1. TF-IDF Term Frequency-Inverse Document FrequencyTF-IDF（Term Frequency-Inverse Document Frequency）是一种在信息检索和文本挖掘中广泛使用的加权技术，用于评估一个词在一个文档或语料库中的重要性。TF-IDF算法结合了两个统计测量：词频（TF）和逆文档频率（IDF），来计算一个词的权重。 词频（TF, Term Frequency） 词频是指一个词在文档中出现的频率。一个词在文档中出现得越频繁，其TF值就越高，表明这个词对该文档的内容可能越重要。然而，仅仅使用词频作为权重是有缺陷的，因为常见的词汇（如冠词、介词等）会获得较高的权重，尽管它们对于文档的主题贡献不大。 TF的计算公式可以表示为：$$ \text{TF}(t, d) &#x3D; \frac{\text{词 } t \text{ 在文档 } d \t...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/05/19/PG-Vector/" title="PG Vector">PG Vector</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-05-19T12:24:37.000Z" title="发表于 2025-05-19 20:24:37">2025-05-19</time></span></div><div class="content">Getting StartedEnable the extension (do this once in each database where you want to use it) 1CREATE EXTENSION vector;  Create a vector column with 3 dimensions 1CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3));  Insert vectors 1INSERT INTO items (embedding) VALUES (&#x27;[1,2,3]&#x27;), (&#x27;[4,5,6]&#x27;);  Get the nearest neighbors by L2 distance 1SELECT * FROM items ORDER BY embedding &lt;-&gt; &#x27;[3,1,2]&#x27; LIMIT 5;  Also supports inner product (&lt;#&gt;) and c...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/05/19/Gen-AI/" title="Gen AI">Gen AI</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-05-19T12:16:21.000Z" title="发表于 2025-05-19 20:16:21">2025-05-19</time></span></div><div class="content">虽然 LLM 提供了很大的潜力，但你也应该谨慎。 LLM 的核心是经过训练来预测序列中的以下单词。 这些单词基于训练数据中其他文本的模式和关系。这些训练数据的来源通常是互联网、书籍和其他公开可用的文本。这些数据的质量可能有问题，也可能是不正确的。培训发生在某个时间点，它可能无法反映世界的当前状态，也不会包含任何私人信息。 LLM 经过微调以尽可能有用，即使这意味着偶尔会产生误导性或毫无根据的内容，这种现象称为幻觉。 例如，当被要求“描述月亮”时，LLM可能会回答“月亮是由奶酪制成的”。虽然这是一句俗语，但事实并非如此。  修复幻觉提供额外的上下文数据有助于为 LLM 的响应奠定基础并使其更加准确。 知识图谱是一种向 LLM 提供额外数据的机制。知识图谱中的数据可以指导 LLM 提供更相关、更准确和更可靠的响应。 虽然LLM使用其语言技能来解释和响应上下文数据，但它不会忽视原始训练数据。 您可以将原始训练数据视为基础知识和语言能力，而上下文信息则在特定情况下提供指导。 这两种方法的结合使 LLM 能够产生更有意义的响应。 避免幻觉LLM 可以“编造”。LLM 旨在根据它们在大量数据...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/05/19/%E6%A6%82%E7%8E%87%E8%AE%BA/" title="概率论">概率论</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-05-19T11:59:51.000Z" title="发表于 2025-05-19 19:59:51">2025-05-19</time></span></div><div class="content">条件概率是指在给定某个条件下，某个事件发生的概率。用于描述事件之间的依赖关系。假设我们有两个事件 A 和 B，其中事件 A 是我们感兴趣的事件，事件 B 是某个条件。条件概率表示在已知事件 B 发生的情况下，事件 A 发生的概率，记作 $P(A|B)$。 条件概率的计算公式如下： $$ P(A|B) &#x3D; \frac{P(A \cap B)}{P(B)} $$ 其中，$P(A \cap B)$ 表示事件 A 和事件 B 同时发生的概率，称为事件 A 与事件 B 的交集。$P(B)$ 表示事件 B 发生的概率。  条件概率的计算可以通过已知的概率和事件之间的关系来进行推导。它可以帮助我们理解事件之间的依赖关系，并在实际问题中进行推断和决策。  条件概率在很多领域都有广泛的应用，例如在机器学习中，条件概率可以用于建模和分类；在信息论中，条件概率可以用于计算熵和互信息等。 需要注意的是，条件概率的计算需要满足一些前提条件，例如事件 B 的概率不能为零，事件 A 和事件 B 之间应该是独立或有一定的关联性等。  联合概率是指多个事件同时发生的概率。在概率论中，联合概率是一个重要的...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/07/24/LLM-Hallucination/" title="LLM Hallucination">LLM Hallucination</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-07-24T12:17:45.000Z" title="发表于 2024-07-24 20:17:45">2024-07-24</time></span></div><div class="content">123456789101112131415161718192021222324mindmap  root((幻觉))    幻觉是什么？    为什么出现幻觉？    如何检测幻觉？      (检索增强评估)        数据集 FactualityPrompt        指标          FActScore          SAFE          FacTool      (基于采样的检测)      (未知知识的校准)        幻觉是什么？模型输出是捏造的,而不是以所提供的上下文或世界知识为基础的情况。 上下文中幻觉：模型输出应与上下文中的源内容一致。外在幻觉：当模型不知道一个事实时，它应该说不知道。 为什么出现幻觉？预训练数据，过时、丢失或不正确 微调使用的新数据跟预训练数据不相容 如何检测幻觉？检索增强评估基准数据集 FactualityPrompt 幻觉的评估指标：  幻觉 NE（命名实体）错误：使用预训练实体检测模型和文档级接地，此指标测量未出现在真实文档中的检测到的命名实体的比例。 蕴涵比率：使用在MNLI和句子级知识基础上微调的RoBER...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/07/21/Tokenizer/" title="Tokenizer">Tokenizer</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-07-21T12:25:28.000Z" title="发表于 2024-07-21 20:25:28">2024-07-21</time></span></div><div class="content">Tokenizer在NLP中，tokenizer是一个软件工具或函数，用于将文本字符串分割成更小的单元，这些单元被称为“tokens”。这些tokens可以是单词、标点符号、数字或任何有意义的文本单元，具体取决于tokenizer的设计和目标应用场景。例如，一个简单的空格分隔的tokenizer会将句子分割成单个的单词。 Tokenization是文本预处理的第一步，几乎所有NLP任务都需要这一步骤，包括但不限于机器翻译、情感分析、文本分类、命名实体识别（NER）、问答系统等。 Tokenizer可以根据不同的语言特性、语法结构和任务需求进行定制。例如：  基础分词器：仅仅基于空格或标点符号分割文本。 高级分词器：考虑连字符、缩写、数字和标点符号，甚至能处理复合词。 子词分词器：如Byte Pair Encoding (BPE)，WordPiece，SentencePiece，它们将单词分割成子词单位，有助于处理未见过的词汇。 预训练模型的分词器：如BERT、RoBERTa、GPT等模型自带的分词器，它们通常使用子词分词技术，并且包含特殊标记如[CLS]、[SEP]、[PAD]等...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/24/Classic-NLP/" title="Classic NLP">Classic NLP</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-24T12:08:17.000Z" title="发表于 2024-05-24 20:08:17">2024-05-24</time></span></div><div class="content">NLP 是一门研究如何使计算机能够理解、处理和生成人类语言的学科。 基本概念：  语言模型：用于对语言的概率进行建模，包括n-gram模型、神经网络语言模型等。 分词：将连续的文本切分成有意义的词语。 词性标注：为文本中的每个词语标注其词性，如名词、动词、形容词等。 命名实体识别：识别文本中的具体实体，如人名、地名、组织机构等。 语义角色标注：对句子中的每个词语进行语义角色的标注，如施事者、受事者等。  基本技术：   文本预处理：包括分词、去除停用词、词干化等，用于清洗和规范化文本数据。 文本分类：将文本分为不同的类别或标签，如情感分类、主题分类等。 信息抽取：从文本中提取结构化的信息，如实体关系、事件等。 机器翻译：将一种语言的文本翻译成另一种语言的文本。 问答系统：根据用户的问题，从文本中找到相关的答案。 对话系统：与用户进行自然语言交互，实现智能对话。  应用场景：  搜索引擎：通过分析用户的查询意图，提供相关的搜索结果。 情感分析：分析文本中的情感倾向，如正面、负面或中性。 社交媒体分析：分析社交媒体上的用户评论和观点。 机器翻译：实现跨语言的文本翻译，如中英互译。 语...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/19/%E5%90%91%E9%87%8F/" title="向量">向量</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-19T11:59:51.000Z" title="发表于 2024-05-19 19:59:51">2024-05-19</time></span></div><div class="content">向量的本质从几何角度来看，向量可以表示空间中的一个有向线段，具有大小（长度）和方向两个属性。向量通常用箭头表示，箭头的方向表示向量的方向，箭头的长度表示向量的大小。 从代数角度来看，向量可以表示为具有一定结构的有序数组或元组。例如，一个二维向量可以表示为一个包含两个实数的有序对（x，y），而一个三维向量可以表示为一个包含三个实数的有序三元组（x，y，z）。在代数中，向量可以进行加法和数乘等运算，从而构成向量空间。 向量运算的本质可以从几何和代数两个角度来理解。  从几何角度来看，向量运算的本质在于描述和操作空间中的位移、方向和力等概念。  向量的加法可以看作是将两个位移或力合成为一个新的位移或力， 向量的减法可以看作是将一个位移或力分解为两个部分。 数乘可以改变向量的大小和方向，从而实现缩放和反向的效果。 向量的数量积可以计算两个向量之间的夹角和长度关系， 向量的向量积可以计算两个向量所张成的平行四边形的面积和垂直关系。  从代数角度来看，向量运算的本质在于定义和操作向量空间中的元素。  向量的加法和减法定义了向量空间中的加法运算和逆运算，使得向量空间成为一个加法群。 数乘定义了...</div></div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#content-inner">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/#content-inner">10</a><a class="extend next" rel="next" href="/page/3/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">59</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/27/SSH-%E5%8F%8D%E5%90%91%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/" title="用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器">用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器</a><time datetime="2026-10-27T06:41:00.000Z" title="发表于 2026-10-27 14:41:00">2026-10-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale-Clash-Coexistence-SOP/" title="Tailscale 与 Clash 共存排查 SOP">Tailscale 与 Clash 共存排查 SOP</a><time datetime="2026-10-26T06:00:00.000Z" title="发表于 2026-10-26 14:00:00">2026-10-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88-%E4%BB%8EWireGuard%E5%88%B0NAT%E7%A9%BF%E9%80%8F%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/" title="Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理">Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理</a><time datetime="2026-10-25T16:35:00.000Z" title="发表于 2026-10-26 00:35:00">2026-10-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale%E4%B8%8EClash%E5%85%B1%E5%AD%98-IPv6%E7%BB%95%E8%BF%87%E4%BB%A3%E7%90%86%E6%8E%92%E6%9F%A5%E4%B8%8E%E4%BF%AE%E5%A4%8D/" title="开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复">开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复</a><time datetime="2026-10-25T16:18:00.000Z" title="发表于 2026-10-26 00:18:00">2026-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议"><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（2）：实例和各种代理协议"/></a><div class="content"><a class="title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议">Clash 的运行原理（2）：实例和各种代理协议</a><time datetime="2026-05-30T09:47:26.000Z" title="发表于 2026-05-30 17:47:26">2026-05-30</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Vim/" style="font-size: 1.1em; color: #999">Vim</a> <a href="/tags/PostgreSQL/" style="font-size: 1.2em; color: #999da3">PostgreSQL</a> <a href="/tags/Python/" style="font-size: 1.15em; color: #999b9e">Python</a> <a href="/tags/zsh/" style="font-size: 1.1em; color: #999">zsh</a> <a href="/tags/Database/" style="font-size: 1.5em; color: #99a9bf">Database</a> <a href="/tags/Identity/" style="font-size: 1.1em; color: #999">Identity</a> <a href="/tags/WebScoket/" style="font-size: 1.1em; color: #999">WebScoket</a> <a href="/tags/HPC/" style="font-size: 1.2em; color: #999da3">HPC</a> <a href="/tags/SOP/" style="font-size: 1.1em; color: #999">SOP</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/" style="font-size: 1.1em; color: #999">软件测试</a> <a href="/tags/Tailscale/" style="font-size: 1.2em; color: #999da3">Tailscale</a> <a href="/tags/ASM/" style="font-size: 1.1em; color: #999">ASM</a> <a href="/tags/Java/" style="font-size: 1.35em; color: #99a3b1">Java</a> <a href="/tags/PL-SQL/" style="font-size: 1.4em; color: #99a5b6">PL/SQL</a> <a href="/tags/MySQL/" style="font-size: 1.1em; color: #999">MySQL</a> <a href="/tags/AT-T/" style="font-size: 1.1em; color: #999">AT&T</a> <a href="/tags/RAG/" style="font-size: 1.1em; color: #999">RAG</a> <a href="/tags/React/" style="font-size: 1.2em; color: #999da3">React</a> <a href="/tags/IPv6/" style="font-size: 1.1em; color: #999">IPv6</a> <a href="/tags/SSH/" style="font-size: 1.1em; color: #999">SSH</a> <a href="/tags/Jenkins/" style="font-size: 1.1em; color: #999">Jenkins</a> <a href="/tags/Linux/" style="font-size: 1.5em; color: #99a9bf">Linux</a> <a href="/tags/%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BB/" style="font-size: 1.1em; color: #999">如何阅读</a> <a href="/tags/OpenGauss/" style="font-size: 1.1em; color: #999">OpenGauss</a> <a href="/tags/KeyCloak/" style="font-size: 1.1em; color: #999">KeyCloak</a> <a href="/tags/Clash/" style="font-size: 1.25em; color: #999fa7">Clash</a> <a href="/tags/Unity3D/" style="font-size: 1.1em; color: #999">Unity3D</a> <a href="/tags/JavaScript/" style="font-size: 1.3em; color: #99a1ac">JavaScript</a> <a href="/tags/3D/" style="font-size: 1.1em; color: #999">3D</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 1.1em; color: #999">正则化</a> <a href="/tags/NLP/" style="font-size: 1.2em; color: #999da3">NLP</a> <a href="/tags/App/" style="font-size: 1.1em; color: #999">App</a> <a href="/tags/FastAPI/" style="font-size: 1.1em; color: #999">FastAPI</a> <a href="/tags/VPN/" style="font-size: 1.1em; color: #999">VPN</a> <a href="/tags/Netty/" style="font-size: 1.1em; color: #999">Netty</a> <a href="/tags/Oracle/" style="font-size: 1.45em; color: #99a7ba">Oracle</a> <a href="/tags/Blender/" style="font-size: 1.1em; color: #999">Blender</a> <a href="/tags/WebSocket/" style="font-size: 1.1em; color: #999">WebSocket</a> <a href="/tags/Neo4j/" style="font-size: 1.1em; color: #999">Neo4j</a> <a href="/tags/Docker/" style="font-size: 1.35em; color: #99a3b1">Docker</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      <a class="card-more-btn" href="/archives/"
+            title="查看更多">
+            <i class="fas fa-angle-right"></i>
+          </a>
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/10/">
+            <span class="card-archive-list-date">
+              十月 2026
+            </span>
+            <span class="card-archive-list-count">4</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/05/">
+            <span class="card-archive-list-date">
+              五月 2026
+            </span>
+            <span class="card-archive-list-count">6</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/03/">
+            <span class="card-archive-list-date">
+              三月 2026
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/06/">
+            <span class="card-archive-list-date">
+              六月 2025
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/05/">
+            <span class="card-archive-list-date">
+              五月 2025
+            </span>
+            <span class="card-archive-list-count">4</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/07/">
+            <span class="card-archive-list-date">
+              七月 2024
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/05/">
+            <span class="card-archive-list-date">
+              五月 2024
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/03/">
+            <span class="card-archive-list-date">
+              三月 2024
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">99</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-10-27T06:42:30.093Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2002 - 2026 By Quanwei</span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: str => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: subtitleType => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        btf.getScript('https://cdn.jsdelivr.net/npm/typed.js/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  },
+  processSubtitle: (content, extraContents = []) => {
+    if (true) {
+      const sub = [].slice()
+
+      if (extraContents.length > 0) {
+        sub.unshift(...extraContents)
+      }
+
+      if (typeof content === 'string') {
+        sub.unshift(content)
+      } else if (Array.isArray(content)) {
+        sub.unshift(...content)
+      }
+
+      sub.length > 0 && typedJSFn.init(sub)
+    } else {
+      document.getElementById('subtitle').textContent = typeof content === 'string' ? content :
+        (Array.isArray(content) && content.length > 0 ? content[0] : '')
+    }
+  }
+}
+btf.addGlobalFn('pjaxSendOnce', () => { typed.destroy() }, 'typedDestroy')
+</script><script>function subtitleType () {
+  btf.getScript('https://sdk.jinrishici.com/v2/browser/jinrishici.js')
+    .then(() => {
+      jinrishici.load(result => {
+        if (result && result.data && result.data.content) {
+          typedJSFn.processSubtitle(result.data.content)
+        } else {
+          throw new Error('Failed to parse the return value of Jinrishici API')
+        }
+      })
+    })
+    .catch(err => {
+      console.error('Failed to get the Jinrishici API:', err)
+      typedJSFn.processSubtitle(0)
+    })
+}
+typedJSFn.run(subtitleType)
+</script></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

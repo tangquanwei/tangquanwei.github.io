@@ -1,0 +1,303 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>QUANWEI - 记录生活中的点点滴滴</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="幸得识卿桃花面，从此阡陌多暖春">
+<meta property="og:type" content="website">
+<meta property="og:title" content="QUANWEI">
+<meta property="og:url" content="http://tangquanwei.github.io/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="幸得识卿桃花面，从此阡陌多暖春">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/images/maomi.png">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="LIFE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/images/maomi.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "QUANWEI",
+  "alternateName": [
+    "记录生活中的点点滴滴",
+    "tangquanwei.github.io"
+  ],
+  "url": "http://tangquanwei.github.io/"
+}</script><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'QUANWEI',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">59</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/images/banner.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">QUANWEI</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/10/27/SSH-%E5%8F%8D%E5%90%91%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/" title="用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器">用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-10-27T06:41:00.000Z" title="发表于 2026-10-27 14:41:00">2026-10-27</time></span></div><div class="content">摘要远程服务器上 pip install、git clone、huggingface-cli download 全都卡住，装个代理客户端却发现节点全部超时——而本地电脑上的代理明明好得很。本文从这次真实排查讲起，用 SSH 反向端口转发（ssh -R） 把本地代理”借”给服务器，让服务器的出口 IP 变成你本地的出口 IP。文中的 IP、端口、耗时数据都来自一次真实排查，可以直接对照复现。  一、从一个真实的尴尬问题说起场景很典型：  你有一台本地电脑，上面跑着代理软件（Clash &#x2F; mihomo &#x2F; sing-box 之类），本地 HTTP 代理端口 7897，上网一切正常。 你还有一台远程服务器（云主机、公司跳板机、超算容器、实验室工作站）。你在上面跑 pip install、git clone、huggingface-cli download，全都卡住。 于是你在服务器上也装了个代理客户端，配了订阅，结果节点全部超时。  排查时的输出大概长这样： 123456789$ curl -s -m 12 -x http://127.0.0.1:7890 htt...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/10/26/Tailscale-Clash-Coexistence-SOP/" title="Tailscale 与 Clash 共存排查 SOP">Tailscale 与 Clash 共存排查 SOP</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-10-26T06:00:00.000Z" title="发表于 2026-10-26 14:00:00">2026-10-26</time></span></div><div class="content">同一台 Mac 同时运行 Tailscale 和 Clash 后，启智平台打不开了。恢复启智访问后，另一个问题又出现了：Tailscale 设备能 ping 通，浏览器却打不开它的服务首页。 两次故障发生在不同环节。启智请求最初卡在 DNS；Tailscale 服务则是直接访问返回 HTTP 200，经过本地 Clash 代理返回 502。最后的配置是：Tailscale 保留设备互联，关闭 DNS 和接受子网路由；Clash 继续按规则分流，同时在 TUN 和系统代理两处绕过 Tailscale 目标。 下面先复盘证据，再给出可以直接复用的排查 SOP。设备地址统一替换为示例 100.101.102.103，代理端口以本次环境的 7897 为例。   1. 先明确要保留的网络行为这次需求很具体：通过 Tailscale IP 访问一台设备上的服务，其余日常访问继续由 Clash 按现有规则处理。既不需要用设备名访问，也不需要借助远端设备访问它背后的局域网。    功能 负责什么 本次选择    Tailscale 设备互联 通过虚拟 IP 连接已加入 tailnet 的设备 保...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/10/26/Tailscale%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88-%E4%BB%8EWireGuard%E5%88%B0NAT%E7%A9%BF%E9%80%8F%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/" title="Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理">Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-10-25T16:35:00.000Z" title="发表于 2026-10-26 00:35:00">2026-10-26</time></span></div><div class="content">家里的电脑、云服务器和随身携带的笔记本，通常位于不同网络。想从外面连接家中电脑，往往要处理公网 IP、端口映射、动态 DNS 和防火墙；如果遇上运营商级 NAT，连端口映射都未必可行。 Tailscale 的作用，就是让这些设备加入一张受身份和访问策略管理的虚拟内网。设备可以通过相对稳定的虚拟 IP 或设备名互相访问，底层则尽量建立点对点加密连接，无法直连时使用中继。 它主要解决“自己的设备如何互联”，默认不会把所有公网访问都改成从远端出站。 理解这一点，也就容易区分 Tailscale、普通代理和出口节点的用途。   1. Tailscale 能解决哪些问题假设有四台设备： 1234MacBook：随身使用，在家、学校和咖啡店之间切换Linux 服务器：运行开发环境和模型服务家用电脑：保存文件，偶尔需要远程桌面手机：在移动网络下访问内部服务  它们加入同一个 Tailscale 网络后，就可以在策略允许的范围内，通过虚拟网络通信。这张网络称为 tailnet。    场景 具体用法    远程开发 SSH 连接服务器，使用 VS Code Remote SSH   访问开发服务...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/10/26/Tailscale%E4%B8%8EClash%E5%85%B1%E5%AD%98-IPv6%E7%BB%95%E8%BF%87%E4%BB%A3%E7%90%86%E6%8E%92%E6%9F%A5%E4%B8%8E%E4%BF%AE%E5%A4%8D/" title="开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复">开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-10-25T16:18:00.000Z" title="发表于 2026-10-26 00:18:00">2026-10-26</time></span></div><div class="content">开启 Tailscale 后，Clash 明明选中了海外节点，查 IP 网站却显示中国。第一反应是：两个软件都创建虚拟网卡，是不是互相冲突了？ 这次排查发现，海外代理节点仍然正常，IPv4 经过 Clash，公网 IPv6 却绕过了 Clash，直接从本地宽带出站。支持 IPv6 的网站可能显示国内地址，仅支持 IPv4 的网站则仍然显示海外地址。 修复方法是为 Clash TUN 补上 IPv6 地址，让 Mihomo 自动建立 IPv6 接管路由，同时排除 Tailscale 的内网网段。修复后，两者可以继续同时使用。   1. 现象与运行环境本次环境是 macOS，使用 Clash Verge Rev，内核为 Mihomo v1.19.32，Tailscale 版本为 1.102.4。 当时的设置如下：    项目 状态    Clash TUN 模式 开启   Clash 系统代理 关闭   Clash 分流模式 Rule   Clash 顶层 ipv6 true   Clash TUN auto-route true   Tailscale 已连接   Tailscal...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议"><img class="post-bg" src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（2）：实例和各种代理协议"></a></div><div class="recent-post-info"><a class="article-title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议">Clash 的运行原理（2）：实例和各种代理协议</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-30T09:47:26.000Z" title="发表于 2026-05-30 17:47:26">2026-05-30</time></span></div><div class="content"> 1. 一次 HTTPS 请求在 Clash 中的完整生命周期以访问 https://www.google.com 为例。 第一步：应用发起 DNS 查询浏览器要访问： 1www.google.com  它先请求 DNS 解析。 第二步：Clash DNS 返回 fake-ip如果开启 fake-ip，Clash 可能返回： 1www.google.com → 198.18.0.23  同时 Clash 记录映射： 1198.18.0.23 → www.google.com  第三步：浏览器连接 fake-ip浏览器以为 198.18.0.23 就是目标地址，于是建立 TCP 连接。 第四步：连接进入 Clash由于系统代理、TUN 或透明代理规则，这条连接进入 Clash。Clash 查映射表，知道： 1198.18.0.23 实际对应 www.google.com  第五步：规则匹配Clash 检查规则： 1- DOMAIN-SUFFIX,google.com,PROXY  命中后，决定走 PROXY 策略组。 第六步：策略组选择节点假设当前 PROXY 选择的是 troja...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"><img class="post-bg" src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/clash1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"></a></div><div class="recent-post-info"><a class="article-title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流">Clash 的运行原理（1）：从虚拟网卡到 DNS 分流</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-30T09:30:42.000Z" title="发表于 2026-05-30 17:30:42">2026-05-30</time></span></div><div class="content">Clash 的运行原理：从虚拟网卡到 DNS 分流   摘要Clash 是一个运行在本机或网关上的规则化代理转发引擎。它把应用程序或系统网络栈产生的流量接入本地，再通过 DNS 模块、规则引擎和策略组判断流量应该直连、拒绝，还是通过某个远程代理节点转发出去。 Clash 可以理解为以下几个模块的组合： 123456流量入口 Inbound+ DNS 解析与 fake-ip 映射+ 规则匹配引擎+ 策略组选择器+ 多协议出站 Outbound+ 远程代理服务器或直连出口  它和传统 VPN 的主要区别在于：传统 VPN 通常把整台设备的 IP 流量放进一个加密隧道，而 Clash 更强调按规则分流。同一台设备上，国内网站可以直连，海外网站可以走代理，广告域名可以拒绝，公司内网可以走 WireGuard，游戏 UDP 可以走 Hysteria 或 TUIC。Clash 的价值是把复杂网络流量按域名、IP、端口、进程、地理位置和协议特征进行精细路由。  1. 先区分几个概念：VPN、代理、Clash日常语境里，很多人会把 Clash、Trojan、Shadowsocks、VLESS 统...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2026/05/28/ONNX/" title="ONNX"><img class="post-bg" src="/2026/05/28/ONNX/image.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ONNX"></a></div><div class="recent-post-info"><a class="article-title" href="/2026/05/28/ONNX/" title="ONNX">ONNX</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-28T01:46:52.000Z" title="发表于 2026-05-28 09:46:52">2026-05-28</time></span></div><div class="content">ONNX 可以理解为机器学习模型的中间表示格式：训练时可以用 PyTorch、TensorFlow、scikit-learn 等框架，部署时把模型导出成 .onnx，再交给 ONNX Runtime、TensorRT、OpenVINO、CoreML、DirectML 等后端执行。  1. ONNX 是什么ONNX，全称 Open Neural Network Exchange，是一个开放的 AI 模型格式。它定义了三类核心内容：计算图模型、内置算子、标准数据类型；官方也明确说当前重点主要是 inference&#x2F;scoring，而不是完整训练框架替代品。(GitHub) 一句话概括：  ONNX 是模型交换格式和推理部署 IR。  典型链路是： 1234567PyTorch / TensorFlow / sklearn        ↓ export / convert      model.onnx        ↓ runtime / compilerONNX Runtime / TensorRT / OpenVINO / CoreML / TVM / custom ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/05/28/%E8%9E%8D%E5%90%88%E7%AE%97%E5%AD%90/" title="融合算子">融合算子</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-28T01:35:06.000Z" title="发表于 2026-05-28 09:35:06">2026-05-28</time></span></div><div class="content">融合算子本质上是：把计算图中多个连续的小算子合并成一个更大的算子或一个 GPU kernel，让它们一次性执行，减少中间结果写回显存、减少 kernel launch、减少 layout 转换，从而提高推理性能。 在 TensorRT、TVM、XLA、TorchInductor、ONNX Runtime、TensorRT-LLM 里，算子融合都是核心优化。  1. 为什么要融合算子GPU 推理不只是“算力瓶颈”，很多时候是： 1读显存 → 算一点 → 写显存 → 再读显存 → 再算一点 → 再写显存  例如： 1Conv → BatchNorm → ReLU  如果不融合，大概是： 12345678910111213kernel 1: Conv  input 从显存读入  weight 从显存读入  conv 输出写回显存kernel 2: BatchNorm  conv 输出再从显存读入  BN 参数读入  BN 输出写回显存kernel 3: ReLU  BN 输出再从显存读入  ReLU 输出写回显存  问题有两个： 第一，中间 tensor 反复读写显存。第二，每个 ke...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/05/28/GEMM/" title="GEMM">GEMM</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-28T01:31:38.000Z" title="发表于 2026-05-28 09:31:38">2026-05-28</time></span></div><div class="content">GEMM 是 General Matrix Multiply，中文通常叫通用矩阵乘法。它是深度学习里最核心的计算形式之一。 它的标准形式是： C &#x3D; \alpha A B + \beta C 其中： 1234A: m × k 矩阵B: k × n 矩阵C: m × n 矩阵α, β: 标量  如果忽略 $\alpha$、$\beta$，最常见的理解就是： 1C = A @ B  也就是矩阵乘矩阵。  1. GEMM 为什么重要神经网络里的很多算子，最后都可以转成 GEMM。 例如全连接层 &#x2F; Linear 层： 1y = x @ W + b  如果： 12x: batch × hiddenW: hidden × output  那么： 1y: batch × output  这本质就是 GEMM，加上一个 bias。 Transformer 里的 Q、K、V 投影也是 GEMM： 123Q = X @ WqK = X @ WkV = X @ Wv  MLP 也是 GEMM： 12H = GELU(X @ W1 + b1)Y = H @ W2 + b2  Att...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2026/05/26/%E6%AD%A3%E5%88%99%E5%8C%96/" title="正则化">正则化</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-26T14:04:34.000Z" title="发表于 2026-05-26 22:04:34">2026-05-26</time></span></div><div class="content">正则化（regularization）：在优化训练误差之外，额外加入一种约束或偏好，使模型不要为了拟合训练集而学出过于复杂、过于极端、过于脆弱的解。 最常见的形式是： $$\min_\theta \ \mathcal{L}_{train}(\theta) + \lambda \Omega(\theta)$$ 其中：  $\mathcal{L}_{train}(\theta)$ 是训练损失； $\Omega(\theta)$ 是正则项，用来惩罚某种“不希望出现的模型性质”； $\lambda$ 控制正则化强度； $\theta$ 是模型参数。  例如 L2 正则化： $$\min_\theta \ \mathcal{L}_{train}(\theta) + \lambda |\theta|_2^2$$ 模型不仅要拟合训练数据，还要尽量让参数不要太大。  1. 从第一性原理看：机器学习到底在做什么？机器学习的目标是学到一个能够泛化到未知样本的函数。 理想目标是最小化真实风险： $$R(f)&#x3D;\mathbb{E}{(x,y)\sim P{data}}[\ell(f(x),y)...</div></div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/#content-inner">10</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">59</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/27/SSH-%E5%8F%8D%E5%90%91%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/" title="用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器">用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器</a><time datetime="2026-10-27T06:41:00.000Z" title="发表于 2026-10-27 14:41:00">2026-10-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale-Clash-Coexistence-SOP/" title="Tailscale 与 Clash 共存排查 SOP">Tailscale 与 Clash 共存排查 SOP</a><time datetime="2026-10-26T06:00:00.000Z" title="发表于 2026-10-26 14:00:00">2026-10-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88-%E4%BB%8EWireGuard%E5%88%B0NAT%E7%A9%BF%E9%80%8F%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/" title="Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理">Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理</a><time datetime="2026-10-25T16:35:00.000Z" title="发表于 2026-10-26 00:35:00">2026-10-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale%E4%B8%8EClash%E5%85%B1%E5%AD%98-IPv6%E7%BB%95%E8%BF%87%E4%BB%A3%E7%90%86%E6%8E%92%E6%9F%A5%E4%B8%8E%E4%BF%AE%E5%A4%8D/" title="开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复">开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复</a><time datetime="2026-10-25T16:18:00.000Z" title="发表于 2026-10-26 00:18:00">2026-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议"><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（2）：实例和各种代理协议"/></a><div class="content"><a class="title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议">Clash 的运行原理（2）：实例和各种代理协议</a><time datetime="2026-05-30T09:47:26.000Z" title="发表于 2026-05-30 17:47:26">2026-05-30</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Vim/" style="font-size: 1.1em; color: #999">Vim</a> <a href="/tags/PostgreSQL/" style="font-size: 1.2em; color: #999da3">PostgreSQL</a> <a href="/tags/Python/" style="font-size: 1.15em; color: #999b9e">Python</a> <a href="/tags/zsh/" style="font-size: 1.1em; color: #999">zsh</a> <a href="/tags/Database/" style="font-size: 1.5em; color: #99a9bf">Database</a> <a href="/tags/Identity/" style="font-size: 1.1em; color: #999">Identity</a> <a href="/tags/WebScoket/" style="font-size: 1.1em; color: #999">WebScoket</a> <a href="/tags/HPC/" style="font-size: 1.2em; color: #999da3">HPC</a> <a href="/tags/SOP/" style="font-size: 1.1em; color: #999">SOP</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/" style="font-size: 1.1em; color: #999">软件测试</a> <a href="/tags/Tailscale/" style="font-size: 1.2em; color: #999da3">Tailscale</a> <a href="/tags/ASM/" style="font-size: 1.1em; color: #999">ASM</a> <a href="/tags/Java/" style="font-size: 1.35em; color: #99a3b1">Java</a> <a href="/tags/PL-SQL/" style="font-size: 1.4em; color: #99a5b6">PL/SQL</a> <a href="/tags/MySQL/" style="font-size: 1.1em; color: #999">MySQL</a> <a href="/tags/AT-T/" style="font-size: 1.1em; color: #999">AT&T</a> <a href="/tags/RAG/" style="font-size: 1.1em; color: #999">RAG</a> <a href="/tags/React/" style="font-size: 1.2em; color: #999da3">React</a> <a href="/tags/IPv6/" style="font-size: 1.1em; color: #999">IPv6</a> <a href="/tags/SSH/" style="font-size: 1.1em; color: #999">SSH</a> <a href="/tags/Jenkins/" style="font-size: 1.1em; color: #999">Jenkins</a> <a href="/tags/Linux/" style="font-size: 1.5em; color: #99a9bf">Linux</a> <a href="/tags/%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BB/" style="font-size: 1.1em; color: #999">如何阅读</a> <a href="/tags/OpenGauss/" style="font-size: 1.1em; color: #999">OpenGauss</a> <a href="/tags/KeyCloak/" style="font-size: 1.1em; color: #999">KeyCloak</a> <a href="/tags/Clash/" style="font-size: 1.25em; color: #999fa7">Clash</a> <a href="/tags/Unity3D/" style="font-size: 1.1em; color: #999">Unity3D</a> <a href="/tags/JavaScript/" style="font-size: 1.3em; color: #99a1ac">JavaScript</a> <a href="/tags/3D/" style="font-size: 1.1em; color: #999">3D</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 1.1em; color: #999">正则化</a> <a href="/tags/NLP/" style="font-size: 1.2em; color: #999da3">NLP</a> <a href="/tags/App/" style="font-size: 1.1em; color: #999">App</a> <a href="/tags/FastAPI/" style="font-size: 1.1em; color: #999">FastAPI</a> <a href="/tags/VPN/" style="font-size: 1.1em; color: #999">VPN</a> <a href="/tags/Netty/" style="font-size: 1.1em; color: #999">Netty</a> <a href="/tags/Oracle/" style="font-size: 1.45em; color: #99a7ba">Oracle</a> <a href="/tags/Blender/" style="font-size: 1.1em; color: #999">Blender</a> <a href="/tags/WebSocket/" style="font-size: 1.1em; color: #999">WebSocket</a> <a href="/tags/Neo4j/" style="font-size: 1.1em; color: #999">Neo4j</a> <a href="/tags/Docker/" style="font-size: 1.35em; color: #99a3b1">Docker</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      <a class="card-more-btn" href="/archives/"
+            title="查看更多">
+            <i class="fas fa-angle-right"></i>
+          </a>
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/10/">
+            <span class="card-archive-list-date">
+              十月 2026
+            </span>
+            <span class="card-archive-list-count">4</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/05/">
+            <span class="card-archive-list-date">
+              五月 2026
+            </span>
+            <span class="card-archive-list-count">6</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/03/">
+            <span class="card-archive-list-date">
+              三月 2026
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/06/">
+            <span class="card-archive-list-date">
+              六月 2025
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/05/">
+            <span class="card-archive-list-date">
+              五月 2025
+            </span>
+            <span class="card-archive-list-count">4</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/07/">
+            <span class="card-archive-list-date">
+              七月 2024
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/05/">
+            <span class="card-archive-list-date">
+              五月 2024
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/03/">
+            <span class="card-archive-list-date">
+              三月 2024
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">99</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-10-27T06:42:30.093Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2002 - 2026 By Quanwei</span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: str => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: subtitleType => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        btf.getScript('https://cdn.jsdelivr.net/npm/typed.js/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  },
+  processSubtitle: (content, extraContents = []) => {
+    if (true) {
+      const sub = [].slice()
+
+      if (extraContents.length > 0) {
+        sub.unshift(...extraContents)
+      }
+
+      if (typeof content === 'string') {
+        sub.unshift(content)
+      } else if (Array.isArray(content)) {
+        sub.unshift(...content)
+      }
+
+      sub.length > 0 && typedJSFn.init(sub)
+    } else {
+      document.getElementById('subtitle').textContent = typeof content === 'string' ? content :
+        (Array.isArray(content) && content.length > 0 ? content[0] : '')
+    }
+  }
+}
+btf.addGlobalFn('pjaxSendOnce', () => { typed.destroy() }, 'typedDestroy')
+</script><script>function subtitleType () {
+  btf.getScript('https://sdk.jinrishici.com/v2/browser/jinrishici.js')
+    .then(() => {
+      jinrishici.load(result => {
+        if (result && result.data && result.data.content) {
+          typedJSFn.processSubtitle(result.data.content)
+        } else {
+          throw new Error('Failed to parse the return value of Jinrishici API')
+        }
+      })
+    })
+    .catch(err => {
+      console.error('Failed to get the Jinrishici API:', err)
+      typedJSFn.processSubtitle(0)
+    })
+}
+typedJSFn.run(subtitleType)
+</script></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

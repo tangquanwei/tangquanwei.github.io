@@ -1,0 +1,435 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理 | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="家里的电脑、云服务器和随身携带的笔记本，通常位于不同网络。想从外面连接家中电脑，往往要处理公网 IP、端口映射、动态 DNS 和防火墙；如果遇上运营商级 NAT，连端口映射都未必可行。 Tailscale 的作用，就是让这些设备加入一张受身份和访问策略管理的虚拟内网。设备可以通过相对稳定的虚拟 IP 或设备名互相访问，底层则尽量建立点对点加密连接，无法直连时使用中继。 它主要解决“自己的设备如何互">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理">
+<meta property="og:url" content="http://tangquanwei.github.io/2026/10/26/Tailscale%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88-%E4%BB%8EWireGuard%E5%88%B0NAT%E7%A9%BF%E9%80%8F%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="家里的电脑、云服务器和随身携带的笔记本，通常位于不同网络。想从外面连接家中电脑，往往要处理公网 IP、端口映射、动态 DNS 和防火墙；如果遇上运营商级 NAT，连端口映射都未必可行。 Tailscale 的作用，就是让这些设备加入一张受身份和访问策略管理的虚拟内网。设备可以通过相对稳定的虚拟 IP 或设备名互相访问，底层则尽量建立点对点加密连接，无法直连时使用中继。 它主要解决“自己的设备如何互">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/images/maomi.png">
+<meta property="article:published_time" content="2026-10-25T16:35:00.000Z">
+<meta property="article:modified_time" content="2026-10-25T17:32:31.398Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="Tailscale">
+<meta property="article:tag" content="VPN">
+<meta property="article:tag" content="WireGuard">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/images/maomi.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理",
+  "url": "http://tangquanwei.github.io/2026/10/26/Tailscale%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88-%E4%BB%8EWireGuard%E5%88%B0NAT%E7%A9%BF%E9%80%8F%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/",
+  "image": "http://tangquanwei.github.io/images/maomi.png",
+  "datePublished": "2026-10-25T16:35:00.000Z",
+  "dateModified": "2026-10-25T17:32:31.398Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Quanwei",
+      "url": "http://tangquanwei.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/2026/10/26/Tailscale%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88-%E4%BB%8EWireGuard%E5%88%B0NAT%E7%A9%BF%E9%80%8F%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">59</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/p1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a><a class="nav-page-title" href="/"><span class="site-name">Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-10-25T16:35:00.000Z" title="发表于 2026-10-26 00:35:00">2026-10-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-25T17:32:31.398Z" title="更新于 2026-10-26 01:32:31">2026-10-26</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>家里的电脑、云服务器和随身携带的笔记本，通常位于不同网络。想从外面连接家中电脑，往往要处理公网 IP、端口映射、动态 DNS 和防火墙；如果遇上运营商级 NAT，连端口映射都未必可行。</p>
+<p>Tailscale 的作用，就是让这些设备加入一张受身份和访问策略管理的虚拟内网。设备可以通过相对稳定的虚拟 IP 或设备名互相访问，底层则尽量建立点对点加密连接，无法直连时使用中继。</p>
+<p><strong>它主要解决“自己的设备如何互联”，默认不会把所有公网访问都改成从远端出站。</strong> 理解这一点，也就容易区分 Tailscale、普通代理和出口节点的用途。</p>
+<span id="more"></span>
+
+<h2 id="1-Tailscale-能解决哪些问题"><a href="#1-Tailscale-能解决哪些问题" class="headerlink" title="1. Tailscale 能解决哪些问题"></a>1. Tailscale 能解决哪些问题</h2><p>假设有四台设备：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MacBook：随身使用，在家、学校和咖啡店之间切换</span><br><span class="line">Linux 服务器：运行开发环境和模型服务</span><br><span class="line">家用电脑：保存文件，偶尔需要远程桌面</span><br><span class="line">手机：在移动网络下访问内部服务</span><br></pre></td></tr></table></figure>
+
+<p>它们加入同一个 Tailscale 网络后，就可以在策略允许的范围内，通过虚拟网络通信。这张网络称为 <strong>tailnet</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>具体用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>远程开发</td>
+<td>SSH 连接服务器，使用 VS Code Remote SSH</td>
+</tr>
+<tr>
+<td>访问开发服务</td>
+<td>在笔记本上打开远端的 Jupyter、测试网站或模型 API</td>
+</tr>
+<tr>
+<td>远程桌面</td>
+<td>通过 Tailscale 地址连接 RDP 或屏幕共享服务</td>
+</tr>
+<tr>
+<td>访问 NAS</td>
+<td>在外面访问家中的文件服务</td>
+</tr>
+<tr>
+<td>团队协作</td>
+<td>按成员、设备和端口授权访问内部服务</td>
+</tr>
+<tr>
+<td>访问未安装客户端的设备</td>
+<td>通过子网路由器连接打印机、NAS 等局域网设备</td>
+</tr>
+<tr>
+<td>改变公网出口</td>
+<td>选择出口节点，让公网流量从指定远端设备出站</td>
+</tr>
+</tbody></table>
+<p>例如，远端设备名为 <code>dev-server</code>，可以这样连接：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh alice@dev-server</span><br></pre></td></tr></table></figure>
+
+<p>若服务器上已经运行了端口为 <code>8000</code> 的 Web 服务，也可以尝试访问：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://dev-server:8000</span><br></pre></td></tr></table></figure>
+
+<p>这要求 MagicDNS 和本机解析正常、服务监听了可达地址、主机防火墙和 tailnet 策略允许通信。<strong>安装 Tailscale 只提供网络连接能力，不会自动启动 SSH、远程桌面或 Web 服务。</strong></p>
+<p>这里的 SSH 示例使用普通 SSH 服务；Tailscale 另有 Tailscale SSH 功能，需要单独启用和配置策略，二者不应混为一谈。</p>
+<h2 id="2-虚拟内网不是同一个物理局域网"><a href="#2-虚拟内网不是同一个物理局域网" class="headerlink" title="2. 虚拟内网不是同一个物理局域网"></a>2. 虚拟内网不是同一个物理局域网</h2><p>加入 tailnet 后，设备通常会获得：</p>
+<ul>
+<li>位于 <code>100.64.0.0/10</code> 范围内的 IPv4 地址。</li>
+<li>位于 <code>fd7a:115c:a1e0::/48</code> 范围内的 IPv6 地址。</li>
+<li>可由 MagicDNS 解析的设备名。</li>
+</ul>
+<p>其中，<code>100.64.0.0/10</code> 是共享地址空间，并非 Tailscale 独占，也不是 RFC 1918 私有地址范围。</p>
+<p>这些地址充当设备在虚拟网络中的身份。当笔记本换 Wi-Fi、服务器公网地址变化时，设备仍可通过相对稳定的 Tailscale 地址互相访问，客户端负责更新底层连接路径。</p>
+<p>但 Tailscale 提供的是三层 IP 网络，不能直接等同于把所有设备插到同一台交换机上。依赖二层广播、局域网自动发现或 mDNS 的应用，不一定能自动发现远端设备。通常需要直接填写设备名或 IP。</p>
+<h2 id="3-架构：控制平面负责协调，数据平面负责通信"><a href="#3-架构：控制平面负责协调，数据平面负责通信" class="headerlink" title="3. 架构：控制平面负责协调，数据平面负责通信"></a>3. 架构：控制平面负责协调，数据平面负责通信</h2><p>理解 Tailscale，首先要把两类工作分开。</p>
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>负责什么</th>
+<th>典型内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>控制平面</td>
+<td>身份、设备发现、策略和连接协调</td>
+<td>设备公钥、候选地址、DNS 和路由配置</td>
+</tr>
+<tr>
+<td>数据平面</td>
+<td>传输实际业务数据</td>
+<td>SSH、文件、远程桌面、HTTP 请求</td>
+</tr>
+</tbody></table>
+<p>简化后的关系如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">        Tailscale 控制服务</span><br><span class="line">       /                 \</span><br><span class="line">身份、公钥、策略       身份、公钥、策略</span><br><span class="line">     /                     \</span><br><span class="line">笔记本 ←── 加密业务通信 ──→ 服务器</span><br></pre></td></tr></table></figure>
+
+<p>控制服务像通讯录和调度中心，帮助设备知道“对方是谁、可能在哪里、是否允许连接”。业务数据则尽量直接在设备之间传输。</p>
+<p>因此，“使用 Tailscale 的云端控制服务”不等于“所有业务流量都经过同一个云端网关”。直连失败时确实可能使用中继，但中继承担的是另一项工作。</p>
+<h3 id="3-1-登录和密钥交换"><a href="#3-1-登录和密钥交换" class="headerlink" title="3.1 登录和密钥交换"></a>3.1 登录和密钥交换</h3><p>设备加入网络时，大致经历以下过程：</p>
+<ol>
+<li>用户通过支持的身份提供商完成认证，或设备使用相应的注册机制加入网络。</li>
+<li>客户端在本机生成通信所需的密钥材料。</li>
+<li>将公钥、设备信息和可连接地址等信息注册到控制服务。</li>
+<li>获取允许通信的对端信息和网络策略。</li>
+<li>根据这些信息建立加密连接。</li>
+</ol>
+<p>用于 WireGuard 通信的私钥保留在设备本地，控制服务分发公钥和协调信息，而不是收集双方的 WireGuard 私钥。</p>
+<p>这并不表示控制平面无关紧要。设备信任关系、策略和配置仍然依赖它；新设备注册、密钥轮换和网络变化也需要相应协调。端到端加密和控制平面的信任，是两个应当分别理解的问题。</p>
+<h3 id="3-2-Tailscale-与-WireGuard-的关系"><a href="#3-2-Tailscale-与-WireGuard-的关系" class="headerlink" title="3.2 Tailscale 与 WireGuard 的关系"></a>3.2 Tailscale 与 WireGuard 的关系</h3><p>WireGuard 提供经过身份认证的加密隧道，主要解决两个端点之间如何安全传输 IP 数据。</p>
+<p>Tailscale 则在它之上补充了设备注册、公钥分发、身份管理、访问策略、NAT 穿透、DNS、路由和中继等能力。Tailscale 客户端可以使用用户态实现，并不要求所有平台都通过内核 WireGuard 模块运行。</p>
+<p>可以用下面的方式理解二者关系：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">WireGuard：加密隧道</span><br><span class="line">Tailscale：加密隧道 + 设备与身份管理 + 连接协调 + 路由和 DNS</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-没有公网-IP，为什么也可能直连"><a href="#4-没有公网-IP，为什么也可能直连" class="headerlink" title="4. 没有公网 IP，为什么也可能直连"></a>4. 没有公网 IP，为什么也可能直连</h2><p>大多数家庭设备都在路由器后面。电脑使用局域网地址，路由器通过 NAT 将流量转换成公网连接；运营商网络还可能增加一层 NAT。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">电脑 A → 家用路由器 / NAT → 互联网 → 另一处路由器 / NAT → 电脑 B</span><br></pre></td></tr></table></figure>
+
+<p>外部设备直接向家中电脑发起新连接时，路由器通常不知道应该转发给谁。但内部设备主动向外发送数据后，路由器会建立映射，并允许符合条件的返回流量通过。</p>
+<p>Tailscale 利用这一机制，探测设备的候选地址和 NAT 映射，让双方协调发送 UDP 数据，尝试建立可用路径。这通常称为 <strong>NAT 穿透</strong>或 UDP 打洞，涉及 STUN 等探测机制以及多种连接尝试。</p>
+<p>直连成功时：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">电脑 A</span><br><span class="line">  → WireGuard 加密数据</span><br><span class="line">  → 互联网中的直接 UDP 路径</span><br><span class="line">  → 电脑 B 解密并处理</span><br></pre></td></tr></table></figure>
+
+<p>“直连”指不需要应用层中继，沿途仍然经过运营商和互联网路由器。</p>
+<p>打洞并非总能成功。UDP 被阻止、双方 NAT 映射难以预测、严格防火墙或其他网络限制，都可能导致直连失败。即使本机网络支持 UDP，也不能单凭这一点保证能与某台远端设备直连。</p>
+<h2 id="5-三种连接路径：直连、Peer-Relay-和-DERP"><a href="#5-三种连接路径：直连、Peer-Relay-和-DERP" class="headerlink" title="5. 三种连接路径：直连、Peer Relay 和 DERP"></a>5. 三种连接路径：直连、Peer Relay 和 DERP</h2><p>按照官方连接类型文档，Tailscale 当前支持三种主要路径：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>数据路径</th>
+<th>性能特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Direct</td>
+<td>设备 A → 设备 B</td>
+<td>通常延迟最低、吞吐量最好</td>
+</tr>
+<tr>
+<td>Peer Relay</td>
+<td>设备 A → tailnet 内配置的中继设备 → 设备 B</td>
+<td>取决于中继位置和网络，可能优于 DERP</td>
+</tr>
+<tr>
+<td>DERP</td>
+<td>设备 A → DERP 中继基础设施 → 设备 B</td>
+<td>兼容受限网络，可能增加延迟并限制吞吐量</td>
+</tr>
+</tbody></table>
+<p>Peer Relay 需要在 tailnet 中显式配置可用的中继设备，并满足双方可达等条件，并不是加入网络的任意设备都会自动承担中继。</p>
+<h3 id="5-1-连接不一定从直连开始"><a href="#5-1-连接不一定从直连开始" class="headerlink" title="5.1 连接不一定从直连开始"></a>5.1 连接不一定从直连开始</h3><p>一个容易忽略的细节是：连接建立初期可以先通过 DERP 通信，双方再交换连接信息、尝试 NAT 穿透。</p>
+<p>按照官方文档描述的典型流程：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">先通过 DERP 建立通信</span><br><span class="line">       ↓</span><br><span class="line">尝试建立直接 UDP 连接</span><br><span class="line">       ├─ 成功 → 切换到直连</span><br><span class="line">       └─ 失败 → 尝试可用的 Peer Relay</span><br><span class="line">                     ├─ 成功 → 使用 Peer Relay</span><br><span class="line">                     └─ 失败 → 保持 DERP 中继</span><br></pre></td></tr></table></figure>
+
+<p>客户端还会继续检查是否存在更好的连接路径。网络切换后，直连也可能退回中继。</p>
+<p>所以，看到一次 <code>via DERP(...)</code> 不代表永远不能直连，需要观察后续探测和实际连接状态。</p>
+<h3 id="5-2-中继能看到数据内容吗"><a href="#5-2-中继能看到数据内容吗" class="headerlink" title="5.2 中继能看到数据内容吗"></a>5.2 中继能看到数据内容吗</h3><p>在两个 Tailscale 端点之间，直连、Peer Relay 和 DERP 都传输 WireGuard 端到端加密的数据。</p>
+<p>中继不持有双方的 WireGuard 私钥，不能因此解密其中的 SSH、HTTP 或文件内容。但中继仍然可以观察流量时间、大小及连接相关元数据，不能把“内容加密”理解成“完全没有元数据”。</p>
+<p>还要区分中继与网关：子网路由器和出口节点会终止对应的 Tailscale 隧道并转发内部数据，后续链路的保护范围不同。</p>
+<h2 id="6-一次-SSH-请求经过了什么"><a href="#6-一次-SSH-请求经过了什么" class="headerlink" title="6. 一次 SSH 请求经过了什么"></a>6. 一次 SSH 请求经过了什么</h2><p>假设 Mac 要访问另一处网络中的 Linux 服务器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh alice@dev-server</span><br></pre></td></tr></table></figure>
+
+<p>大致过程是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">MagicDNS 将设备名解析为 Tailscale 地址</span><br><span class="line">                 ↓</span><br><span class="line">操作系统根据目标地址选择 Tailscale 路由</span><br><span class="line">                 ↓</span><br><span class="line">数据进入 Tailscale 虚拟网络接口</span><br><span class="line">                 ↓</span><br><span class="line">客户端处理并通过 WireGuard 加密</span><br><span class="line">                 ↓</span><br><span class="line">直连发送，或通过中继传输</span><br><span class="line">                 ↓</span><br><span class="line">远端客户端解密，并按访问策略处理</span><br><span class="line">                 ↓</span><br><span class="line">交给远端 SSH 服务</span><br></pre></td></tr></table></figure>
+
+<p>这是常见系统网络模式的简化流程；用户态网络模式等部署方式的接入机制会有所不同。</p>
+<p>SSH 自身也有加密，所以这里是 SSH 会话运行在 WireGuard 加密网络之上。Tailscale 的网络策略决定是否允许连接，SSH 服务仍然负责相应的用户认证和主机权限。</p>
+<h2 id="7-子网路由器与出口节点分别做什么"><a href="#7-子网路由器与出口节点分别做什么" class="headerlink" title="7. 子网路由器与出口节点分别做什么"></a>7. 子网路由器与出口节点分别做什么</h2><p>这两个功能都会转发数据，但目标不同。</p>
+<h3 id="7-1-子网路由器：进入另一处局域网"><a href="#7-1-子网路由器：进入另一处局域网" class="headerlink" title="7.1 子网路由器：进入另一处局域网"></a>7.1 子网路由器：进入另一处局域网</h3><p>假设家里的打印机没有 Tailscale 客户端，地址是 <code>192.168.50.20</code>。可以让家里一台常开设备安装 Tailscale，作为子网路由器，发布相应网段：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">外面的笔记本</span><br><span class="line">  → Tailscale 隧道</span><br><span class="line">  → 家中子网路由器</span><br><span class="line">  → 家庭局域网</span><br><span class="line">  → 打印机 192.168.50.20</span><br></pre></td></tr></table></figure>
+
+<p>这需要配置转发、发布和批准路由、访问策略，以及客户端对路由的接受行为；并不是安装客户端后自动获得整个家庭网络的访问权。</p>
+<p>Tailscale 的加密在子网路由器处终止。子网路由器到打印机这一段是否加密，取决于实际应用协议和网络配置。另外，远端局域网与当前位置的局域网网段重叠时，需要专门处理地址冲突。</p>
+<h3 id="7-2-出口节点：从远端网络访问公网"><a href="#7-2-出口节点：从远端网络访问公网" class="headerlink" title="7.2 出口节点：从远端网络访问公网"></a>7.2 出口节点：从远端网络访问公网</h3><p>如果想让访问公网网站的流量从家里出站，可以将家中设备配置为出口节点，并在笔记本上选择使用它：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">外面的笔记本</span><br><span class="line">  → Tailscale 隧道</span><br><span class="line">  → 家中出口节点</span><br><span class="line">  → 家中宽带</span><br><span class="line">  → 公网网站</span><br></pre></td></tr></table></figure>
+
+<p>此时网站看到的通常是出口节点所在网络的公网地址。出口节点可以接管 IPv4 和 IPv6 默认路由，具体还受客户端平台、其他路由及配置影响。</p>
+<p>Tailscale 加密保护的是到出口节点的隧道。出口节点之后，HTTPS 等应用协议继续提供自身的加密；不能认为 WireGuard 隧道一直延伸到任意公网网站。</p>
+<table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>子网路由器</th>
+<th>出口节点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主要目标</td>
+<td>指定的远端子网</td>
+<td>公网流量</td>
+</tr>
+<tr>
+<td>常见资源</td>
+<td>打印机、NAS、内部服务</td>
+<td>外部网站和公网 API</td>
+</tr>
+<tr>
+<td>是否要改变公网出口</td>
+<td>通常不需要</td>
+<td>是其主要用途</td>
+</tr>
+</tbody></table>
+<p>出口节点由设备发布、管理员授权，客户端再按相应设置选择使用。<strong>仅仅开启 Tailscale，不代表已经选择了出口节点。</strong></p>
+<h2 id="8-怎么判断当前连接走哪条路径"><a href="#8-怎么判断当前连接走哪条路径" class="headerlink" title="8. 怎么判断当前连接走哪条路径"></a>8. 怎么判断当前连接走哪条路径</h2><p>常用命令有：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看设备状态和已经发生通信的连接信息</span></span><br><span class="line">tailscale status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 探测与某个设备之间的 Tailscale 连接</span></span><br><span class="line">tailscale ping dev-server</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查当前网络的 UDP、NAT 和中继延迟等情况</span></span><br><span class="line">tailscale netcheck</span><br></pre></td></tr></table></figure>
+
+<p><code>status</code> 中常见的关键词包括：</p>
+<table>
+<thead>
+<tr>
+<th>输出</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>direct</code></td>
+<td>当前使用直接连接</td>
+</tr>
+<tr>
+<td><code>relay</code></td>
+<td>通过 DERP 中继</td>
+</tr>
+<tr>
+<td><code>peer-relay</code></td>
+<td>通过配置的 Peer Relay 设备中继</td>
+</tr>
+</tbody></table>
+<p>下面是示意输出，设备名和数值仅用于说明：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pong from dev-server (...) via DERP(sin) in 180ms</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>sin</code> 表示新加坡 DERP 区域。如果后续输出变成通过具体端点地址通信，说明可能已经升级为直连。</p>
+<p>本次实际排查中，Mac 到一台远端 Linux 设备可以通信，但持续使用新加坡 DERP，延迟约为 140–250 ms。这个现象说明连接可用而路径可能有优化空间，并不能直接归因于本机代理软件。</p>
+<p>另外，<code>tailscale ping</code> 主要验证 Tailscale 连接情况。它成功不代表目标端口已有服务监听，也不代替应用访问策略、主机防火墙和应用本身的检查。排查 Web 或 SSH 问题时，还应测试实际请求。</p>
+<h2 id="9-Tailscale-与-Clash-为什么可以同时使用"><a href="#9-Tailscale-与-Clash-为什么可以同时使用" class="headerlink" title="9. Tailscale 与 Clash 为什么可以同时使用"></a>9. Tailscale 与 Clash 为什么可以同时使用</h2><p>二者虽然都可能创建虚拟网卡，解决的主要问题却不同。</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>主要关注点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tailscale</td>
+<td>让授权设备跨网络互联，支持子网和出口路由</td>
+</tr>
+<tr>
+<td>Clash &#x2F; Mihomo</td>
+<td>接收应用流量，按规则选择直连或代理出口</td>
+</tr>
+</tbody></table>
+<p>一种常见分工是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">访问自己的服务器、电脑和 NAS → Tailscale</span><br><span class="line">访问公网网站 → Clash 按规则代理或直连</span><br></pre></td></tr></table></figure>
+
+<p>但二者可能同时影响系统路由和 DNS。需要确认内网目标仍走 Tailscale，公网流量按预期进入 Clash，而且 IPv4 和 IPv6 都得到正确处理。使用 Tailscale 出口节点时，还要重新考虑公网流量的实际路径。</p>
+<p>之前的排查中，Clash 能代理 IPv4，却没有完整接管公网 IPv6。开启 Tailscale 时使用的 DNS 能返回真实 IPv6 地址，应用选择 IPv6 后便从本地宽带直出。修复的是 Clash 的 IPv6 路由缺口，而不是关闭 Tailscale。</p>
+<p>具体过程见：<a href="/2026/10/26/Tailscale%E4%B8%8EClash%E5%85%B1%E5%AD%98-IPv6%E7%BB%95%E8%BF%87%E4%BB%A3%E7%90%86%E6%8E%92%E6%9F%A5%E4%B8%8E%E4%BF%AE%E5%A4%8D/" title="开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复">开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复</a>。</p>
+<p>默认未使用出口节点时，Tailscale 主要处理 tailnet 及已配置的路由，不会自动将普通公网访问全部交给远端设备。不过，DNS 配置仍可能发生变化，所以“没有使用出口节点”和“完全不影响上网行为”也不是同一个概念。</p>
+<h2 id="10-从一个最小场景开始使用"><a href="#10-从一个最小场景开始使用" class="headerlink" title="10. 从一个最小场景开始使用"></a>10. 从一个最小场景开始使用</h2><p>对于个人开发环境，可以先完成一个简单目标：让笔记本访问一台远端服务器。</p>
+<ol>
+<li>在两台设备上安装官方 Tailscale 客户端，登录并加入同一个 tailnet。</li>
+<li>在管理界面确认设备已获准加入，并检查访问策略。</li>
+<li>用 <code>tailscale status</code> 和 <code>tailscale ping</code> 检查设备是否可达。</li>
+<li>确认远端 SSH 或 Web 服务已经启动，并监听可达地址。</li>
+<li>通过设备名或 Tailscale IP 访问实际服务。</li>
+<li>如果传输慢，再检查是直连还是中继，以及双方网络条件。</li>
+</ol>
+<p>有了这条最小可用路径，再根据需要增加子网路由器、出口节点或更细的访问策略，排查起来会更清楚。</p>
+<p>Tailscale 带来的便利，是把原本分散的身份、公钥、地址变化、NAT 穿透和路由管理组合起来。使用时仍然需要分别确认三件事：<strong>设备能否连接、策略是否允许、应用是否正常提供服务。</strong></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>以下官方资料查阅于 2026 年 10 月，功能支持和具体行为应以所用版本为准。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://tailscale.com/docs/concepts/what-is-tailscale">What is Tailscale?</a></li>
+<li><a target="_blank" rel="noopener" href="https://tailscale.com/blog/how-tailscale-works">How Tailscale works</a></li>
+<li><a target="_blank" rel="noopener" href="https://tailscale.com/docs/reference/connection-types">Connection types：Direct、DERP 与 Peer Relay</a></li>
+<li><a target="_blank" rel="noopener" href="https://tailscale.com/blog/how-nat-traversal-works">How NAT traversal works</a></li>
+<li><a target="_blank" rel="noopener" href="https://tailscale.com/docs/features/exit-nodes">Exit nodes</a></li>
+<li><a target="_blank" rel="noopener" href="https://tailscale.com/docs/features/subnet-routers">Subnet routers</a></li>
+<li><a target="_blank" rel="noopener" href="https://tailscale.com/kb/1017/install">Install Tailscale</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io/2026/10/26/Tailscale%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88-%E4%BB%8EWireGuard%E5%88%B0NAT%E7%A9%BF%E9%80%8F%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/">http://tangquanwei.github.io/2026/10/26/Tailscale%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88-%E4%BB%8EWireGuard%E5%88%B0NAT%E7%A9%BF%E9%80%8F%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C/">网络</a><a class="post-meta__tags" href="/tags/Tailscale/">Tailscale</a><a class="post-meta__tags" href="/tags/WireGuard/">WireGuard</a><a class="post-meta__tags" href="/tags/VPN/">VPN</a></div><div class="post-share"><div class="social-share" data-image="/images/maomi.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/10/26/Tailscale-Clash-Coexistence-SOP/" title="Tailscale 与 Clash 共存排查 SOP"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Tailscale 与 Clash 共存排查 SOP</div></div><div class="info-2"><div class="info-item-1">同一台 Mac 同时运行 Tailscale 和 Clash 后，启智平台打不开了。恢复启智访问后，另一个问题又出现了：Tailscale 设备能 ping 通，浏览器却打不开它的服务首页。 两次故障发生在不同环节。启智请求最初卡在 DNS；Tailscale 服务则是直接访问返回 HTTP 200，经过本地 Clash 代理返回 502。最后的配置是：Tailscale 保留设备互联，关闭 DNS 和接受子网路由；Clash 继续按规则分流，同时在 TUN 和系统代理两处绕过 Tailscale 目标。 下面先复盘证据，再给出可以直接复用的排查 SOP。设备地址统一替换为示例 100.101.102.103，代理端口以本次环境的 7897 为例。   1. 先明确要保留的网络行为这次需求很具体：通过 Tailscale IP 访问一台设备上的服务，其余日常访问继续由 Clash 按现有规则处理。既不需要用设备名访问，也不需要借助远端设备访问它背后的局域网。    功能 负责什么 本次选择    Tailscale 设备互联 通过虚拟 IP 连接已加入 tailnet 的设备 保...</div></div></div></a><a class="pagination-related" href="/2026/10/26/Tailscale%E4%B8%8EClash%E5%85%B1%E5%AD%98-IPv6%E7%BB%95%E8%BF%87%E4%BB%A3%E7%90%86%E6%8E%92%E6%9F%A5%E4%B8%8E%E4%BF%AE%E5%A4%8D/" title="开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复</div></div><div class="info-2"><div class="info-item-1">开启 Tailscale 后，Clash 明明选中了海外节点，查 IP 网站却显示中国。第一反应是：两个软件都创建虚拟网卡，是不是互相冲突了？ 这次排查发现，海外代理节点仍然正常，IPv4 经过 Clash，公网 IPv6 却绕过了 Clash，直接从本地宽带出站。支持 IPv6 的网站可能显示国内地址，仅支持 IPv4 的网站则仍然显示海外地址。 修复方法是为 Clash TUN 补上 IPv6 地址，让 Mihomo 自动建立 IPv6 接管路由，同时排除 Tailscale 的内网网段。修复后，两者可以继续同时使用。   1. 现象与运行环境本次环境是 macOS，使用 Clash Verge Rev，内核为 Mihomo v1.19.32，Tailscale 版本为 1.102.4。 当时的设置如下：    项目 状态    Clash TUN 模式 开启   Clash 系统代理 关闭   Clash 分流模式 Rule   Clash 顶层 ipv6 true   Clash TUN auto-route true   Tailscale 已连接   Tailscal...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/10/26/Tailscale%E4%B8%8EClash%E5%85%B1%E5%AD%98-IPv6%E7%BB%95%E8%BF%87%E4%BB%A3%E7%90%86%E6%8E%92%E6%9F%A5%E4%B8%8E%E4%BF%AE%E5%A4%8D/" title="开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-26</div><div class="info-item-2">开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复</div></div><div class="info-2"><div class="info-item-1">开启 Tailscale 后，Clash 明明选中了海外节点，查 IP 网站却显示中国。第一反应是：两个软件都创建虚拟网卡，是不是互相冲突了？ 这次排查发现，海外代理节点仍然正常，IPv4 经过 Clash，公网 IPv6 却绕过了 Clash，直接从本地宽带出站。支持 IPv6 的网站可能显示国内地址，仅支持 IPv4 的网站则仍然显示海外地址。 修复方法是为 Clash TUN 补上 IPv6 地址，让 Mihomo 自动建立 IPv6 接管路由，同时排除 Tailscale 的内网网段。修复后，两者可以继续同时使用。   1. 现象与运行环境本次环境是 macOS，使用 Clash Verge Rev，内核为 Mihomo v1.19.32，Tailscale 版本为 1.102.4。 当时的设置如下：    项目 状态    Clash TUN 模式 开启   Clash 系统代理 关闭   Clash 分流模式 Rule   Clash 顶层 ipv6 true   Clash TUN auto-route true   Tailscale 已连接   Tailscal...</div></div></div></a><a class="pagination-related" href="/2026/10/26/Tailscale-Clash-Coexistence-SOP/" title="Tailscale 与 Clash 共存排查 SOP"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-26</div><div class="info-item-2">Tailscale 与 Clash 共存排查 SOP</div></div><div class="info-2"><div class="info-item-1">同一台 Mac 同时运行 Tailscale 和 Clash 后，启智平台打不开了。恢复启智访问后，另一个问题又出现了：Tailscale 设备能 ping 通，浏览器却打不开它的服务首页。 两次故障发生在不同环节。启智请求最初卡在 DNS；Tailscale 服务则是直接访问返回 HTTP 200，经过本地 Clash 代理返回 502。最后的配置是：Tailscale 保留设备互联，关闭 DNS 和接受子网路由；Clash 继续按规则分流，同时在 TUN 和系统代理两处绕过 Tailscale 目标。 下面先复盘证据，再给出可以直接复用的排查 SOP。设备地址统一替换为示例 100.101.102.103，代理端口以本次环境的 7897 为例。   1. 先明确要保留的网络行为这次需求很具体：通过 Tailscale IP 访问一台设备上的服务，其余日常访问继续由 Clash 按现有规则处理。既不需要用设备名访问，也不需要借助远端设备访问它背后的局域网。    功能 负责什么 本次选择    Tailscale 设备互联 通过虚拟 IP 连接已加入 tailnet 的设备 保...</div></div></div></a><a class="pagination-related" href="/2026/10/27/SSH-%E5%8F%8D%E5%90%91%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/" title="用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-27</div><div class="info-item-2">用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器</div></div><div class="info-2"><div class="info-item-1">摘要远程服务器上 pip install、git clone、huggingface-cli download 全都卡住，装个代理客户端却发现节点全部超时——而本地电脑上的代理明明好得很。本文从这次真实排查讲起，用 SSH 反向端口转发（ssh -R） 把本地代理”借”给服务器，让服务器的出口 IP 变成你本地的出口 IP。文中的 IP、端口、耗时数据都来自一次真实排查，可以直接对照复现。  一、从一个真实的尴尬问题说起场景很典型：  你有一台本地电脑，上面跑着代理软件（Clash &#x2F; mihomo &#x2F; sing-box 之类），本地 HTTP 代理端口 7897，上网一切正常。 你还有一台远程服务器（云主机、公司跳板机、超算容器、实验室工作站）。你在上面跑 pip install、git clone、huggingface-cli download，全都卡住。 于是你在服务器上也装了个代理客户端，配了订阅，结果节点全部超时。  排查时的输出大概长这样： 123456789$ curl -s -m 12 -x http://127.0.0.1:7890 htt...</div></div></div></a><a class="pagination-related" href="/2023/05/22/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/" title="网络编程模型"><img class="cover" src="/2023/05/22/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/2023-05-22-22-34-09.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-22</div><div class="info-item-2">网络编程模型</div></div><div class="info-2"><div class="info-item-1">网络编程模型网络编程模型的核心： 服务器如何管理连接  服务器如何处理请求   以上两个设计点最终都和操作系统的 I&#x2F;O 模型及进程模型相关 I/O模型：阻塞 、非阻塞、同步 、异步   进程模型：单进程、 多进程、多线程  PPC (Process per Connection)  父进程接受连接（图中accept） 父进程“fork”子进程（图中fork） 子进程处理连接的读写请求（图中子进程read、业务处理、write） 子进程关闭连接（图中子进程中的close）  PPC 模式实现简单，比较适合服务器的连接数没那么多的情况(eg. pgsql) 而互联网兴起后，服务器的并发和访问量从几十剧增到成千上万，这种模式的弊端就凸显出来了，主要体现在如下几个方面:    fork代价高：站在操作系统的角度，创建一个进程的代价是很高的，需要分配很多内核资源，需要将内存映像从父进程复制到子进程。 父子进程通信复杂：父进程“fork”子进程时，文件描述符可以通过内存映像复制从父进程传到子进程，但“fork”完成后，父子进程通信就比较麻烦了，需要采用IPC(Interproce...</div></div></div></a><a class="pagination-related" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"><img class="cover" src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/clash1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-30</div><div class="info-item-2">Clash 的运行原理（1）：从虚拟网卡到 DNS 分流</div></div><div class="info-2"><div class="info-item-1">Clash 的运行原理：从虚拟网卡到 DNS 分流   摘要Clash 是一个运行在本机或网关上的规则化代理转发引擎。它把应用程序或系统网络栈产生的流量接入本地，再通过 DNS 模块、规则引擎和策略组判断流量应该直连、拒绝，还是通过某个远程代理节点转发出去。 Clash 可以理解为以下几个模块的组合： 123456流量入口 Inbound+ DNS 解析与 fake-ip 映射+ 规则匹配引擎+ 策略组选择器+ 多协议出站 Outbound+ 远程代理服务器或直连出口  它和传统 VPN 的主要区别在于：传统 VPN 通常把整台设备的 IP 流量放进一个加密隧道，而 Clash 更强调按规则分流。同一台设备上，国内网站可以直连，海外网站可以走代理，广告域名可以拒绝，公司内网可以走 WireGuard，游戏 UDP 可以走 Hysteria 或 TUIC。Clash 的价值是把复杂网络流量按域名、IP、端口、进程、地理位置和协议特征进行精细路由。  1. 先区分几个概念：VPN、代理、Clash日常语境里，很多人会把 Clash、Trojan、Shadowsocks、VLESS 统...</div></div></div></a><a class="pagination-related" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议"><img class="cover" src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-30</div><div class="info-item-2">Clash 的运行原理（2）：实例和各种代理协议</div></div><div class="info-2"><div class="info-item-1"> 1. 一次 HTTPS 请求在 Clash 中的完整生命周期以访问 https://www.google.com 为例。 第一步：应用发起 DNS 查询浏览器要访问： 1www.google.com  它先请求 DNS 解析。 第二步：Clash DNS 返回 fake-ip如果开启 fake-ip，Clash 可能返回： 1www.google.com → 198.18.0.23  同时 Clash 记录映射： 1198.18.0.23 → www.google.com  第三步：浏览器连接 fake-ip浏览器以为 198.18.0.23 就是目标地址，于是建立 TCP 连接。 第四步：连接进入 Clash由于系统代理、TUN 或透明代理规则，这条连接进入 Clash。Clash 查映射表，知道： 1198.18.0.23 实际对应 www.google.com  第五步：规则匹配Clash 检查规则： 1- DOMAIN-SUFFIX,google.com,PROXY  命中后，决定走 PROXY 策略组。 第六步：策略组选择节点假设当前 PROXY 选择的是 troja...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">59</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Tailscale-%E8%83%BD%E8%A7%A3%E5%86%B3%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">1. Tailscale 能解决哪些问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%99%9A%E6%8B%9F%E5%86%85%E7%BD%91%E4%B8%8D%E6%98%AF%E5%90%8C%E4%B8%80%E4%B8%AA%E7%89%A9%E7%90%86%E5%B1%80%E5%9F%9F%E7%BD%91"><span class="toc-number">2.</span> <span class="toc-text">2. 虚拟内网不是同一个物理局域网</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%9E%B6%E6%9E%84%EF%BC%9A%E6%8E%A7%E5%88%B6%E5%B9%B3%E9%9D%A2%E8%B4%9F%E8%B4%A3%E5%8D%8F%E8%B0%83%EF%BC%8C%E6%95%B0%E6%8D%AE%E5%B9%B3%E9%9D%A2%E8%B4%9F%E8%B4%A3%E9%80%9A%E4%BF%A1"><span class="toc-number">3.</span> <span class="toc-text">3. 架构：控制平面负责协调，数据平面负责通信</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E7%99%BB%E5%BD%95%E5%92%8C%E5%AF%86%E9%92%A5%E4%BA%A4%E6%8D%A2"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 登录和密钥交换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-Tailscale-%E4%B8%8E-WireGuard-%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 Tailscale 与 WireGuard 的关系</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%B2%A1%E6%9C%89%E5%85%AC%E7%BD%91-IP%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B9%9F%E5%8F%AF%E8%83%BD%E7%9B%B4%E8%BF%9E"><span class="toc-number">4.</span> <span class="toc-text">4. 没有公网 IP，为什么也可能直连</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E4%B8%89%E7%A7%8D%E8%BF%9E%E6%8E%A5%E8%B7%AF%E5%BE%84%EF%BC%9A%E7%9B%B4%E8%BF%9E%E3%80%81Peer-Relay-%E5%92%8C-DERP"><span class="toc-number">5.</span> <span class="toc-text">5. 三种连接路径：直连、Peer Relay 和 DERP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%80%E5%AE%9A%E4%BB%8E%E7%9B%B4%E8%BF%9E%E5%BC%80%E5%A7%8B"><span class="toc-number">5.1.</span> <span class="toc-text">5.1 连接不一定从直连开始</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E4%B8%AD%E7%BB%A7%E8%83%BD%E7%9C%8B%E5%88%B0%E6%95%B0%E6%8D%AE%E5%86%85%E5%AE%B9%E5%90%97"><span class="toc-number">5.2.</span> <span class="toc-text">5.2 中继能看到数据内容吗</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E4%B8%80%E6%AC%A1-SSH-%E8%AF%B7%E6%B1%82%E7%BB%8F%E8%BF%87%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-number">6.</span> <span class="toc-text">6. 一次 SSH 请求经过了什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E5%AD%90%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8%E4%B8%8E%E5%87%BA%E5%8F%A3%E8%8A%82%E7%82%B9%E5%88%86%E5%88%AB%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-number">7.</span> <span class="toc-text">7. 子网路由器与出口节点分别做什么</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E5%AD%90%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8%EF%BC%9A%E8%BF%9B%E5%85%A5%E5%8F%A6%E4%B8%80%E5%A4%84%E5%B1%80%E5%9F%9F%E7%BD%91"><span class="toc-number">7.1.</span> <span class="toc-text">7.1 子网路由器：进入另一处局域网</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E5%87%BA%E5%8F%A3%E8%8A%82%E7%82%B9%EF%BC%9A%E4%BB%8E%E8%BF%9C%E7%AB%AF%E7%BD%91%E7%BB%9C%E8%AE%BF%E9%97%AE%E5%85%AC%E7%BD%91"><span class="toc-number">7.2.</span> <span class="toc-text">7.2 出口节点：从远端网络访问公网</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E6%80%8E%E4%B9%88%E5%88%A4%E6%96%AD%E5%BD%93%E5%89%8D%E8%BF%9E%E6%8E%A5%E8%B5%B0%E5%93%AA%E6%9D%A1%E8%B7%AF%E5%BE%84"><span class="toc-number">8.</span> <span class="toc-text">8. 怎么判断当前连接走哪条路径</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-Tailscale-%E4%B8%8E-Clash-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E4%BB%A5%E5%90%8C%E6%97%B6%E4%BD%BF%E7%94%A8"><span class="toc-number">9.</span> <span class="toc-text">9. Tailscale 与 Clash 为什么可以同时使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E4%BB%8E%E4%B8%80%E4%B8%AA%E6%9C%80%E5%B0%8F%E5%9C%BA%E6%99%AF%E5%BC%80%E5%A7%8B%E4%BD%BF%E7%94%A8"><span class="toc-number">10.</span> <span class="toc-text">10. 从一个最小场景开始使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">11.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/27/SSH-%E5%8F%8D%E5%90%91%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/" title="用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器">用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器</a><time datetime="2026-10-27T06:41:00.000Z" title="发表于 2026-10-27 14:41:00">2026-10-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale-Clash-Coexistence-SOP/" title="Tailscale 与 Clash 共存排查 SOP">Tailscale 与 Clash 共存排查 SOP</a><time datetime="2026-10-26T06:00:00.000Z" title="发表于 2026-10-26 14:00:00">2026-10-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88-%E4%BB%8EWireGuard%E5%88%B0NAT%E7%A9%BF%E9%80%8F%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/" title="Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理">Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理</a><time datetime="2026-10-25T16:35:00.000Z" title="发表于 2026-10-26 00:35:00">2026-10-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale%E4%B8%8EClash%E5%85%B1%E5%AD%98-IPv6%E7%BB%95%E8%BF%87%E4%BB%A3%E7%90%86%E6%8E%92%E6%9F%A5%E4%B8%8E%E4%BF%AE%E5%A4%8D/" title="开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复">开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复</a><time datetime="2026-10-25T16:18:00.000Z" title="发表于 2026-10-26 00:18:00">2026-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议"><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（2）：实例和各种代理协议"/></a><div class="content"><a class="title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议">Clash 的运行原理（2）：实例和各种代理协议</a><time datetime="2026-05-30T09:47:26.000Z" title="发表于 2026-05-30 17:47:26">2026-05-30</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2002 - 2026 By Quanwei</span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

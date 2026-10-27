@@ -1,0 +1,171 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Docker MySQL | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="123456789docker run \  --name mysql-8 \  -d \  -p 3306:3306 \  --restart unless-stopped \  -v ~&#x2F;.mysql&#x2F;log:&#x2F;var&#x2F;log&#x2F;mysql \  -v ~&#x2F;.mysql&#x2F;data:&#x2F;var&#x2F;lib&#x2F;mysql \  -e MYSQL_ROOT_PASSWORD&#x3D;021009 \  mysql:8">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker MySQL">
+<meta property="og:url" content="http://tangquanwei.github.io/2023/07/04/Docker-MySQL/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="123456789docker run \  --name mysql-8 \  -d \  -p 3306:3306 \  --restart unless-stopped \  -v ~&#x2F;.mysql&#x2F;log:&#x2F;var&#x2F;log&#x2F;mysql \  -v ~&#x2F;.mysql&#x2F;data:&#x2F;var&#x2F;lib&#x2F;mysql \  -e MYSQL_ROOT_PASSWORD&#x3D;021009 \  mysql:8">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/images/maomi.png">
+<meta property="article:published_time" content="2023-07-04T07:46:43.000Z">
+<meta property="article:modified_time" content="2026-10-23T06:38:05.791Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="Database">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/images/maomi.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Docker MySQL",
+  "url": "http://tangquanwei.github.io/2023/07/04/Docker-MySQL/",
+  "image": "http://tangquanwei.github.io/images/maomi.png",
+  "datePublished": "2023-07-04T07:46:43.000Z",
+  "dateModified": "2026-10-23T06:38:05.791Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Quanwei",
+      "url": "http://tangquanwei.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/2023/07/04/Docker-MySQL/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Docker MySQL',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">59</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/p1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a><a class="nav-page-title" href="/"><span class="site-name">Docker MySQL</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Docker MySQL</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-07-04T07:46:43.000Z" title="发表于 2023-07-04 15:46:43">2023-07-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-23T06:38:05.791Z" title="更新于 2026-10-23 14:38:05">2026-10-23</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line">  --name mysql-8 \</span><br><span class="line">  -d \</span><br><span class="line">  -p 3306:3306 \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  -v ~/.mysql/log:/var/log/mysql \</span><br><span class="line">  -v ~/.mysql/data:/var/lib/mysql \</span><br><span class="line">  -e MYSQL_ROOT_PASSWORD=021009 \</span><br><span class="line">  mysql:8.0.31</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">int：整型</span><br><span class="line">double：浮点型，例如double(5,2)表示最多5位，其中必须有2位小数，即最大值为999.99；</span><br><span class="line">char：固定长度字符串类型；    char(10)     &#x27;aaa       &#x27;  占10位</span><br><span class="line">varchar：可变长度字符串类型； varchar(10)  &#x27;aaa&#x27;  占3为</span><br><span class="line">text：字符串类型；</span><br><span class="line">blob：字节类型；</span><br><span class="line">date：日期类型，格式为：yyyy-MM-dd；</span><br><span class="line">time：时间类型，格式为：hh:mm:ss</span><br><span class="line">timestamp：时间戳类型 yyyy-MM-dd hh:mm:ss  会自动赋值</span><br><span class="line">datetime:日期时间类型 yyyy-MM-dd hh:mm:ss</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io/2023/07/04/Docker-MySQL/">http://tangquanwei.github.io/2023/07/04/Docker-MySQL/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Docker/">Docker</a><a class="post-meta__tags" href="/tags/MySQL/">MySQL</a><a class="post-meta__tags" href="/tags/Database/">Database</a></div><div class="post-share"><div class="social-share" data-image="/images/maomi.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2023/07/05/Docker-Elasticsearch/" title="Docker Elasticsearch"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Docker Elasticsearch</div></div><div class="info-2"><div class="info-item-1">12345678910111213141516171819202122docker run -d --name es01 \ -p 9200:9200 \ -e ES_JAVA_OPTS=&quot;-Xms1g -Xmx1g&quot; \ -e &quot;discovery.type=single-node&quot; \ --ulimit nofile=1024:1024 \ elasticsearch:8.7.0docker exec -it es01 /usr/share/elasticsearch/bin/elasticsearch-reset-passworddocker cp es01:/usr/share/elasticsearch/config/certs/http_ca.crt .curl --cacert http_ca.crt -u elastic https://localhost:9200 1234567891011121314151617181920212223242526272829303132version: &quot;3.9&quot;s...</div></div></div></a><a class="pagination-related" href="/2023/07/01/Blender/" title="Blender"><img class="cover" src="/2023/07/01/Blender/image.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Blender</div></div><div class="info-2"><div class="info-item-1">BlenderBlender集成了完整的3D创作工具, 建模、UV映射、贴图、绑定、动画、渲染、合成和运动跟踪等功能 学习路径第一阶段：基础入门 软件安装：下载并安装Blender最新版本。 界面熟悉：了解Blender的用户界面和基本操作。 视图操作：学习如何使用视图导航和视图设置。 基本几何体：熟悉并练习创建基本几何体，如盒子、球体、圆柱体等。 编辑模式：掌握编辑模式下的基本操作，如选择、移动、缩放和旋转。 简单建模：尝试创建简单的物体，如桌子、椅子等。 材质和纹理：了解如何为物体添加材质和纹理。 照明和相机：学习基本的照明设置和相机使用。  第二阶段：中级技能 复杂建模：学习如何创建更复杂的模型，包括多边形建模和细节雕刻。 UV展开：掌握如何为模型创建UV布局，以及如何展开和编辑UV。 贴图绘制：学习如何在图像编辑软件中创建和编辑贴图。 绑定和角色设置：了解如何为角色模型设置骨骼、蒙皮和绑定。 动画基础：学习基本的动画制作，如关键帧动画和运动规律。 渲染设置：熟悉Cycles渲染器的使用和渲染设置。  第三阶段：高级应用 高级建模技术：学习高级建模技术，如布尔运算、细分曲面...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2023/06/10/MongoDB/" title="MongoDB 安装和使用"><img class="cover" src="/2023/06/10/MongoDB/2023-06-10-21-22-01.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-06-10</div><div class="info-item-2">MongoDB 安装和使用</div></div><div class="info-2"><div class="info-item-1">MongoDB 安装和使用使用 Docker 安装Pull the MongoDB Docker Image1docker pull mongo  Run the Image as a Container12345mkdir -p ~/.mongodb/dbdocker run --name mongo -d -p 27017:27017 --privileged=true \ -e MONGO_INITDB_ROOT_USERNAME=root \ -e MONGO_INITDB_ROOT_PASSWORD=021009 \ -v ~/docker/mongodb/db:/data/db mongo   Connect to the MongoDB Deployment with mongoshOpen an interactive container instance of mongo and connect to the deployment with mongosh. 1docker exec -it mongo mongosh   mongo 体系结构   SQL术语&...</div></div></div></a><a class="pagination-related" href="/2023/08/02/Docker-PostgreSQL/" title="PostgreSQL"><img class="cover" src="/2023/08/02/Docker-PostgreSQL/2023-08-02-19-46-38.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-02</div><div class="info-item-2">PostgreSQL</div></div><div class="info-2"><div class="info-item-1">PostgreSQL: The World’s Most Advanced Open Source Relational Database Docker 安装 PostgreSQL12345docker run -d --name postgres \  -p 5432:5432 \  -e POSTGRES_PASSWORD=021009 \  -v /home/quanwei/docker/pgdata:/var/lib/postgresql/data \  postgres    Docker 安装 pgAdminpgAdmin is the most popular and feature rich Open Source administration and development platform for PostgreSQL, the most advanced Open Source database in the world.  123456docker run -d --name pgadmin \  -e PGADMIN_DEFAULT_EMAIL=post...</div></div></div></a><a class="pagination-related" href="/2023/04/12/Oracle-User/" title="Oracle User"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-12</div><div class="info-item-2">Oracle User</div></div><div class="info-2"><div class="info-item-1">创建用户123456789CREATE USER user	IDENTIFIED &#123;BY password | EXTERNALLY&#125;	[ DEFAULT TABLESPACE tablespace ]	[ TEMPORARY TABLESPACE tablespace ]	[ QUOTA &#123;integer [K | M ] | UNLIMITED &#125; ON tablespace	[ QUOTA &#123;integer [K | M ] | UNLIMITED &#125; ON tablespace 	]...]	[ PASSWORD EXPIRE ]	[ ACCOUNT &#123; LOCK | UNLOCK &#125;]	[ PROFILE &#123; profile | DEFAULT &#125;]  修该密码 alter  user   scott  identified by “tiger”; 删除用户1DROP USER user [CASCADE] CASCADE 同时删除表 查看配额DBA_USERSDBA_T...</div></div></div></a><a class="pagination-related" href="/2023/04/07/OpenGauss-Database/" title="OpenGauss Database"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-07</div><div class="info-item-2">OpenGauss Database</div></div><div class="info-2"><div class="info-item-1">OpenGauss Database安装1234567891011docker run --name opengauss --privileged=true -d -e GS_PASSWORD=Tq@021009 -p 5432:5432 enmotech/opengauss:latestdocker run --name opengauss --privileged=true -d -e GS_PASSWORD=Tq@021009 -p 5432:5432 opengauss/opengaussgsql -d postgres -U gaussdb -W &#x27;Tq@021009&#x27; -h host_ip -p 5432su - ommgsql  12345678910步骤 1 以操作系统用户omm登录数据库主节点。gs_om -t status --detail步骤 2 使用如下命令查询openGauss状态：若要查询某主机上的实例状态，请在命令中增加“-h”项。示例如下：。示例如下：gs_om -t status -h plat2 --detail其中，pla...</div></div></div></a><a class="pagination-related" href="/2023/05/01/ORACLE-PLSQL-%E5%8C%85/" title="PL&#x2F;SQL 包"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-01</div><div class="info-item-2">PL&#x2F;SQL 包</div></div><div class="info-2"><div class="info-item-1">包的创建及使用包类似于面向对象中的类，是数据库中的一个实体，其中包含一系列公共常量、变量、数据类型、游标、过程以及函数的定义。 创建包包由包的描述部分和包体两部分组成，包描述部分相当于一个包头，他对包的所有部件进行一个简单的声明，这些部件可以被外界应用程序访问，包描述部分格式如下： 123CREATE PACKAGE &lt;包名&gt; IS  变量、常量及数据类型的定义； 游标定义头部； 函数、过程的说明；END&lt;包名&gt;；   包头部分：12345678910CREATE PACKAGE MY_PACKAGE IS DEPT_NUM NUMBER; --Cursor manager_cur; FUNCTION F_DEPT_NUM(  IN_DEPTNO IN SCOTT.EMP.DEPTNO%TYPE) RETURN NUMBER;PROCEDURE P_DEPT_NUM(  IN_DEPTNO IN SCOTT.EMP.DEPTNO%TYPE,  OUT_NUM OUT NUMBER);END MY_PACKAGE;  包体部分：包体部分是包的描述部分中游标、...</div></div></div></a><a class="pagination-related" href="/2023/05/08/ORACLE-PLSQL-%E8%A7%A6%E5%8F%91%E5%99%A8/" title="ORACLE PLSQL 触发器"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-08</div><div class="info-item-2">ORACLE PLSQL 触发器</div></div><div class="info-2"><div class="info-item-1">触发器基础知识： 触发器类似于函数和过程，它们都是具有声明部分、执行部分和异常处理部分的命名PL&#x2F;SQL块。 像包一样，触发器必须在数据库中以独立对象的身份存储。过程是显式地通过过程调用从其他块中执行的.同时，过程调用可以传递参数。与之相反,触发器是在事件发生时隐式地运行的，并且触发器不能接收参数。运行触发器的方式叫做激发（firing）触发器，触发事件可以是对数据库表的DML（INSERT、UPDATE或DELETE）操作或某种视图的操作(View)。或系统事件，如数据库的启动和关闭，以及某种DDL操作。 触发器可以用于下列情况：• 维护在表创建阶段通过声明限制无法实现的复杂完整性限制。• 通过记录修改内容和修改者来审计表中的信息。• 在表内容发生变更时，自动通知其他程序采取相应的处理。有三种主要的触发器类型： D M L、替代触发器和系统触发器。 创建触发器的通用语法123456789101112131415CREATE [OR REPLACE ] TRIGGER trigger_name  &#123;BEFORE | AFTER | INSTEAD OF &#1...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">59</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/27/SSH-%E5%8F%8D%E5%90%91%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/" title="用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器">用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器</a><time datetime="2026-10-27T06:41:00.000Z" title="发表于 2026-10-27 14:41:00">2026-10-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale-Clash-Coexistence-SOP/" title="Tailscale 与 Clash 共存排查 SOP">Tailscale 与 Clash 共存排查 SOP</a><time datetime="2026-10-26T06:00:00.000Z" title="发表于 2026-10-26 14:00:00">2026-10-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88-%E4%BB%8EWireGuard%E5%88%B0NAT%E7%A9%BF%E9%80%8F%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/" title="Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理">Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理</a><time datetime="2026-10-25T16:35:00.000Z" title="发表于 2026-10-26 00:35:00">2026-10-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale%E4%B8%8EClash%E5%85%B1%E5%AD%98-IPv6%E7%BB%95%E8%BF%87%E4%BB%A3%E7%90%86%E6%8E%92%E6%9F%A5%E4%B8%8E%E4%BF%AE%E5%A4%8D/" title="开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复">开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复</a><time datetime="2026-10-25T16:18:00.000Z" title="发表于 2026-10-26 00:18:00">2026-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议"><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（2）：实例和各种代理协议"/></a><div class="content"><a class="title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议">Clash 的运行原理（2）：实例和各种代理协议</a><time datetime="2026-05-30T09:47:26.000Z" title="发表于 2026-05-30 17:47:26">2026-05-30</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2002 - 2026 By Quanwei</span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

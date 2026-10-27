@@ -1,0 +1,403 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Tailscale 与 Clash 共存排查 SOP | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="从启智域名解析失败到 Tailscale 服务经系统代理返回 502，记录分层排查、最小配置和浏览器验收方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tailscale 与 Clash 共存排查 SOP">
+<meta property="og:url" content="http://tangquanwei.github.io/2026/10/26/Tailscale-Clash-Coexistence-SOP/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="从启智域名解析失败到 Tailscale 服务经系统代理返回 502，记录分层排查、最小配置和浏览器验收方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/images/maomi.png">
+<meta property="article:published_time" content="2026-10-26T06:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-27T06:42:20.816Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="Clash">
+<meta property="article:tag" content="SOP">
+<meta property="article:tag" content="Tailscale">
+<meta property="article:tag" content="macOS">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/images/maomi.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Tailscale 与 Clash 共存排查 SOP",
+  "url": "http://tangquanwei.github.io/2026/10/26/Tailscale-Clash-Coexistence-SOP/",
+  "image": "http://tangquanwei.github.io/images/maomi.png",
+  "datePublished": "2026-10-26T06:00:00.000Z",
+  "dateModified": "2026-10-27T06:42:20.816Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Quanwei",
+      "url": "http://tangquanwei.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/2026/10/26/Tailscale-Clash-Coexistence-SOP/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Tailscale 与 Clash 共存排查 SOP',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">59</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/p1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a><a class="nav-page-title" href="/"><span class="site-name">Tailscale 与 Clash 共存排查 SOP</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Tailscale 与 Clash 共存排查 SOP</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-10-26T06:00:00.000Z" title="发表于 2026-10-26 14:00:00">2026-10-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-27T06:42:20.816Z" title="更新于 2026-10-27 14:42:20">2026-10-27</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>同一台 Mac 同时运行 Tailscale 和 Clash 后，启智平台打不开了。恢复启智访问后，另一个问题又出现了：Tailscale 设备能 ping 通，浏览器却打不开它的服务首页。</p>
+<p>两次故障发生在不同环节。启智请求最初卡在 DNS；Tailscale 服务则是直接访问返回 HTTP 200，经过本地 Clash 代理返回 502。最后的配置是：<strong>Tailscale 保留设备互联，关闭 DNS 和接受子网路由；Clash 继续按规则分流，同时在 TUN 和系统代理两处绕过 Tailscale 目标。</strong></p>
+<p>下面先复盘证据，再给出可以直接复用的排查 SOP。设备地址统一替换为示例 <code>100.101.102.103</code>，代理端口以本次环境的 <code>7897</code> 为例。</p>
+<span id="more"></span>
+
+<h2 id="1-先明确要保留的网络行为"><a href="#1-先明确要保留的网络行为" class="headerlink" title="1. 先明确要保留的网络行为"></a>1. 先明确要保留的网络行为</h2><p>这次需求很具体：通过 Tailscale IP 访问一台设备上的服务，其余日常访问继续由 Clash 按现有规则处理。既不需要用设备名访问，也不需要借助远端设备访问它背后的局域网。</p>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>负责什么</th>
+<th>本次选择</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tailscale 设备互联</td>
+<td>通过虚拟 IP 连接已加入 tailnet 的设备</td>
+<td>保留</td>
+</tr>
+<tr>
+<td>Tailscale DNS</td>
+<td>接受管理后台配置的 DNS，包括设备名及其他域名的解析设置</td>
+<td>关闭</td>
+</tr>
+<tr>
+<td>接受 Tailscale 子网路由</td>
+<td>通过其他节点访问其发布的网段，如远端局域网</td>
+<td>关闭</td>
+</tr>
+<tr>
+<td>Tailscale 出口节点</td>
+<td>借助指定节点转发普通互联网流量</td>
+<td>不启用</td>
+</tr>
+<tr>
+<td>Clash TUN</td>
+<td>在系统路由层接入流量，再交给规则引擎处理</td>
+<td>保留，并排除 Tailscale 地址段</td>
+</tr>
+<tr>
+<td>Clash 系统代理</td>
+<td>让遵循系统代理设置的应用连接本地代理端口</td>
+<td>保留，并绕过目标 IP</td>
+</tr>
+</tbody></table>
+<p>直接访问设备自己的 Tailscale IP，不依赖 DNS，也不需要接受子网路由。关闭这两项不会断开设备互联；如果以后要使用设备名或远端局域网，再按需求重新启用。<a target="_blank" rel="noopener" href="https://tailscale.com/docs/features/client/manage-preferences">Tailscale 客户端设置文档</a></p>
+<p>这是一套流量分工配置，不是访问控制策略。其他获授权的 Tailscale 设备仍可能可达；若要限制只能访问某个 IP 或端口，应另行配置 tailnet 访问策略。</p>
+<h2 id="2-第一次故障发生在-DNS-阶段"><a href="#2-第一次故障发生在-DNS-阶段" class="headerlink" title="2. 第一次故障发生在 DNS 阶段"></a>2. 第一次故障发生在 DNS 阶段</h2><h3 id="2-1-先确认连接停在哪里"><a href="#2-1-先确认连接停在哪里" class="headerlink" title="2.1 先确认连接停在哪里"></a>2.1 先确认连接停在哪里</h3><p>访问启智平台时，最初的请求直接报错：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl: (6) Could not resolve host: qz.sii.edu.cn</span><br></pre></td></tr></table></figure>
+
+<p>这说明请求还没有进入目标站点的 TCP 和 TLS 阶段。此时应先看解析路径，不能直接判断服务器宕机或证书失效。</p>
+<p>macOS 的检查命令是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scutil --dns</span><br><span class="line">scutil --proxy</span><br><span class="line">dig qz.sii.edu.cn A +<span class="keyword">time</span>=3 +tries=1</span><br></pre></td></tr></table></figure>
+
+<p>当时系统解析器中存在 Tailscale 的 <code>100.100.100.100</code>，域名查询返回 <code>NXDOMAIN</code>，即解析器回答该域名不存在。</p>
+<h3 id="2-2-指定公共-DNS-也可能仍被-Clash-接管"><a href="#2-2-指定公共-DNS-也可能仍被-Clash-接管" class="headerlink" title="2.2 指定公共 DNS 也可能仍被 Clash 接管"></a>2.2 指定公共 DNS 也可能仍被 Clash 接管</h3><p>再分别查询两个公共 DNS：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dig @223.5.5.5 qz.sii.edu.cn A +<span class="keyword">time</span>=3 +tries=1</span><br><span class="line">dig @1.1.1.1 qz.sii.edu.cn A +<span class="keyword">time</span>=3 +tries=1</span><br></pre></td></tr></table></figure>
+
+<p>两次却都立即返回 <code>198.18.0.7</code>。结合 Clash 已启用 <code>fake-ip</code> 和 <code>dns-hijack</code> 的配置，可以判断这些查询进入了 Clash 的 DNS 处理路径，返回的是虚拟地址。</p>
+<p><strong>指定 <code>@公共DNS</code>，不足以证明查询真的抵达了那个公共 DNS。</strong> 在 TUN 接管 DNS 的环境下，需要同时核对配置和响应特征。这里也不能把 <code>198.18.0.7</code> 当成启智服务器的真实地址，更不能写进 hosts 长期使用。</p>
+<p>随后用加密 DNS 查询做对照，Google 和 Cloudflare 的解析服务也返回了 <code>NXDOMAIN</code>。这修正了最初的判断：问题不能简单归结为“Tailscale 把一个公开可解析的域名解析坏了”；更准确的结论是，<strong>当时的普通解析路径无法得到可用地址，而既有启智代理路径能够完成访问。</strong></p>
+<h3 id="2-3-用显式代理验证整条登录链"><a href="#2-3-用显式代理验证整条登录链" class="headerlink" title="2.3 用显式代理验证整条登录链"></a>2.3 用显式代理验证整条登录链</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl --proxy <span class="string">&#x27;http://127.0.0.1:7897&#x27;</span> --noproxy <span class="string">&#x27;&#x27;</span> \</span><br><span class="line">  --connect-timeout 5 --max-time 20 \</span><br><span class="line">  -sS -L -o /dev/null \</span><br><span class="line">  -w <span class="string">&#x27;HTTP %&#123;http_code&#125;; TLS %&#123;ssl_verify_result&#125;; redirects %&#123;num_redirects&#125;\n&#x27;</span> \</span><br><span class="line">  <span class="string">&#x27;https://qz.sii.edu.cn/&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>这条路径最终返回 HTTP 200，TLS 验证通过。启智入口先重定向到身份认证服务，所以只看到入口的 302 还不够；必须继续检查登录域名和最终页面。</p>
+<p>本机已有启智域名到专用代理组的分流规则。开启系统代理后，遵循系统设置的浏览器可以把目标域名交给 Clash 处理。之后关闭 Tailscale DNS，让本次不需要的 DNS 接管退出，也简化了两套工具的职责。</p>
+<h2 id="3-第二次故障暴露了系统代理路径"><a href="#3-第二次故障暴露了系统代理路径" class="headerlink" title="3. 第二次故障暴露了系统代理路径"></a>3. 第二次故障暴露了系统代理路径</h2><h3 id="3-1-隧道连通和服务可访问是两次验收"><a href="#3-1-隧道连通和服务可访问是两次验收" class="headerlink" title="3.1 隧道连通和服务可访问是两次验收"></a>3.1 隧道连通和服务可访问是两次验收</h3><p>第一轮配置完成后，目标设备的 Tailscale ping 成功，系统路由也指向 Tailscale 接口。但浏览器仍然打不开服务首页。</p>
+<p>最有区分度的测试，是对同一个 URL 分别走直连和显式代理：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">TARGET_IP=<span class="string">&#x27;100.101.102.103&#x27;</span></span><br><span class="line">TARGET_URL=<span class="string">&quot;http://<span class="variable">$&#123;TARGET_IP&#125;</span>/&quot;</span></span><br><span class="line">CLASH_PROXY=<span class="string">&#x27;http://127.0.0.1:7897&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不使用 curl 的显式代理，交给系统路由。</span></span><br><span class="line">curl --noproxy <span class="string">&#x27;*&#x27;</span> --connect-timeout 5 --max-time 10 \</span><br><span class="line">  -sS -o /dev/null -w <span class="string">&#x27;Direct: HTTP %&#123;http_code&#125;\n&#x27;</span> <span class="string">&quot;<span class="variable">$TARGET_URL</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 明确强制进入 Clash，避免 NO_PROXY 环境变量干扰对照。</span></span><br><span class="line">curl --proxy <span class="string">&quot;<span class="variable">$CLASH_PROXY</span>&quot;</span> --noproxy <span class="string">&#x27;&#x27;</span> \</span><br><span class="line">  --connect-timeout 5 --max-time 10 \</span><br><span class="line">  -sS -o /dev/null -w <span class="string">&#x27;Proxy: HTTP %&#123;http_code&#125;\n&#x27;</span> <span class="string">&quot;<span class="variable">$TARGET_URL</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>现场结果如下：</p>
+<table>
+<thead>
+<tr>
+<th>测试</th>
+<th>结果</th>
+<th>能确认的事实</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>tailscale ping</code></td>
+<td>成功，约几十毫秒</td>
+<td>对端 Tailscale 连接可建立</td>
+</tr>
+<tr>
+<td><code>route -n get 目标IP</code></td>
+<td>指向 Tailscale 接口</td>
+<td>系统直接连接目标时有对应路由</td>
+</tr>
+<tr>
+<td>HTTP 直连</td>
+<td>200</td>
+<td>目标 Web 服务可经当前直连路径访问</td>
+</tr>
+<tr>
+<td>HTTP 显式经过 Clash</td>
+<td>502，约 5 秒后返回</td>
+<td>经本地代理的请求路径失败</td>
+</tr>
+</tbody></table>
+<p>这组对照把问题收敛到了经过本地代理的访问路径。它没有证明目标服务宕机，也不足以单凭现象断定 Mihomo 内部究竟是哪项接口选择或拨号行为导致失败。</p>
+<h3 id="3-2-TUN-排除和系统代理绕过作用在不同入口"><a href="#3-2-TUN-排除和系统代理绕过作用在不同入口" class="headerlink" title="3.2 TUN 排除和系统代理绕过作用在不同入口"></a>3.2 TUN 排除和系统代理绕过作用在不同入口</h3><p>两种应用访问路径可以画成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">应用直接连接目标 IP</span><br><span class="line">  → 系统路由</span><br><span class="line">  → Tailscale 隧道</span><br><span class="line">  → 目标 Web 服务</span><br><span class="line"></span><br><span class="line">浏览器遵循系统代理，且目标未被绕过</span><br><span class="line">  → 127.0.0.1:7897</span><br><span class="line">  → Clash 规则与出站连接</span><br><span class="line">  → 目标 Web 服务</span><br></pre></td></tr></table></figure>
+
+<p>Clash 的 TUN 排除网段只影响自动路由的接管范围。如果浏览器已经主动连接本地代理端口，TUN 排除不会撤销这个应用层选择。<a target="_blank" rel="noopener" href="https://wiki.metacubex.one/config/inbound/tun/">Mihomo TUN 配置说明</a></p>
+<p>当时 Clash 中已经存在目标 IP 的 <code>DIRECT</code> 规则，但代理访问仍然返回 502。因此，<code>DIRECT</code> 只能说明规则选择了直连出站，不能单独作为“浏览器访问已经成功”的证据。</p>
+<p>修复是在系统代理绕过列表中明确加入目标 IP，让浏览器直接连接目标，再由系统的 Tailscale 路由接手。</p>
+<h2 id="4-最终使用的最小配置"><a href="#4-最终使用的最小配置" class="headerlink" title="4. 最终使用的最小配置"></a>4. 最终使用的最小配置</h2><h3 id="4-1-关闭-Tailscale-DNS-和接受子网路由"><a href="#4-1-关闭-Tailscale-DNS-和接受子网路由" class="headerlink" title="4.1 关闭 Tailscale DNS 和接受子网路由"></a>4.1 关闭 Tailscale DNS 和接受子网路由</h3><p>macOS 独立版客户端可以使用应用内的 CLI：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/Applications/Tailscale.app/Contents/MacOS/Tailscale <span class="built_in">set</span> \</span><br><span class="line">  --accept-dns=<span class="literal">false</span> \</span><br><span class="line">  --accept-routes=<span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<p>若安装方式不同，先确认本机 CLI 路径。<code>set</code> 只修改显式提供的设置；这里没有重新登录或重置整个客户端配置。</p>
+<p>同时在 Tailscale 菜单中确认出口节点为 <code>None</code>。本次原本就没有启用出口节点，无需额外更改。</p>
+<h3 id="4-2-保留-Clash-TUN-的-Tailscale-网段排除"><a href="#4-2-保留-Clash-TUN-的-Tailscale-网段排除" class="headerlink" title="4.2 保留 Clash TUN 的 Tailscale 网段排除"></a>4.2 保留 Clash TUN 的 Tailscale 网段排除</h3><p>在 Clash Verge 的持久扩展配置中，合并以下字段：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">tun:</span></span><br><span class="line">  <span class="attr">route-exclude-address:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="number">100.64</span><span class="number">.0</span><span class="number">.0</span><span class="string">/10</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">fd7a:115c:a1e0::/48</span></span><br></pre></td></tr></table></figure>
+
+<p>合并时保留已有的其他排除项，不要用这个片段覆盖整个 TUN 配置。<code>100.64.0.0/10</code> 是共享地址空间，具体环境若还使用该地址段，需要一并核对路由。</p>
+<p>本次 IPv6 TUN 配置已经存在，予以保留；没有通过关闭 IPv6 来掩盖访问路径问题。也不需要为了这次修复再启用全局模式或修改已有策略组。</p>
+<h3 id="4-3-把目标-IP-加入系统代理绕过列表"><a href="#4-3-把目标-IP-加入系统代理绕过列表" class="headerlink" title="4.3 把目标 IP 加入系统代理绕过列表"></a>4.3 把目标 IP 加入系统代理绕过列表</h3><p>本次 Clash Verge Rev v2.5.8 的操作路径为：</p>
+<ol>
+<li>打开 <strong>Settings → System Proxy 旁的齿轮</strong>。</li>
+<li>关闭 <strong>Always use Default Bypass</strong>，进入自定义列表。</li>
+<li>保留原有默认绕过项，新增 <code>100.101.102.103</code>。</li>
+<li>点击 <strong>NEW</strong> 加入列表，再点击 <strong>SAVE</strong> 保存。</li>
+<li>用 <code>scutil --proxy</code> 确认 <code>ExceptionsList</code> 中确实出现目标 IP。</li>
+</ol>
+<p>这个列表填写单个 IP，适用于该 IP 的不同服务端口；不要把 <code>http://</code>、路径或端口一起填进去。不同版本的界面名称可能有所不同。</p>
+<p>把设置保存到 Clash Verge，而不只是临时修改 macOS 网络设置，可以避免客户端下次重新应用系统代理时丢失绕过项。</p>
+<h3 id="4-4-保留目标-IP-的直连规则作为补充"><a href="#4-4-保留目标-IP-的直连规则作为补充" class="headerlink" title="4.4 保留目标 IP 的直连规则作为补充"></a>4.4 保留目标 IP 的直连规则作为补充</h3><p>在持久自定义规则的前部加入：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">IP-CIDR,100.101.102.103/32,DIRECT,no-resolve</span></span><br></pre></td></tr></table></figure>
+
+<p>这里展示的是要添加的规则，不是让整个 <code>rules</code> 列表只剩这一项。保留其他规则并重新激活配置，确认内核规则列表中已出现该项。Mihomo 按从上到下的顺序匹配规则。<a target="_blank" rel="noopener" href="https://wiki.metacubex.one/config/rules/">规则说明</a></p>
+<p>这条规则为进入 Clash 的请求提供分流意图；本次浏览器恢复访问的关键，仍是上一节的系统代理绕过。</p>
+<h2 id="5-可复用的分层排查-SOP"><a href="#5-可复用的分层排查-SOP" class="headerlink" title="5. 可复用的分层排查 SOP"></a>5. 可复用的分层排查 SOP</h2><h3 id="步骤一-固定目标和失败表现"><a href="#步骤一-固定目标和失败表现" class="headerlink" title="步骤一 固定目标和失败表现"></a>步骤一 固定目标和失败表现</h3><p>先记录 URL、协议、端口、浏览器报错，以及 Tailscale 和 Clash 的当前状态。IP 能打开而域名打不开，优先查 DNS；域名已解析但连接失败，再看路由、端口和代理。</p>
+<p>先把下面的示例 IP、服务端口和本地代理端口替换为自己的值：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">TARGET_IP=<span class="string">&#x27;100.101.102.103&#x27;</span></span><br><span class="line">TARGET_URL=<span class="string">&quot;http://<span class="variable">$&#123;TARGET_IP&#125;</span>/&quot;</span></span><br><span class="line">CLASH_PROXY=<span class="string">&#x27;http://127.0.0.1:7897&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>不要先同时关闭两个软件。否则即使恢复访问，也难以知道究竟哪条路径发生了变化。</p>
+<h3 id="步骤二-读取-DNS-和代理设置"><a href="#步骤二-读取-DNS-和代理设置" class="headerlink" title="步骤二 读取 DNS 和代理设置"></a>步骤二 读取 DNS 和代理设置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scutil --dns</span><br><span class="line">scutil --proxy</span><br></pre></td></tr></table></figure>
+
+<p>检查三个位置：系统选择了哪些解析器，HTTP&#x2F;HTTPS&#x2F;SOCKS 是否启用，以及目标是否在 <code>ExceptionsList</code> 中。DNS 查询若被 Clash 劫持，应结合 fake-ip 配置解释结果。</p>
+<p>对于域名故障，可以用 <code>dig</code> 和加密 DNS 做对照；测试内部域名时，使用自己有权访问且适合该域名的解析器。</p>
+<h3 id="步骤三-核对目标路由和-Tailscale-连接"><a href="#步骤三-核对目标路由和-Tailscale-连接" class="headerlink" title="步骤三 核对目标路由和 Tailscale 连接"></a>步骤三 核对目标路由和 Tailscale 连接</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">route -n get <span class="string">&quot;<span class="variable">$TARGET_IP</span>&quot;</span></span><br><span class="line"></span><br><span class="line">/Applications/Tailscale.app/Contents/MacOS/Tailscale ping \</span><br><span class="line">  --c 1 --<span class="built_in">timeout</span> 5s <span class="string">&quot;<span class="variable">$TARGET_IP</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>记录路由对应的接口，以及 Tailscale 报告的连接路径。接口名称可能是 <code>utun8</code>、<code>utun9</code> 或其他编号，应结合本机配置识别，不能把编号写死。</p>
+<p>这一步通过后，仍需测试实际服务端口。ping 成功不能替代 HTTP、SSH 或应用自身的验收。</p>
+<h3 id="步骤四-对同一服务做直连和代理对照"><a href="#步骤四-对同一服务做直连和代理对照" class="headerlink" title="步骤四 对同一服务做直连和代理对照"></a>步骤四 对同一服务做直连和代理对照</h3><p>复用第三节的两条 curl 命令，固定 URL 和超时，只改变是否进入代理。</p>
+<table>
+<thead>
+<tr>
+<th>观察结果</th>
+<th>下一步检查</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DNS 失败，显式代理成功</td>
+<td>解析器选择、域名是否依赖特定代理或网络</td>
+</tr>
+<tr>
+<td>Tailscale ping 成功，HTTP 直连失败</td>
+<td>服务监听地址、端口、主机防火墙及访问策略</td>
+</tr>
+<tr>
+<td>HTTP 直连成功，代理失败</td>
+<td>系统代理绕过、Clash 规则和代理出站路径</td>
+</tr>
+<tr>
+<td>HTTP 两种方式成功，浏览器失败</td>
+<td>浏览器自身代理设置、扩展、缓存及页面子资源</td>
+</tr>
+<tr>
+<td>入口成功，登录页或子域名失败</td>
+<td>完整重定向链与后续域名的分流和解析</td>
+</tr>
+</tbody></table>
+<p><code>curl --noproxy &#39;*&#39;</code> 只排除 curl 的显式代理，不会跳过系统级 TUN。反过来，命令行 curl 也不会自动完整复现浏览器对 macOS 系统代理的使用方式，因此浏览器验收必须单独做。</p>
+<h3 id="步骤五-每次修改只对应一个已定位的环节"><a href="#步骤五-每次修改只对应一个已定位的环节" class="headerlink" title="步骤五 每次修改只对应一个已定位的环节"></a>步骤五 每次修改只对应一个已定位的环节</h3><p>先改 DNS 或单条绕过规则，再重复同一组测试。把修改写入客户端的持久配置，并核对当前运行状态；不要只编辑会被重新生成的运行时配置文件。</p>
+<p>如果系统代理绕过后浏览器已经成功，手动强制 <code>curl --proxy ... --noproxy &#39;&#39;</code> 仍然失败，并不表示绕过设置失效。这条命令刻意绕过了正常分工，用于重现原先失败的代理路径。</p>
+<h3 id="步骤六-在浏览器里完成最终验收"><a href="#步骤六-在浏览器里完成最终验收" class="headerlink" title="步骤六 在浏览器里完成最终验收"></a>步骤六 在浏览器里完成最终验收</h3><p>本次旧错误标签页没有立即恢复，但新标签页成功显示了目标服务首页。验收应打开原始 URL 或新建标签页，确认实际页面内容，而不只看路由表和 HTTP 状态码。</p>
+<p>启智平台还要确认身份认证页面正常渲染；如果只有 302 跳转，或登录页仍然空白，排查还没有结束。</p>
+<h2 id="6-验收表和回退方法"><a href="#6-验收表和回退方法" class="headerlink" title="6. 验收表和回退方法"></a>6. 验收表和回退方法</h2><p>本次最终完成了以下检查：</p>
+<table>
+<thead>
+<tr>
+<th>检查项</th>
+<th>验收结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tailscale DNS</td>
+<td>已关闭，系统不再使用其 DNS 配置</td>
+</tr>
+<tr>
+<td>接受子网路由</td>
+<td>已关闭，Tailscale 继续连接</td>
+</tr>
+<tr>
+<td>出口节点</td>
+<td>未启用</td>
+</tr>
+<tr>
+<td>目标 IP 路由</td>
+<td>指向 Tailscale 接口</td>
+</tr>
+<tr>
+<td>目标服务</td>
+<td>HTTP 200，浏览器显示服务首页</td>
+</tr>
+<tr>
+<td>系统代理绕过项</td>
+<td>目标 IP 同时存在于系统状态和客户端持久设置中</td>
+</tr>
+<tr>
+<td>Clash</td>
+<td>保持 Rule 模式，TUN 与系统代理开启</td>
+</tr>
+<tr>
+<td>公网测试 IP</td>
+<td>系统路由进入 Clash TUN，后续按规则决定出站</td>
+</tr>
+<tr>
+<td>启智平台</td>
+<td>TUN 与显式代理路径均返回最终 HTTP 200，TLS 验证通过，浏览器显示认证页面</td>
+</tr>
+</tbody></table>
+<p>回退时，恢复修改前记录的设置即可：删除新增的单 IP 绕过项和直连规则，恢复原来的自定义或默认绕过列表模式；DNS 和子网路由也只恢复各自的原值，不要一律设为开启。原本已存在的 TUN 排除项和 IPv6 设置应保留。</p>
+<p>这次最值得保留的排查习惯，是把 <strong>DNS 解析、系统路由、代理路径和应用响应</strong> 分别验证。一次 ping、一个 <code>DIRECT</code> 标签或一条正确路由都只覆盖其中一部分；同一 URL 的直连与代理对照，加上浏览器里的实际页面，才能把这类共存问题定位到具体环节。</p>
+<h2 id="参考资料与延伸阅读"><a href="#参考资料与延伸阅读" class="headerlink" title="参考资料与延伸阅读"></a>参考资料与延伸阅读</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://tailscale.com/docs/features/client/manage-preferences">Tailscale 客户端 DNS 与子网路由设置</a></li>
+<li><a target="_blank" rel="noopener" href="https://tailscale.com/docs/features/exit-nodes">Tailscale 出口节点</a></li>
+<li><a target="_blank" rel="noopener" href="https://wiki.metacubex.one/config/inbound/tun/">Mihomo TUN 配置</a></li>
+<li><a target="_blank" rel="noopener" href="https://wiki.metacubex.one/config/rules/">Mihomo 路由规则</a></li>
+<li><a href="/2026/10/26/Tailscale%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88-%E4%BB%8EWireGuard%E5%88%B0NAT%E7%A9%BF%E9%80%8F%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/" title="Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理">Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理</a></li>
+<li><a href="/2026/10/26/Tailscale%E4%B8%8EClash%E5%85%B1%E5%AD%98-IPv6%E7%BB%95%E8%BF%87%E4%BB%A3%E7%90%86%E6%8E%92%E6%9F%A5%E4%B8%8E%E4%BF%AE%E5%A4%8D/" title="开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复">开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io/2026/10/26/Tailscale-Clash-Coexistence-SOP/">http://tangquanwei.github.io/2026/10/26/Tailscale-Clash-Coexistence-SOP/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Clash/">Clash</a><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C/">网络</a><a class="post-meta__tags" href="/tags/Tailscale/">Tailscale</a><a class="post-meta__tags" href="/tags/macOS/">macOS</a><a class="post-meta__tags" href="/tags/SOP/">SOP</a></div><div class="post-share"><div class="social-share" data-image="/images/maomi.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/10/27/SSH-%E5%8F%8D%E5%90%91%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/" title="用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器</div></div><div class="info-2"><div class="info-item-1">摘要远程服务器上 pip install、git clone、huggingface-cli download 全都卡住，装个代理客户端却发现节点全部超时——而本地电脑上的代理明明好得很。本文从这次真实排查讲起，用 SSH 反向端口转发（ssh -R） 把本地代理”借”给服务器，让服务器的出口 IP 变成你本地的出口 IP。文中的 IP、端口、耗时数据都来自一次真实排查，可以直接对照复现。  一、从一个真实的尴尬问题说起场景很典型：  你有一台本地电脑，上面跑着代理软件（Clash &#x2F; mihomo &#x2F; sing-box 之类），本地 HTTP 代理端口 7897，上网一切正常。 你还有一台远程服务器（云主机、公司跳板机、超算容器、实验室工作站）。你在上面跑 pip install、git clone、huggingface-cli download，全都卡住。 于是你在服务器上也装了个代理客户端，配了订阅，结果节点全部超时。  排查时的输出大概长这样： 123456789$ curl -s -m 12 -x http://127.0.0.1:7890 htt...</div></div></div></a><a class="pagination-related" href="/2026/10/26/Tailscale%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88-%E4%BB%8EWireGuard%E5%88%B0NAT%E7%A9%BF%E9%80%8F%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/" title="Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理</div></div><div class="info-2"><div class="info-item-1">家里的电脑、云服务器和随身携带的笔记本，通常位于不同网络。想从外面连接家中电脑，往往要处理公网 IP、端口映射、动态 DNS 和防火墙；如果遇上运营商级 NAT，连端口映射都未必可行。 Tailscale 的作用，就是让这些设备加入一张受身份和访问策略管理的虚拟内网。设备可以通过相对稳定的虚拟 IP 或设备名互相访问，底层则尽量建立点对点加密连接，无法直连时使用中继。 它主要解决“自己的设备如何互联”，默认不会把所有公网访问都改成从远端出站。 理解这一点，也就容易区分 Tailscale、普通代理和出口节点的用途。   1. Tailscale 能解决哪些问题假设有四台设备： 1234MacBook：随身使用，在家、学校和咖啡店之间切换Linux 服务器：运行开发环境和模型服务家用电脑：保存文件，偶尔需要远程桌面手机：在移动网络下访问内部服务  它们加入同一个 Tailscale 网络后，就可以在策略允许的范围内，通过虚拟网络通信。这张网络称为 tailnet。    场景 具体用法    远程开发 SSH 连接服务器，使用 VS Code Remote SSH   访问开发服务...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/10/26/Tailscale%E4%B8%8EClash%E5%85%B1%E5%AD%98-IPv6%E7%BB%95%E8%BF%87%E4%BB%A3%E7%90%86%E6%8E%92%E6%9F%A5%E4%B8%8E%E4%BF%AE%E5%A4%8D/" title="开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-26</div><div class="info-item-2">开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复</div></div><div class="info-2"><div class="info-item-1">开启 Tailscale 后，Clash 明明选中了海外节点，查 IP 网站却显示中国。第一反应是：两个软件都创建虚拟网卡，是不是互相冲突了？ 这次排查发现，海外代理节点仍然正常，IPv4 经过 Clash，公网 IPv6 却绕过了 Clash，直接从本地宽带出站。支持 IPv6 的网站可能显示国内地址，仅支持 IPv4 的网站则仍然显示海外地址。 修复方法是为 Clash TUN 补上 IPv6 地址，让 Mihomo 自动建立 IPv6 接管路由，同时排除 Tailscale 的内网网段。修复后，两者可以继续同时使用。   1. 现象与运行环境本次环境是 macOS，使用 Clash Verge Rev，内核为 Mihomo v1.19.32，Tailscale 版本为 1.102.4。 当时的设置如下：    项目 状态    Clash TUN 模式 开启   Clash 系统代理 关闭   Clash 分流模式 Rule   Clash 顶层 ipv6 true   Clash TUN auto-route true   Tailscale 已连接   Tailscal...</div></div></div></a><a class="pagination-related" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Clash 的运行原理（1）：从虚拟网卡到 DNS 分流"><img class="cover" src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/clash1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-30</div><div class="info-item-2">Clash 的运行原理（1）：从虚拟网卡到 DNS 分流</div></div><div class="info-2"><div class="info-item-1">Clash 的运行原理：从虚拟网卡到 DNS 分流   摘要Clash 是一个运行在本机或网关上的规则化代理转发引擎。它把应用程序或系统网络栈产生的流量接入本地，再通过 DNS 模块、规则引擎和策略组判断流量应该直连、拒绝，还是通过某个远程代理节点转发出去。 Clash 可以理解为以下几个模块的组合： 123456流量入口 Inbound+ DNS 解析与 fake-ip 映射+ 规则匹配引擎+ 策略组选择器+ 多协议出站 Outbound+ 远程代理服务器或直连出口  它和传统 VPN 的主要区别在于：传统 VPN 通常把整台设备的 IP 流量放进一个加密隧道，而 Clash 更强调按规则分流。同一台设备上，国内网站可以直连，海外网站可以走代理，广告域名可以拒绝，公司内网可以走 WireGuard，游戏 UDP 可以走 Hysteria 或 TUIC。Clash 的价值是把复杂网络流量按域名、IP、端口、进程、地理位置和协议特征进行精细路由。  1. 先区分几个概念：VPN、代理、Clash日常语境里，很多人会把 Clash、Trojan、Shadowsocks、VLESS 统...</div></div></div></a><a class="pagination-related" href="/2026/10/26/Tailscale%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88-%E4%BB%8EWireGuard%E5%88%B0NAT%E7%A9%BF%E9%80%8F%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/" title="Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-26</div><div class="info-item-2">Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理</div></div><div class="info-2"><div class="info-item-1">家里的电脑、云服务器和随身携带的笔记本，通常位于不同网络。想从外面连接家中电脑，往往要处理公网 IP、端口映射、动态 DNS 和防火墙；如果遇上运营商级 NAT，连端口映射都未必可行。 Tailscale 的作用，就是让这些设备加入一张受身份和访问策略管理的虚拟内网。设备可以通过相对稳定的虚拟 IP 或设备名互相访问，底层则尽量建立点对点加密连接，无法直连时使用中继。 它主要解决“自己的设备如何互联”，默认不会把所有公网访问都改成从远端出站。 理解这一点，也就容易区分 Tailscale、普通代理和出口节点的用途。   1. Tailscale 能解决哪些问题假设有四台设备： 1234MacBook：随身使用，在家、学校和咖啡店之间切换Linux 服务器：运行开发环境和模型服务家用电脑：保存文件，偶尔需要远程桌面手机：在移动网络下访问内部服务  它们加入同一个 Tailscale 网络后，就可以在策略允许的范围内，通过虚拟网络通信。这张网络称为 tailnet。    场景 具体用法    远程开发 SSH 连接服务器，使用 VS Code Remote SSH   访问开发服务...</div></div></div></a><a class="pagination-related" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议"><img class="cover" src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-30</div><div class="info-item-2">Clash 的运行原理（2）：实例和各种代理协议</div></div><div class="info-2"><div class="info-item-1"> 1. 一次 HTTPS 请求在 Clash 中的完整生命周期以访问 https://www.google.com 为例。 第一步：应用发起 DNS 查询浏览器要访问： 1www.google.com  它先请求 DNS 解析。 第二步：Clash DNS 返回 fake-ip如果开启 fake-ip，Clash 可能返回： 1www.google.com → 198.18.0.23  同时 Clash 记录映射： 1198.18.0.23 → www.google.com  第三步：浏览器连接 fake-ip浏览器以为 198.18.0.23 就是目标地址，于是建立 TCP 连接。 第四步：连接进入 Clash由于系统代理、TUN 或透明代理规则，这条连接进入 Clash。Clash 查映射表，知道： 1198.18.0.23 实际对应 www.google.com  第五步：规则匹配Clash 检查规则： 1- DOMAIN-SUFFIX,google.com,PROXY  命中后，决定走 PROXY 策略组。 第六步：策略组选择节点假设当前 PROXY 选择的是 troja...</div></div></div></a><a class="pagination-related" href="/2026/10/27/SSH-%E5%8F%8D%E5%90%91%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/" title="用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-27</div><div class="info-item-2">用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器</div></div><div class="info-2"><div class="info-item-1">摘要远程服务器上 pip install、git clone、huggingface-cli download 全都卡住，装个代理客户端却发现节点全部超时——而本地电脑上的代理明明好得很。本文从这次真实排查讲起，用 SSH 反向端口转发（ssh -R） 把本地代理”借”给服务器，让服务器的出口 IP 变成你本地的出口 IP。文中的 IP、端口、耗时数据都来自一次真实排查，可以直接对照复现。  一、从一个真实的尴尬问题说起场景很典型：  你有一台本地电脑，上面跑着代理软件（Clash &#x2F; mihomo &#x2F; sing-box 之类），本地 HTTP 代理端口 7897，上网一切正常。 你还有一台远程服务器（云主机、公司跳板机、超算容器、实验室工作站）。你在上面跑 pip install、git clone、huggingface-cli download，全都卡住。 于是你在服务器上也装了个代理客户端，配了订阅，结果节点全部超时。  排查时的输出大概长这样： 123456789$ curl -s -m 12 -x http://127.0.0.1:7890 htt...</div></div></div></a><a class="pagination-related" href="/2023/05/22/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/" title="网络编程模型"><img class="cover" src="/2023/05/22/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/2023-05-22-22-34-09.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-22</div><div class="info-item-2">网络编程模型</div></div><div class="info-2"><div class="info-item-1">网络编程模型网络编程模型的核心： 服务器如何管理连接  服务器如何处理请求   以上两个设计点最终都和操作系统的 I&#x2F;O 模型及进程模型相关 I/O模型：阻塞 、非阻塞、同步 、异步   进程模型：单进程、 多进程、多线程  PPC (Process per Connection)  父进程接受连接（图中accept） 父进程“fork”子进程（图中fork） 子进程处理连接的读写请求（图中子进程read、业务处理、write） 子进程关闭连接（图中子进程中的close）  PPC 模式实现简单，比较适合服务器的连接数没那么多的情况(eg. pgsql) 而互联网兴起后，服务器的并发和访问量从几十剧增到成千上万，这种模式的弊端就凸显出来了，主要体现在如下几个方面:    fork代价高：站在操作系统的角度，创建一个进程的代价是很高的，需要分配很多内核资源，需要将内存映像从父进程复制到子进程。 父子进程通信复杂：父进程“fork”子进程时，文件描述符可以通过内存映像复制从父进程传到子进程，但“fork”完成后，父子进程通信就比较麻烦了，需要采用IPC(Interproce...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">59</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%85%88%E6%98%8E%E7%A1%AE%E8%A6%81%E4%BF%9D%E7%95%99%E7%9A%84%E7%BD%91%E7%BB%9C%E8%A1%8C%E4%B8%BA"><span class="toc-number">1.</span> <span class="toc-text">1. 先明确要保留的网络行为</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%95%85%E9%9A%9C%E5%8F%91%E7%94%9F%E5%9C%A8-DNS-%E9%98%B6%E6%AE%B5"><span class="toc-number">2.</span> <span class="toc-text">2. 第一次故障发生在 DNS 阶段</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%85%88%E7%A1%AE%E8%AE%A4%E8%BF%9E%E6%8E%A5%E5%81%9C%E5%9C%A8%E5%93%AA%E9%87%8C"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 先确认连接停在哪里</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E6%8C%87%E5%AE%9A%E5%85%AC%E5%85%B1-DNS-%E4%B9%9F%E5%8F%AF%E8%83%BD%E4%BB%8D%E8%A2%AB-Clash-%E6%8E%A5%E7%AE%A1"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 指定公共 DNS 也可能仍被 Clash 接管</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E7%94%A8%E6%98%BE%E5%BC%8F%E4%BB%A3%E7%90%86%E9%AA%8C%E8%AF%81%E6%95%B4%E6%9D%A1%E7%99%BB%E5%BD%95%E9%93%BE"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 用显式代理验证整条登录链</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%95%85%E9%9A%9C%E6%9A%B4%E9%9C%B2%E4%BA%86%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%90%86%E8%B7%AF%E5%BE%84"><span class="toc-number">3.</span> <span class="toc-text">3. 第二次故障暴露了系统代理路径</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E9%9A%A7%E9%81%93%E8%BF%9E%E9%80%9A%E5%92%8C%E6%9C%8D%E5%8A%A1%E5%8F%AF%E8%AE%BF%E9%97%AE%E6%98%AF%E4%B8%A4%E6%AC%A1%E9%AA%8C%E6%94%B6"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 隧道连通和服务可访问是两次验收</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-TUN-%E6%8E%92%E9%99%A4%E5%92%8C%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%90%86%E7%BB%95%E8%BF%87%E4%BD%9C%E7%94%A8%E5%9C%A8%E4%B8%8D%E5%90%8C%E5%85%A5%E5%8F%A3"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 TUN 排除和系统代理绕过作用在不同入口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%9C%80%E7%BB%88%E4%BD%BF%E7%94%A8%E7%9A%84%E6%9C%80%E5%B0%8F%E9%85%8D%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text">4. 最终使用的最小配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%85%B3%E9%97%AD-Tailscale-DNS-%E5%92%8C%E6%8E%A5%E5%8F%97%E5%AD%90%E7%BD%91%E8%B7%AF%E7%94%B1"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 关闭 Tailscale DNS 和接受子网路由</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E4%BF%9D%E7%95%99-Clash-TUN-%E7%9A%84-Tailscale-%E7%BD%91%E6%AE%B5%E6%8E%92%E9%99%A4"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 保留 Clash TUN 的 Tailscale 网段排除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E6%8A%8A%E7%9B%AE%E6%A0%87-IP-%E5%8A%A0%E5%85%A5%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%90%86%E7%BB%95%E8%BF%87%E5%88%97%E8%A1%A8"><span class="toc-number">4.3.</span> <span class="toc-text">4.3 把目标 IP 加入系统代理绕过列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E4%BF%9D%E7%95%99%E7%9B%AE%E6%A0%87-IP-%E7%9A%84%E7%9B%B4%E8%BF%9E%E8%A7%84%E5%88%99%E4%BD%9C%E4%B8%BA%E8%A1%A5%E5%85%85"><span class="toc-number">4.4.</span> <span class="toc-text">4.4 保留目标 IP 的直连规则作为补充</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%8F%AF%E5%A4%8D%E7%94%A8%E7%9A%84%E5%88%86%E5%B1%82%E6%8E%92%E6%9F%A5-SOP"><span class="toc-number">5.</span> <span class="toc-text">5. 可复用的分层排查 SOP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%80-%E5%9B%BA%E5%AE%9A%E7%9B%AE%E6%A0%87%E5%92%8C%E5%A4%B1%E8%B4%A5%E8%A1%A8%E7%8E%B0"><span class="toc-number">5.1.</span> <span class="toc-text">步骤一 固定目标和失败表现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E4%BA%8C-%E8%AF%BB%E5%8F%96-DNS-%E5%92%8C%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE"><span class="toc-number">5.2.</span> <span class="toc-text">步骤二 读取 DNS 和代理设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%89-%E6%A0%B8%E5%AF%B9%E7%9B%AE%E6%A0%87%E8%B7%AF%E7%94%B1%E5%92%8C-Tailscale-%E8%BF%9E%E6%8E%A5"><span class="toc-number">5.3.</span> <span class="toc-text">步骤三 核对目标路由和 Tailscale 连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E5%9B%9B-%E5%AF%B9%E5%90%8C%E4%B8%80%E6%9C%8D%E5%8A%A1%E5%81%9A%E7%9B%B4%E8%BF%9E%E5%92%8C%E4%BB%A3%E7%90%86%E5%AF%B9%E7%85%A7"><span class="toc-number">5.4.</span> <span class="toc-text">步骤四 对同一服务做直连和代理对照</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E4%BA%94-%E6%AF%8F%E6%AC%A1%E4%BF%AE%E6%94%B9%E5%8F%AA%E5%AF%B9%E5%BA%94%E4%B8%80%E4%B8%AA%E5%B7%B2%E5%AE%9A%E4%BD%8D%E7%9A%84%E7%8E%AF%E8%8A%82"><span class="toc-number">5.5.</span> <span class="toc-text">步骤五 每次修改只对应一个已定位的环节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E5%85%AD-%E5%9C%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E9%87%8C%E5%AE%8C%E6%88%90%E6%9C%80%E7%BB%88%E9%AA%8C%E6%94%B6"><span class="toc-number">5.6.</span> <span class="toc-text">步骤六 在浏览器里完成最终验收</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E9%AA%8C%E6%94%B6%E8%A1%A8%E5%92%8C%E5%9B%9E%E9%80%80%E6%96%B9%E6%B3%95"><span class="toc-number">6.</span> <span class="toc-text">6. 验收表和回退方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99%E4%B8%8E%E5%BB%B6%E4%BC%B8%E9%98%85%E8%AF%BB"><span class="toc-number">7.</span> <span class="toc-text">参考资料与延伸阅读</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/27/SSH-%E5%8F%8D%E5%90%91%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/" title="用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器">用 SSH 给自己开一条代理通道：把本地代理反向借给远程服务器</a><time datetime="2026-10-27T06:41:00.000Z" title="发表于 2026-10-27 14:41:00">2026-10-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale-Clash-Coexistence-SOP/" title="Tailscale 与 Clash 共存排查 SOP">Tailscale 与 Clash 共存排查 SOP</a><time datetime="2026-10-26T06:00:00.000Z" title="发表于 2026-10-26 14:00:00">2026-10-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88-%E4%BB%8EWireGuard%E5%88%B0NAT%E7%A9%BF%E9%80%8F%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/" title="Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理">Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理</a><time datetime="2026-10-25T16:35:00.000Z" title="发表于 2026-10-26 00:35:00">2026-10-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale%E4%B8%8EClash%E5%85%B1%E5%AD%98-IPv6%E7%BB%95%E8%BF%87%E4%BB%A3%E7%90%86%E6%8E%92%E6%9F%A5%E4%B8%8E%E4%BF%AE%E5%A4%8D/" title="开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复">开启 Tailscale 后，Clash 出口为什么变成中国？一次 IPv6 绕过代理的排查与修复</a><time datetime="2026-10-25T16:18:00.000Z" title="发表于 2026-10-26 00:18:00">2026-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议"><img src="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/clash2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Clash 的运行原理（2）：实例和各种代理协议"/></a><div class="content"><a class="title" href="/2026/05/30/Clash%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%8D%8F%E8%AE%AE/" title="Clash 的运行原理（2）：实例和各种代理协议">Clash 的运行原理（2）：实例和各种代理协议</a><time datetime="2026-05-30T09:47:26.000Z" title="发表于 2026-05-30 17:47:26">2026-05-30</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2002 - 2026 By Quanwei</span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
