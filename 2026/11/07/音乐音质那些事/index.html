@@ -1,0 +1,1436 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>音乐音质那些事：从比特率到全景声 | QUANWEI</title><meta name="author" content="Quanwei"><meta name="copyright" content="Quanwei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="音乐音质那些事：从比特率到全景声你打开音乐 App，音质选项从「标准」到「臻音全景声」排了一长串：128kbps、320kbps、44.1kHz&#x2F;16bit、192kHz&#x2F;24bit、7.1.4 声道…… 这些数字到底在说什么？有损和无损差别大吗？16bit 和 24bit 能听出来吗？「空间音频」是音质变好了，还是声音变了个样子？ 这篇文章把这些参数一个一个拆开讲清楚，最后会">
+<meta property="og:type" content="article">
+<meta property="og:title" content="音乐音质那些事：从比特率到全景声">
+<meta property="og:url" content="http://tangquanwei.github.io/2026/11/07/%E9%9F%B3%E4%B9%90%E9%9F%B3%E8%B4%A8%E9%82%A3%E4%BA%9B%E4%BA%8B/index.html">
+<meta property="og:site_name" content="QUANWEI">
+<meta property="og:description" content="音乐音质那些事：从比特率到全景声你打开音乐 App，音质选项从「标准」到「臻音全景声」排了一长串：128kbps、320kbps、44.1kHz&#x2F;16bit、192kHz&#x2F;24bit、7.1.4 声道…… 这些数字到底在说什么？有损和无损差别大吗？16bit 和 24bit 能听出来吗？「空间音频」是音质变好了，还是声音变了个样子？ 这篇文章把这些参数一个一个拆开讲清楚，最后会">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tangquanwei.github.io/images/maomi.png">
+<meta property="article:published_time" content="2026-11-07T07:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-07T07:03:51.306Z">
+<meta property="article:author" content="Quanwei">
+<meta property="article:tag" content="音乐">
+<meta property="article:tag" content="音频">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tangquanwei.github.io/images/maomi.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "音乐音质那些事：从比特率到全景声",
+  "url": "http://tangquanwei.github.io/2026/11/07/%E9%9F%B3%E4%B9%90%E9%9F%B3%E8%B4%A8%E9%82%A3%E4%BA%9B%E4%BA%8B/",
+  "image": "http://tangquanwei.github.io/images/maomi.png",
+  "datePublished": "2026-11-07T07:00:00.000Z",
+  "dateModified": "2026-11-07T07:03:51.306Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Quanwei",
+      "url": "http://tangquanwei.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favico32x32.ico"><link rel="canonical" href="http://tangquanwei.github.io/2026/11/07/%E9%9F%B3%E4%B9%90%E9%9F%B3%E8%B4%A8%E9%82%A3%E4%BA%9B%E4%BA%8B/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '音乐音质那些事：从比特率到全景声',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">101</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">61</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/p1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">QUANWEI</span></a><a class="nav-page-title" href="/"><span class="site-name">音乐音质那些事：从比特率到全景声</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">音乐音质那些事：从比特率到全景声</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-11-07T07:00:00.000Z" title="发表于 2026-11-07 15:00:00">2026-11-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-11-07T07:03:51.306Z" title="更新于 2026-11-07 15:03:51">2026-11-07</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="音乐音质那些事：从比特率到全景声"><a href="#音乐音质那些事：从比特率到全景声" class="headerlink" title="音乐音质那些事：从比特率到全景声"></a>音乐音质那些事：从比特率到全景声</h1><p>你打开音乐 App，音质选项从「标准」到「臻音全景声」排了一长串：128kbps、320kbps、44.1kHz&#x2F;16bit、192kHz&#x2F;24bit、7.1.4 声道……</p>
+<p>这些数字到底在说什么？有损和无损差别大吗？16bit 和 24bit 能听出来吗？「空间音频」是音质变好了，还是声音变了个样子？</p>
+<p>这篇文章把这些参数一个一个拆开讲清楚，最后会告诉你：<strong>哪些参数真正影响你听到的声音，哪些只是数字游戏。</strong></p>
+<hr>
+<h2 id="摘要：先给结论"><a href="#摘要：先给结论" class="headerlink" title="摘要：先给结论"></a>摘要：先给结论</h2><p>如果把影响「你实际听到的声音」的因素按重要性排个序，大概是这样的：</p>
+<table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>因素</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>母带与混音</td>
+<td>同一首歌不同版本（母带重制、不同平台的不同母带）差异最大</td>
+</tr>
+<tr>
+<td>2</td>
+<td>耳机 &#x2F; 音箱 &#x2F; 房间</td>
+<td>换一条耳机的影响远大于 128kbps 换无损</td>
+</tr>
+<tr>
+<td>3</td>
+<td>有损码率（128 → 320）</td>
+<td>从明显能听出到几乎听不出</td>
+</tr>
+<tr>
+<td>4</td>
+<td>空间音频&#x2F;多声道</td>
+<td>听感变化极大，但那是「形态」而不是「保真度」</td>
+</tr>
+<tr>
+<td>5</td>
+<td>有损 320kbps → 无损</td>
+<td>多数人在多数设备上听不出</td>
+</tr>
+<tr>
+<td>6</td>
+<td>采样率 44.1 → 96&#x2F;192kHz</td>
+<td>几乎听不出（成品音乐）</td>
+</tr>
+<tr>
+<td>7</td>
+<td>位深 16 → 24bit</td>
+<td>几乎听不出（成品音乐）</td>
+</tr>
+</tbody></table>
+<p>一句话总结：</p>
+<blockquote>
+<p><strong>有损看比特率，决定「丢了多少」；无损看采样率和位深，决定「原始有多精细」；而真正决定好不好听的，往往是母带、耳机和房间。</strong></p>
+</blockquote>
+<hr>
+<h2 id="一、常见音质选项一览"><a href="#一、常见音质选项一览" class="headerlink" title="一、常见音质选项一览"></a>一、常见音质选项一览</h2><p>以国内主流音乐 App（QQ 音乐、网易云、酷狗等）为例，大致分这几档。各家命名不同，但内涵基本一致：</p>
+<table>
+<thead>
+<tr>
+<th>音质档位</th>
+<th>类型</th>
+<th>典型参数</th>
+<th>特点</th>
+<th>会员要求</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>标准</td>
+<td>有损</td>
+<td>128kbps（AAC&#x2F;MP3）</td>
+<td>体积小，细节损失明显</td>
+<td>免费</td>
+</tr>
+<tr>
+<td>极高 HQ</td>
+<td>有损</td>
+<td>最高 320kbps</td>
+<td>接近 CD 听感</td>
+<td>免费</td>
+</tr>
+<tr>
+<td>无损 SQ</td>
+<td>无损</td>
+<td>最高 48kHz&#x2F;16bit（FLAC）</td>
+<td>CD 级无损</td>
+<td>VIP</td>
+</tr>
+<tr>
+<td>高解析度无损 Hi-Res</td>
+<td>无损</td>
+<td>最高 192kHz&#x2F;24bit</td>
+<td>高于 CD 的参数</td>
+<td>VIP</td>
+</tr>
+<tr>
+<td>高清臻音 Spatial Audio</td>
+<td>空间音频</td>
+<td>96kHz&#x2F;24bit + 空间渲染</td>
+<td>带空间感的高解析</td>
+<td>VIP</td>
+</tr>
+<tr>
+<td>臻音全景声 Audio Vivid</td>
+<td>全景声</td>
+<td>最高 7.1.4 声道</td>
+<td>真三维环绕</td>
+<td>SVIP</td>
+</tr>
+</tbody></table>
+<p>海外平台对照：</p>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>免费&#x2F;基础</th>
+<th>高级</th>
+<th>最高</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Apple Music</td>
+<td>AAC 256kbps</td>
+<td>—</td>
+<td>无损 ALAC 最高 192kHz&#x2F;24bit + 杜比全景声</td>
+</tr>
+<tr>
+<td>Spotify</td>
+<td>Ogg Vorbis 96~160kbps</td>
+<td>320kbps</td>
+<td>320kbps（无损档长期难产）</td>
+</tr>
+<tr>
+<td>YouTube Music</td>
+<td>Opus 128kbps</td>
+<td>Opus 256kbps</td>
+<td>256kbps</td>
+</tr>
+<tr>
+<td>Tidal</td>
+<td>AAC</td>
+<td>16bit&#x2F;44.1 FLAC</td>
+<td>FLAC 最高 192&#x2F;24 + Atmos</td>
+</tr>
+</tbody></table>
+<p>注意几个现象：</p>
+<ul>
+<li><strong>免费档通常停在 128kbps</strong>，这是有损压缩「开始明显能听出问题」的分界线。</li>
+<li><strong>HQ 档基本就是 320kbps</strong>，这是有损压缩的收益拐点。</li>
+<li><strong>再往上（SQ &#x2F; Hi-Res）全部是 VIP 内容</strong>，也正是「心理价值」最高的部分。</li>
+<li><strong>全景声档往往是 SVIP 且独立计费</strong>，因为它不只是音质，而是另一种内容形态。</li>
+</ul>
+<hr>
+<h2 id="二、四个核心参数"><a href="#二、四个核心参数" class="headerlink" title="二、四个核心参数"></a>二、四个核心参数</h2><p>所有音质参数，归根结底只有四个维度：<strong>比特率、采样率、位深、声道数</strong>。</p>
+<h3 id="2-1-比特率（kbps）"><a href="#2-1-比特率（kbps）" class="headerlink" title="2.1 比特率（kbps）"></a>2.1 比特率（kbps）</h3><blockquote>
+<p>每秒用多少数据来描述声音。</p>
+</blockquote>
+<ul>
+<li>单位是 kbps（kilobits per second），即千比特每秒。</li>
+<li>128kbps 意味着：每秒最多用 128,000 bit 来表达这一段音乐。</li>
+<li>这是一个<strong>预算</strong>：编码器必须在这么小的预算里，尽可能保住「人耳敏感」的信息。</li>
+</ul>
+<p><strong>比特率是衡量有损压缩质量的核心指标</strong>，因为它直接决定了编码器能保留多少信息。</p>
+<p>按用途分三种模式：</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>含义</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CBR（固定码率）</td>
+<td>全程码率恒定</td>
+<td>体积可预测，适合流媒体，复杂段落质量下降</td>
+</tr>
+<tr>
+<td>VBR（可变码率）</td>
+<td>按内容复杂度动态分配</td>
+<td>同体积下质量更好，专业场景常用</td>
+</tr>
+<tr>
+<td>ABR（平均码率）</td>
+<td>一段内平均达标</td>
+<td>折中方案</td>
+</tr>
+</tbody></table>
+<p>所以「320kbps」这个说法严格来说并不精确——它可能是 320kbps CBR，也可能是目标平均 320kbps 的 VBR。同一首歌、同样标 320kbps，不同编码器（LAME、Fraunhofer、iTunes AAC、libopus）的实际质量可以差出一截。</p>
+<h3 id="2-2-采样率（kHz）"><a href="#2-2-采样率（kHz）" class="headerlink" title="2.2 采样率（kHz）"></a>2.2 采样率（kHz）</h3><blockquote>
+<p>每秒对连续的声音波形「拍照」多少次。</p>
+</blockquote>
+<ul>
+<li>44.1kHz 表示每秒采样 44,100 次。</li>
+<li>根据<strong>奈奎斯特-香农采样定理</strong>：采样率必须大于信号最高频率的 2 倍，才能无失真重建。</li>
+<li>反过来说：<strong>采样率 &#x2F; 2 &#x3D; 能表示的最高频率</strong>。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>采样率</th>
+<th>奈奎斯特频率（理论上限）</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>32kHz</td>
+<td>16kHz</td>
+<td>广播语音</td>
+</tr>
+<tr>
+<td>44.1kHz</td>
+<td>22.05kHz</td>
+<td>CD、绝大多数音乐</td>
+</tr>
+<tr>
+<td>48kHz</td>
+<td>24kHz</td>
+<td>视频、影视、专业制作</td>
+</tr>
+<tr>
+<td>88.2kHz</td>
+<td>44.1kHz</td>
+<td>44.1 的 2 倍（便于整数分频）</td>
+</tr>
+<tr>
+<td>96kHz</td>
+<td>48kHz</td>
+<td>高解析录音、影视</td>
+</tr>
+<tr>
+<td>192kHz</td>
+<td>96kHz</td>
+<td>高解析母带、营销卖点</td>
+</tr>
+</tbody></table>
+<p>人耳听觉上限大约 20kHz（儿童约 20kHz，成年人普遍降到 15~17kHz）。所以 <strong>44.1kHz 和 48kHz 已经完整覆盖人耳可听范围</strong>。</p>
+<p><strong>采样率是无损格式质量的核心指标之一</strong>，因为它决定了频率上限。</p>
+<h3 id="2-3-位深（bit）"><a href="#2-3-位深（bit）" class="headerlink" title="2.3 位深（bit）"></a>2.3 位深（bit）</h3><blockquote>
+<p>每个采样点用多少位来记录「振幅」的精度。</p>
+</blockquote>
+<p>位深决定的是<strong>动态范围</strong>（最安静到最响亮的跨度），公式很简单：</p>
+<p>$$<br>\text{动态范围(dB)} \approx 6.02 \times N<br>$$</p>
+<table>
+<thead>
+<tr>
+<th>位深</th>
+<th>理论动态范围</th>
+<th>量化级数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>8bit</td>
+<td>约 48dB</td>
+<td>256</td>
+</tr>
+<tr>
+<td>16bit</td>
+<td>约 96dB</td>
+<td>65,536</td>
+</tr>
+<tr>
+<td>24bit</td>
+<td>约 144dB</td>
+<td>16,777,216</td>
+</tr>
+<tr>
+<td>32bit float</td>
+<td>有效精度约 24bit，但范围极大</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p>所以 16bit ≈ 96dB 动态范围，24bit ≈ 144dB——这是 CD 标准与「高解析录音」之间的核心差别。</p>
+<p><strong>位深是无损格式质量的另一个核心指标</strong>，它决定了振幅精度和噪声地板。</p>
+<h3 id="2-4-声道数（如-7-1-4）"><a href="#2-4-声道数（如-7-1-4）" class="headerlink" title="2.4 声道数（如 7.1.4）"></a>2.4 声道数（如 7.1.4）</h3><p>普通音乐是 <strong>2.0 立体声</strong>（左 + 右）。</p>
+<p>7.1.4 的读法是：</p>
+<ul>
+<li><strong>7</strong>：7 个主声道 —— 左(L)、中(C)、右(R)、左环绕(Ls)、右环绕(Rs)、左后环绕(Lb)、右后环绕(Rb)</li>
+<li><strong>.1</strong>：1 个低频效果声道（LFE，就是那个「.1」，负责低频震撼）</li>
+<li><strong>.4</strong>：4 个高度声道 —— 顶部前左、顶部前右、顶部后左、顶部后右</li>
+</ul>
+<p>组合起来就是「水平面 7 只 + 低频 1 只 + 头顶 4 只」的真三维声场。注意：影院系统的 7.1.2 里的 2 只顶置，7.1.4 是 4 只顶置的进阶版。</p>
+<p><strong>多声道不提升「保真度」，它提升的是「空间信息量」</strong>——这是完全不同的一个维度，后面会单独讲。</p>
+<hr>
+<h2 id="三、数字音频的底层：PCM、采样、量化"><a href="#三、数字音频的底层：PCM、采样、量化" class="headerlink" title="三、数字音频的底层：PCM、采样、量化"></a>三、数字音频的底层：PCM、采样、量化</h2><p>要理解上面这些参数，得先知道声音是怎么被「数字化」的。</p>
+<h3 id="3-1-从空气振动到一串数字"><a href="#3-1-从空气振动到一串数字" class="headerlink" title="3.1 从空气振动到一串数字"></a>3.1 从空气振动到一串数字</h3><p>声音是空气压强随时间的变化，是一条连续曲线。数字化要经过三步：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">连续声波</span><br><span class="line">   │  ① 采样（Sampling）：每隔 1/44100 秒取一个点</span><br><span class="line">   ▼</span><br><span class="line">离散时间点</span><br><span class="line">   │  ② 量化（Quantization）：把每个点的振幅对齐到最近的整数刻度</span><br><span class="line">   ▼</span><br><span class="line">离散整数值  ←── ③ 编码（Coding）：按 PCM 或压缩格式存储</span><br><span class="line">   │</span><br><span class="line">   ▼</span><br><span class="line">文件（.wav / .flac / .mp3 / .m4a）</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>采样率</strong> 决定 ① 的密度 → 决定能表示的<strong>最高频率</strong></li>
+<li><strong>位深</strong> 决定 ② 的刻度粗细 → 决定<strong>动态范围 + 噪声地板</strong></li>
+<li><strong>编码方式</strong> 决定 ③ 是不是无损 → 决定<strong>文件大小</strong></li>
+</ul>
+<h3 id="3-2-PCM：最朴素的存法"><a href="#3-2-PCM：最朴素的存法" class="headerlink" title="3.2 PCM：最朴素的存法"></a>3.2 PCM：最朴素的存法</h3><p>PCM（Pulse Code Modulation，脉冲编码调制）就是「把每个采样点的量化值原样写进文件」。CD 音频的全称是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">44.1kHz / 16bit / 2ch / PCM</span><br></pre></td></tr></table></figure>
+
+<p>也就是每秒 44,100 个点 × 每点 16bit × 2 个声道。</p>
+<p>文件大小公式：</p>
+<p>$$<br>\text{码率(bps)} &#x3D; \text{采样率} \times \text{位深} \times \text{声道数}<br>$$</p>
+<p>$$<br>\text{文件大小} &#x3D; \text{码率} \times \text{时长} \div 8<br>$$</p>
+<p>算一下 CD 标准：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">44100 × 16 × 2 = 1,411,200 bps = 1411 kbps ≈ 176.4 KB/s</span><br></pre></td></tr></table></figure>
+
+<p>一首 4 分钟的 CD 无损曲目：<code>1411.2 kbps × 240 s ÷ 8 ≈ 42 MB</code></p>
+<p>各格式实测对比（以 4 分钟单曲为参考）：</p>
+<table>
+<thead>
+<tr>
+<th>格式</th>
+<th>参数</th>
+<th>码率</th>
+<th>4 分钟体积</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MP3&#x2F;AAC 标准</td>
+<td>128kbps</td>
+<td>128 kbps</td>
+<td>≈ 3.8 MB</td>
+</tr>
+<tr>
+<td>MP3&#x2F;AAC 极高</td>
+<td>320kbps</td>
+<td>320 kbps</td>
+<td>≈ 9.6 MB</td>
+</tr>
+<tr>
+<td>CD 无损</td>
+<td>44.1kHz&#x2F;16bit 立体声</td>
+<td>1411 kbps</td>
+<td>≈ 42 MB</td>
+</tr>
+<tr>
+<td>FLAC</td>
+<td>44.1kHz&#x2F;16bit（压缩）</td>
+<td>约 700~1000 kbps</td>
+<td>≈ 23 MB</td>
+</tr>
+<tr>
+<td>Hi-Res</td>
+<td>48kHz&#x2F;24bit</td>
+<td>2304 kbps</td>
+<td>≈ 69 MB</td>
+</tr>
+<tr>
+<td>Hi-Res</td>
+<td>96kHz&#x2F;24bit</td>
+<td>4608 kbps</td>
+<td>≈ 138 MB</td>
+</tr>
+<tr>
+<td>Hi-Res</td>
+<td>192kHz&#x2F;24bit</td>
+<td>9216 kbps</td>
+<td>≈ 276 MB</td>
+</tr>
+<tr>
+<td>流媒体全景声</td>
+<td>Dolby Atmos（E-AC-3 JOC）</td>
+<td>约 384~768 kbps</td>
+<td>≈ 13 MB</td>
+</tr>
+</tbody></table>
+<p>注意最后一行——<strong>流媒体的「全景声」几乎都是有损压缩，码率甚至比无损立体声低一个数量级</strong>。但它听起来「更丰富」，因为它在讲空间，不在讲保真。</p>
+<h3 id="3-3-量化噪声与-dither"><a href="#3-3-量化噪声与-dither" class="headerlink" title="3.3 量化噪声与 dither"></a>3.3 量化噪声与 dither</h3><p>把连续振幅对齐到整数刻度，就会产生误差，叫做<strong>量化噪声</strong>。</p>
+<ul>
+<li>16bit 的量化噪声地板约在 -96dBFS。</li>
+<li>如果直接「四舍五入」截断，误差和信号相关，听感上会出现** granular 的失真**（低电平段落尤其明显）。</li>
+<li>解决办法是 <strong>dither（抖动）</strong>：在量化前加入极低电平的随机噪声，把相关失真变成不相关的白噪声，听感反而更「干净」。</li>
+</ul>
+<p>专业的母带处理在降位深（比如 24bit 混音 → 16bit CD）时一定会加 dither，还会用 <strong>noise shaping（噪声整形）</strong> 把噪声能量推到人耳不敏感的频段（例如 15kHz 以上）。</p>
+<p>这也是为什么「16bit 不如 24bit」这个说法在<strong>制作环节</strong>是对的，在<strong>播放环节</strong>意义不大——因为成品 16bit 文件里的量化噪声已经被精心处理过了。</p>
+<hr>
+<h2 id="四、有损压缩：魔法在心理声学"><a href="#四、有损压缩：魔法在心理声学" class="headerlink" title="四、有损压缩：魔法在心理声学"></a>四、有损压缩：魔法在心理声学</h2><p>有损格式（MP3、AAC、Opus、Vorbis）的核心不是「音频压缩算法」，而是<strong>心理声学模型</strong>——它在猜你听不见什么。</p>
+<h3 id="4-1-心理声学三个基本事实"><a href="#4-1-心理声学三个基本事实" class="headerlink" title="4.1 心理声学三个基本事实"></a>4.1 心理声学三个基本事实</h3><ol>
+<li><strong>人耳不是线性频谱分析仪</strong>：频率分辨率随时长变化，低频分辨率高，高频分辨率低。</li>
+<li><strong>听觉阈值</strong>：低于某条曲线（绝对听阈）的声音根本听不到；不同频率敏感度不同（2~5kHz 最敏感，因为耳道共振）。</li>
+<li><strong>掩蔽效应（Masking）</strong>：一个响亮的声音会把附近频率&#x2F;时间上的弱声音「盖住」。掩蔽分三类：<ul>
+<li>频域掩蔽：强音附近的频段阈值抬高</li>
+<li>时域前掩蔽：强音<strong>之前</strong>约 5~20ms</li>
+<li>时域后掩蔽：强音<strong>之后</strong>约 50~200ms</li>
+</ul>
+</li>
+</ol>
+<p>于是编码器的策略非常直接：</p>
+<blockquote>
+<p><strong>凡是「被掩蔽的」和「低于听阈的」信息，直接丢掉不编码，省下来的比特用在人耳敏感的部分。</strong></p>
+</blockquote>
+<p>这就是有损压缩能到 1&#x2F;10 体积还「听起来差不多」的原因。</p>
+<h3 id="4-2-编码流程（以-MP3-AAC-为例）"><a href="#4-2-编码流程（以-MP3-AAC-为例）" class="headerlink" title="4.2 编码流程（以 MP3&#x2F;AAC 为例）"></a>4.2 编码流程（以 MP3&#x2F;AAC 为例）</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">PCM 输入</span><br><span class="line">  │</span><br><span class="line">  ├─→ 时域分析（瞬态检测，决定窗长）</span><br><span class="line">  │</span><br><span class="line">  ├─→ MDCT 变换到频域（把波形拆成一堆频率成分）</span><br><span class="line">  │</span><br><span class="line">  ├─→ 心理声学模型（算出每个频段的掩蔽阈值）</span><br><span class="line">  │</span><br><span class="line">  ├─→ 比特分配（给「听得见」的频段多分比特，「听不见」的少分或不分）</span><br><span class="line">  │</span><br><span class="line">  ├─→ 量化 + 霍夫曼编码</span><br><span class="line">  │</span><br><span class="line">  └─→ 比特流（帧打包）</span><br></pre></td></tr></table></figure>
+
+<p>关键点：<strong>「丢掉」的动作发生在量化阶段</strong>——给不重要的频段用很粗的量化台阶，甚至直接置零。</p>
+<h3 id="4-3-有损压缩的典型瑕疵"><a href="#4-3-有损压缩的典型瑕疵" class="headerlink" title="4.3 有损压缩的典型瑕疵"></a>4.3 有损压缩的典型瑕疵</h3><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>成因</th>
+<th>常见场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>高频发闷、细节消失</td>
+<td>高频段比特分配不足，15kHz 以上被大幅削减</td>
+<td>128kbps 及以下</td>
+</tr>
+<tr>
+<td>金属感&#x2F;水声&#x2F;whale song</td>
+<td>频域量化噪声被听见</td>
+<td>低码率、复杂信号（合唱、失真吉他）</td>
+</tr>
+<tr>
+<td>预回声（pre-echo）</td>
+<td>瞬态（鼓点、拍手）在变换编码中噪声扩散到之前</td>
+<td>128kbps 敲击类音乐</td>
+</tr>
+<tr>
+<td>立体声像变窄</td>
+<td>中侧（M&#x2F;S）联合编码压缩了侧声道</td>
+<td>低码率</td>
+</tr>
+<tr>
+<td>底噪「呼吸感」</td>
+<td>VBR 下安静段落比特不足</td>
+<td>古典乐弱奏段落</td>
+</tr>
+</tbody></table>
+<p><strong>这些瑕疵在 128kbps 时普遍可闻，在 320kbps 时基本消失。</strong></p>
+<h3 id="4-4-各码率的主观感受"><a href="#4-4-各码率的主观感受" class="headerlink" title="4.4 各码率的主观感受"></a>4.4 各码率的主观感受</h3><table>
+<thead>
+<tr>
+<th>码率</th>
+<th>主观评价</th>
+<th>谁听得出来</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>64kbps</td>
+<td>明显失真，人声发糊</td>
+<td>几乎所有人</td>
+</tr>
+<tr>
+<td>96kbps</td>
+<td>能听但粗糙，高频缺失</td>
+<td>大多数人</td>
+</tr>
+<tr>
+<td>128kbps</td>
+<td>可接受，但复杂段落糊</td>
+<td>大多数人（认真听）</td>
+</tr>
+<tr>
+<td>192kbps</td>
+<td>明显改善，日常够用</td>
+<td>部分人</td>
+</tr>
+<tr>
+<td>256kbps</td>
+<td>接近透明</td>
+<td>少数人</td>
+</tr>
+<tr>
+<td>320kbps</td>
+<td>绝大多数内容「透明」</td>
+<td>极少数人 + 特定素材</td>
+</tr>
+<tr>
+<td>无损</td>
+<td>无压缩损失</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p>「透明（transparent）」是音频领域的一个术语，意思是「听不出与原版的差异」。</p>
+<h3 id="4-5-编码器横向对比"><a href="#4-5-编码器横向对比" class="headerlink" title="4.5 编码器横向对比"></a>4.5 编码器横向对比</h3><p>同码率下的实际质量，一般可以这么排：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Opus  &gt;  AAC-LC  &gt;  MP3 (LAME)  &gt;  老式编码器</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Opus</strong>：目前最强，低码率下尤其明显，YouTube &#x2F; Discord &#x2F; WebRTC 都在用。64kbps Opus 大致能打 128kbps MP3。</li>
+<li><strong>AAC-LC</strong>：Apple Music &#x2F; 各大平台的主流，同码率优于 MP3 约 20~30%。</li>
+<li><strong>MP3</strong>：老但兼容性无敌，320kbps 至今仍是很多平台的默认「高音质」。</li>
+</ul>
+<hr>
+<h2 id="五、无损压缩：只是「打包方式」不同"><a href="#五、无损压缩：只是「打包方式」不同" class="headerlink" title="五、无损压缩：只是「打包方式」不同"></a>五、无损压缩：只是「打包方式」不同</h2><p>无损格式（FLAC、ALAC、APE、WavPack）的原则是：</p>
+<blockquote>
+<p><strong>解码后得到的数据，与原始 PCM 一个比特都不差。</strong></p>
+</blockquote>
+<h3 id="5-1-无损是怎么压缩的"><a href="#5-1-无损是怎么压缩的" class="headerlink" title="5.1 无损是怎么压缩的"></a>5.1 无损是怎么压缩的</h3><p>它压缩的不是「声音」，而是「数据的冗余」：</p>
+<ol>
+<li><strong>线性预测</strong>：用前几个采样点预测下一个点，只存「预测误差」。音乐波形高度相关，误差通常很小。</li>
+<li><strong>残差编码</strong>：小数值用少 bit，大数值用多 bit（Golomb-Rice &#x2F; 算术编码）。</li>
+<li><strong>立体声去相关</strong>：左右声道高度相似，可用 M&#x2F;S 或 L&#x2F;R 关系减少冗余。</li>
+<li><strong>分块 + 熵编码</strong>：把小块数据用 Huffman 或算术编码做最终压缩。</li>
+</ol>
+<p>典型压缩率：<strong>原始 PCM 的 50%~70%</strong>。</p>
+<h3 id="5-2-常见无损格式对比"><a href="#5-2-常见无损格式对比" class="headerlink" title="5.2 常见无损格式对比"></a>5.2 常见无损格式对比</h3><table>
+<thead>
+<tr>
+<th>格式</th>
+<th>后缀</th>
+<th>压缩率</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>WAV</td>
+<td>.wav</td>
+<td>0%（不压缩）</td>
+<td>容器格式，兼容性最好，无标签支持弱</td>
+</tr>
+<tr>
+<td>AIFF</td>
+<td>.aiff</td>
+<td>0%</td>
+<td>Apple 版 WAV，大端序</td>
+</tr>
+<tr>
+<td>FLAC</td>
+<td>.flac</td>
+<td>50~60%</td>
+<td>开源、免专利、硬件支持广，事实标准</td>
+</tr>
+<tr>
+<td>ALAC</td>
+<td>.m4a</td>
+<td>40~50%</td>
+<td>Apple 生态，可塞进 MP4 容器</td>
+</tr>
+<tr>
+<td>APE</td>
+<td>.ape</td>
+<td>50~60%</td>
+<td>压缩率略高，但解码 CPU 开销大、抗损坏差</td>
+</tr>
+<tr>
+<td>WavPack</td>
+<td>.wv</td>
+<td>40~70%</td>
+<td>支持混合模式（有损+残差修正）</td>
+</tr>
+</tbody></table>
+<h3 id="5-3-一个常见误区"><a href="#5-3-一个常见误区" class="headerlink" title="5.3 一个常见误区"></a>5.3 一个常见误区</h3><blockquote>
+<p>「我下的是 FLAC，所以音质一定好。」</p>
+</blockquote>
+<p><strong>不成立。</strong> 无损只保证「不丢信息」，不保证「原始信息里有好东西」。</p>
+<p>把 128kbps MP3 转成 FLAC，得到一个 100% 无损的、包含了 128kbps 全部瑕疵的文件。这种现象叫 <strong>转码（transcoding）</strong>，也是市面上「假无损」的来源。后面会讲怎么识别。</p>
+<p>同理，无损也不代表母带好——一首被响度战争压成砖头的无损，听着还不如一个母带健康的 256kbps。</p>
+<hr>
+<h2 id="六、为什么有损看比特率，无损看采样率？"><a href="#六、为什么有损看比特率，无损看采样率？" class="headerlink" title="六、为什么有损看比特率，无损看采样率？"></a>六、为什么有损看比特率，无损看采样率？</h2><p>因为两者的<strong>存储逻辑完全不同</strong>。</p>
+<h3 id="6-1-有损：在预算内做取舍"><a href="#6-1-有损：在预算内做取舍" class="headerlink" title="6.1 有损：在预算内做取舍"></a>6.1 有损：在预算内做取舍</h3><p>有损格式的工作方式是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">给定预算 B kbps</span><br><span class="line">  ↓</span><br><span class="line">分析这一帧里哪些信息「人耳听不到」</span><br><span class="line">  ↓</span><br><span class="line">把 B 按重要性分配给各频段</span><br><span class="line">  ↓</span><br><span class="line">量化 → 编码</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>采样率在有损格式里意义不大</strong>：因为采样率本身也会被降到 44.1k&#x2F;48k（甚至更低），而且真正决定质量的是「每个频段分到多少比特」。</li>
+<li><strong>比特率直接决定预算大小</strong>：128kbps 是穷预算，320kbps 是宽裕预算。</li>
+</ul>
+<p>所以有损音质 ≈ 比特率 × 编码器效率。</p>
+<h3 id="6-2-无损：完整保存，只做数据压缩"><a href="#6-2-无损：完整保存，只做数据压缩" class="headerlink" title="6.2 无损：完整保存，只做数据压缩"></a>6.2 无损：完整保存，只做数据压缩</h3><p>无损格式不做任何取舍：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">原始 PCM（44.1kHz/16bit）</span><br><span class="line">  ↓ 线性预测 + 熵编码（纯数学，可逆）</span><br><span class="line">  ↓</span><br><span class="line">FLAC 文件（信息量 100% 保留）</span><br></pre></td></tr></table></figure>
+
+<p>既然一个采样点都不丢，那么质量就完全由<strong>原始 PCM 的参数</strong>决定：</p>
+<ul>
+<li><strong>采样率</strong> → 频率上限（22.05kHz 还是 48kHz？）</li>
+<li><strong>位深</strong> → 动态范围（96dB 还是 144dB？）</li>
+<li><strong>声道数</strong> → 空间信息量</li>
+</ul>
+<p>所以无损音质 ≈ 源文件的采样率&#x2F;位深。</p>
+<h3 id="6-3-一张图说清"><a href="#6-3-一张图说清" class="headerlink" title="6.3 一张图说清"></a>6.3 一张图说清</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">         ┌── 有损：MP3 / AAC / Opus</span><br><span class="line">         │     质量 ← 比特率（预算）</span><br><span class="line">音频 ────┤              ← 编码器效率</span><br><span class="line">         │</span><br><span class="line">         └── 无损：FLAC / ALAC / WAV</span><br><span class="line">               质量 ← 采样率（频率精度）</span><br><span class="line">                     ← 位深（振幅精度）</span><br><span class="line">                     ← 声道数（空间信息）</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="七、44-1kHz-和-48kHz-到底差在哪"><a href="#七、44-1kHz-和-48kHz-到底差在哪" class="headerlink" title="七、44.1kHz 和 48kHz 到底差在哪"></a>七、44.1kHz 和 48kHz 到底差在哪</h2><p>两者的实测听感差异<strong>极小</strong>，但它们的历史和工程属性完全不一样。</p>
+<h3 id="7-1-44-1kHz-的由来：被录像机逼出来的"><a href="#7-1-44-1kHz-的由来：被录像机逼出来的" class="headerlink" title="7.1 44.1kHz 的由来：被录像机逼出来的"></a>7.1 44.1kHz 的由来：被录像机逼出来的</h3><p>1980 年代，索尼和飞利浦要制定 CD 标准。当时的现实约束是：</p>
+<ul>
+<li>数字母带没有硬盘可存，只能用**专业录像机（U-matic）**当存储介质。</li>
+<li>U-matic 的视频格式是 525 行 &#x2F; 60 场（NTSC）或 625 行 &#x2F; 50 场（PAL）。</li>
+<li>工程师需要在录像机的「行」和「场」里塞音频采样点。</li>
+</ul>
+<p>于是算出了这个数字：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3 个采样点/行 × 245 行/场 × 60 场/秒 = 44,100 采样/秒</span><br></pre></td></tr></table></figure>
+
+<p>44.1kHz 就是这样被「视频格式」逼出来的，跟人耳没有半点关系。</p>
+<h3 id="7-2-48kHz-的由来：为视频而生"><a href="#7-2-48kHz-的由来：为视频而生" class="headerlink" title="7.2 48kHz 的由来：为视频而生"></a>7.2 48kHz 的由来：为视频而生</h3><p>48kHz 来自更早的专业数字音频（如 AES&#x2F;EBU、DAT），好处是：</p>
+<ul>
+<li>与 <strong>24fps &#x2F; 25fps &#x2F; 30fps &#x2F; 60fps</strong> 等视频帧率容易整数对齐，一帧里刚好是整数个采样点。</li>
+<li>与 32kHz、96kHz、192kHz 都是同一族（48 × n），时钟分频干净。</li>
+</ul>
+<h3 id="7-3-工程上的真正差异：抗混叠滤波器的过渡带"><a href="#7-3-工程上的真正差异：抗混叠滤波器的过渡带" class="headerlink" title="7.3 工程上的真正差异：抗混叠滤波器的过渡带"></a>7.3 工程上的真正差异：抗混叠滤波器的过渡带</h3><p>这是 44.1 vs 48 最实质的技术差别。数字系统在 ADC 之前必须有<strong>抗混叠低通滤波器</strong>，它需要在「20kHz（保留）」和「奈奎斯特频率（必须压死）」之间完成上百 dB 的衰减。</p>
+<table>
+<thead>
+<tr>
+<th>采样率</th>
+<th>奈奎斯特</th>
+<th>20kHz 到奈奎斯特的过渡带宽度</th>
+<th>滤波器难度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>44.1kHz</td>
+<td>22.05kHz</td>
+<td><strong>2.05kHz</strong></td>
+<td>很陡，需要高阶滤波器，相位失真&#x2F;延迟大</td>
+</tr>
+<tr>
+<td>48kHz</td>
+<td>24kHz</td>
+<td>4kHz</td>
+<td>稍缓，容易做</td>
+</tr>
+<tr>
+<td>96kHz</td>
+<td>48kHz</td>
+<td>28kHz</td>
+<td>很宽松，可用温和的线性相位滤波器</td>
+</tr>
+<tr>
+<td>192kHz</td>
+<td>96kHz</td>
+<td>76kHz</td>
+<td>几乎随便做</td>
+</tr>
+</tbody></table>
+<p>过渡带越窄，滤波器阶数越高：</p>
+<ul>
+<li>高阶滤波器 → 群延迟大、相位响应差</li>
+<li>或者用「慢滚降」滤波器 → 20kHz 附近提前开始衰减（有些 44.1kHz 的老 CD 机在 19kHz 就开始掉了）</li>
+</ul>
+<p>所以专业制作倾向 48kHz，不是因为「能听到更多」，而是<strong>滤波更容易做干净、相位更线性、和视频对齐更简单</strong>。</p>
+<h3 id="7-4-那-96kHz-192kHz-呢？"><a href="#7-4-那-96kHz-192kHz-呢？" class="headerlink" title="7.4 那 96kHz &#x2F; 192kHz 呢？"></a>7.4 那 96kHz &#x2F; 192kHz 呢？</h3><p>在成品音乐里，96kHz 以上的<strong>可听收益基本为零</strong>，因为：</p>
+<ol>
+<li>人耳上限 20kHz，44.1kHz 已经覆盖。</li>
+<li>麦克风、话放、音箱的频响在 40kHz 以上普遍劣化。</li>
+<li>绝大多数录音链路的信噪比到不了 24bit 理论水平。</li>
+</ol>
+<p>它们的真实价值在：</p>
+<ul>
+<li><strong>录音&#x2F;混音阶段</strong>：高采样率可以避免 ADC 滤波器的副作用，也方便做大幅降调、变速等处理。</li>
+<li><strong>专业分析</strong>：某些噪声整形、DSD 转 PCM 需要更宽的频带。</li>
+<li><strong>接口&#x2F;时钟工艺</strong>：高规格设备往往整体做工更好（但那是「设备好」，不是「格式好」）。</li>
+</ul>
+<p>以及最重要的：<strong>营销价值</strong>。</p>
+<h3 id="7-5-升频是没有意义的"><a href="#7-5-升频是没有意义的" class="headerlink" title="7.5 升频是没有意义的"></a>7.5 升频是没有意义的</h3><p>一个 44.1kHz 的文件「升」到 192kHz，文件变大 4 倍多，但<strong>信息量一点没增加</strong>——只是把同样的信息用更细的网格重新表达了一遍。</p>
+<p>甚至更糟：低质量的重采样会引入新的失真。这就像把一张 720p 的图片放大到 4K，像素变多了，细节并没有。</p>
+<p>建议：<strong>让播放链路统一用源文件的采样率，不要强行升频。</strong></p>
+<hr>
+<h2 id="八、16bit-和-24bit-听起来有差别吗？"><a href="#八、16bit-和-24bit-听起来有差别吗？" class="headerlink" title="八、16bit 和 24bit 听起来有差别吗？"></a>八、16bit 和 24bit 听起来有差别吗？</h2><p>答案是：<strong>在成品音乐里几乎听不出，在制作环节非常重要。</strong></p>
+<h3 id="8-1-动态范围的物理意义"><a href="#8-1-动态范围的物理意义" class="headerlink" title="8.1 动态范围的物理意义"></a>8.1 动态范围的物理意义</h3><p>16bit 的动态范围 96dB 意味着什么？我们把它换算到声压级（SPL）：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>声压级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>人耳听阈</td>
+<td>0 dB SPL</td>
+</tr>
+<tr>
+<td>安静卧室（夜间）</td>
+<td>25~30 dB SPL</td>
+</tr>
+<tr>
+<td>普通室内</td>
+<td>40~50 dB SPL</td>
+</tr>
+<tr>
+<td>正常对话</td>
+<td>60~65 dB SPL</td>
+</tr>
+<tr>
+<td>交响乐高潮</td>
+<td>90~100 dB SPL</td>
+</tr>
+<tr>
+<td>摇滚现场前排</td>
+<td>110~120 dB SPL</td>
+</tr>
+<tr>
+<td>痛阈</td>
+<td>120~130 dB SPL</td>
+</tr>
+</tbody></table>
+<p>假设你听音乐时峰值是 <strong>100 dB SPL</strong>：</p>
+<ul>
+<li>16bit 的噪声地板 &#x3D; 100 - 96 &#x3D; <strong>4 dB SPL</strong>，低于人耳听阈，听不见。</li>
+<li>24bit 的噪声地板 &#x3D; 100 - 144 &#x3D; <strong>-44 dB SPL</strong>，更是远低于听阈。</li>
+</ul>
+<p>也就是说，<strong>16bit 已经把噪声地板压到听不见了</strong>，24bit 多出来的 48dB 在播放端完全没有用武之地。</p>
+<p>再看设备限制：</p>
+<table>
+<thead>
+<tr>
+<th>设备</th>
+<th>典型实际动态范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>手机内置 DAC</td>
+<td>90~105 dB</td>
+</tr>
+<tr>
+<td>普通 USB DAC</td>
+<td>110~120 dB</td>
+</tr>
+<tr>
+<td>高端台式 DAC&#x2F;耳放</td>
+<td>120~125 dB</td>
+</tr>
+<tr>
+<td>房间&#x2F;环境的本底噪声</td>
+<td>常常 30~40 dB SPL</td>
+</tr>
+</tbody></table>
+<p>即使有 144dB 的「理论动态范围」，你的<strong>环境噪声</strong>早就把它吃掉了。你在安静房间里能感知的实际动态范围，大概只有 60~70dB。</p>
+<h3 id="8-2-那-24bit-为什么重要？"><a href="#8-2-那-24bit-为什么重要？" class="headerlink" title="8.2 那 24bit 为什么重要？"></a>8.2 那 24bit 为什么重要？</h3><p>因为<strong>录音和混音的 headroom（余量）</strong>。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">录音时：麦克风拾取的瞬间峰值可能比平均电平高 20~30dB</span><br><span class="line">         如果只用 16bit，为了不削波，平均电平要压低 20dB</span><br><span class="line">         有效位深只剩 16 - 3.3 ≈ 12.7bit，动态范围只剩约 76dB</span><br><span class="line"></span><br><span class="line">用 24bit：可以放心压低平均电平，留足余量</span><br><span class="line">         后期归一化回来，噪声地板依然远低于可闻阈值</span><br></pre></td></tr></table></figure>
+
+<p>再加上多轨叠加：64 轨混音时噪声会累积增加约 18dB（10·log₁₀64）。24bit 提供了这个余量。</p>
+<p>所以：</p>
+<ul>
+<li><strong>录音&#x2F;混音&#x2F;母带</strong>：24bit 甚至 32bit float 是刚需。</li>
+<li><strong>成品分发</strong>：16bit 完全够用。</li>
+<li><strong>Hi-Res 的 24bit</strong>：主要价值是「从 24bit 母带直出，避免了一次降位深」，而不是「24bit 比 16bit 好听」。</li>
+</ul>
+<h3 id="8-3-32bit-float-是另一回事"><a href="#8-3-32bit-float-是另一回事" class="headerlink" title="8.3 32bit float 是另一回事"></a>8.3 32bit float 是另一回事</h3><p>32bit float 不是「32bit 精度」，而是「24bit 精度 + 巨大的指数范围」。它的真正用途是：</p>
+<ul>
+<li>混音内部计算，<strong>永不削波</strong>（超过 0dBFS 的值也能存下来）</li>
+<li>多级处理时避免累积误差</li>
+</ul>
+<p>它不是给听歌用的。</p>
+<hr>
+<h2 id="九、有损-vs-无损，到底差多少？"><a href="#九、有损-vs-无损，到底差多少？" class="headerlink" title="九、有损 vs 无损，到底差多少？"></a>九、有损 vs 无损，到底差多少？</h2><p>这是本文最实际的问题。</p>
+<h3 id="9-1-ABX-盲测的公开结论"><a href="#9-1-ABX-盲测的公开结论" class="headerlink" title="9.1 ABX 盲测的公开结论"></a>9.1 ABX 盲测的公开结论</h3><p>音频社区（HydrogenAudio、SoundExpert 等）多年 ABX 双盲测试的共识：</p>
+<table>
+<thead>
+<tr>
+<th>对比</th>
+<th>能听出差异的人比例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>128kbps vs 无损</td>
+<td>大多数（&gt;60%）</td>
+<td>复杂素材（古典、金属、合唱）更明显</td>
+</tr>
+<tr>
+<td>192kbps vs 无损</td>
+<td>约一半</td>
+<td>需要认真听、特定段落</td>
+</tr>
+<tr>
+<td>256kbps vs 无损</td>
+<td>少数（&lt;20%）</td>
+<td>训练过的听者</td>
+</tr>
+<tr>
+<td>320kbps vs 无损</td>
+<td>极少（&lt;5%）</td>
+<td>需要好设备 + 安静环境 + 熟悉曲目</td>
+</tr>
+<tr>
+<td>44.1&#x2F;16 无损 vs 96&#x2F;24 无损</td>
+<td>几乎为零</td>
+<td>统计学上与随机猜测无差别</td>
+</tr>
+<tr>
+<td>CD vs 黑胶</td>
+<td>明显（但方向不定）</td>
+<td>差异来自母带和播放特性</td>
+</tr>
+</tbody></table>
+<p>关键前提：<strong>这些测试都在「好设备 + 专注聆听」下进行</strong>。日常通勤戴蓝牙耳机听歌，320kbps 和无损的差异基本可以忽略。</p>
+<h3 id="9-2-为什么-128-→-320-这么大，320-→-无损这么小"><a href="#9-2-为什么-128-→-320-这么大，320-→-无损这么小" class="headerlink" title="9.2 为什么 128 → 320 这么大，320 → 无损这么小"></a>9.2 为什么 128 → 320 这么大，320 → 无损这么小</h3><p>因为<strong>收益递减</strong>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">64 ──→ 128 ──→ 192 ──→ 256 ──→ 320 ──→ 无损</span><br><span class="line">    ↑大        ↑大       ↑中      ↑小      ↑极小</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>低码率时，编码器被迫砍掉大量「有用」的信息（高频、瞬态、空间感）。</li>
+<li>码率高到一定程度后，需要砍的信息已经落在「掩蔽阈值以下」，也就是「本来也听不见」的部分。</li>
+</ul>
+<p><strong>这就是有损压缩的「透明点」，通常在 256~320kbps 之间。</strong></p>
+<h3 id="9-3-真正的差距在母带，不在格式"><a href="#9-3-真正的差距在母带，不在格式" class="headerlink" title="9.3 真正的差距在母带，不在格式"></a>9.3 真正的差距在母带，不在格式</h3><p>有一个很少被提到的现实：<strong>同一首歌在不同平台上的版本，可能根本是不同的母带。</strong></p>
+<ul>
+<li>不同年代的母带重制（remaster）</li>
+<li>不同地区的授权版本</li>
+<li>平台自己做的响度归一化（loudness normalization）</li>
+<li>有些平台对曲目做过二次编码</li>
+</ul>
+<p>举个典型例子：一首 1980 年代的老歌，它的 2015 年重制版和 1990 年首版 CD，差异<strong>远大于</strong> 128kbps 和 192&#x2F;24 之间的差异——混音平衡、动态压缩、EQ 全都变了。</p>
+<p><strong>响度战争（Loudness War）</strong> 是更大的问题：</p>
+<table>
+<thead>
+<tr>
+<th>年代</th>
+<th>流行音乐典型响度（LUFS）</th>
+<th>动态范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1980s</td>
+<td>-16 ~ -14 LUFS</td>
+<td>大</td>
+</tr>
+<tr>
+<td>2000s</td>
+<td>-10 ~ -8 LUFS</td>
+<td>中</td>
+</tr>
+<tr>
+<td>现在</td>
+<td>-8 ~ -5 LUFS</td>
+<td>小（被压得很扁）</td>
+</tr>
+</tbody></table>
+<p>一个被压成「砖头」的 192&#x2F;24 无损，动态表现可能还不如一个母带健康的 44.1&#x2F;16 无损。</p>
+<hr>
+<h2 id="十、空间音频与全景声：换了个维度"><a href="#十、空间音频与全景声：换了个维度" class="headerlink" title="十、空间音频与全景声：换了个维度"></a>十、空间音频与全景声：换了个维度</h2><p>这部分和前面完全不同：<strong>它讨论的不是「保真度」，而是「空间信息」</strong>。</p>
+<h3 id="10-1-从声道到对象"><a href="#10-1-从声道到对象" class="headerlink" title="10.1 从声道到对象"></a>10.1 从声道到对象</h3><p>传统多声道是**基于声道（channel-based）**的：混音师把声音分配到固定的声道（左、右、中、环绕……），你有几个喇叭就还原几个位置。</p>
+<p>全景声是**基于对象（object-based）**的：混音师描述「这个声音在空间中的某个坐标、某个大小」，播放端根据你的设备（耳机、5.1、7.1.4、回音壁）实时计算怎么渲染。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>例子</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>声道（Channel-based）</td>
+<td>立体声、5.1、7.1</td>
+<td>固定声道，混音即成品</td>
+</tr>
+<tr>
+<td>对象（Object-based）</td>
+<td>Dolby Atmos、DTS:X、Audio Vivid</td>
+<td>存「声音对象 + 位置元数据」，播放端渲染</td>
+</tr>
+<tr>
+<td>场景（Scene&#x2F;Ambisonic）</td>
+<td>Ambisonics、Sony 360RA 部分</td>
+<td>存整个声场的球谐表示</td>
+</tr>
+</tbody></table>
+<h3 id="10-2-主流全景声标准对比"><a href="#10-2-主流全景声标准对比" class="headerlink" title="10.2 主流全景声标准对比"></a>10.2 主流全景声标准对比</h3><table>
+<thead>
+<tr>
+<th>标准</th>
+<th>厂商&#x2F;组织</th>
+<th>内容格式</th>
+<th>流媒体编码</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Dolby Atmos</td>
+<td>Dolby</td>
+<td>ADM&#x2F;BWF、DAMF</td>
+<td>E-AC-3 JOC（DD+ Atmos）</td>
+<td>生态最成熟，影视+音乐双强</td>
+</tr>
+<tr>
+<td>DTS:X</td>
+<td>DTS</td>
+<td>MDA</td>
+<td>DTS-HD &#x2F; DTS Express</td>
+<td>影院强势，音乐较少</td>
+</tr>
+<tr>
+<td>Audio Vivid（菁彩声）</td>
+<td>中国 UWA &#x2F; AVS</td>
+<td>AVS3-P3</td>
+<td>AVS3</td>
+<td>中国自主标准，最高 7.1.4，QQ 音乐 SVIP</td>
+</tr>
+<tr>
+<td>Sony 360 Reality Audio</td>
+<td>Sony</td>
+<td>MPEG-H 3D Audio</td>
+<td>MPEG-H</td>
+<td>主打耳机双耳渲染</td>
+</tr>
+</tbody></table>
+<h3 id="10-3-Dolby-Atmos-音乐的真实规格"><a href="#10-3-Dolby-Atmos-音乐的真实规格" class="headerlink" title="10.3 Dolby Atmos 音乐的真实规格"></a>10.3 Dolby Atmos 音乐的真实规格</h3><p>这是一个很多人不知道的事实：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">影院版 Atmos：</span><br><span class="line">  基于 7.1.2 的 bed（声床）+ 最多 118 个对象</span><br><span class="line">  无损编码（Dolby TrueHD），码率可达数 Mbps</span><br><span class="line">  载体：蓝光</span><br><span class="line"></span><br><span class="line">流媒体版 Atmos（Apple Music / Tidal / QQ 音乐）：</span><br><span class="line">  E-AC-3（Dolby Digital Plus）+ JOC（Joint Object Coding）</span><br><span class="line">  码率通常 384~768 kbps</span><br><span class="line">  有损！</span><br></pre></td></tr></table></figure>
+
+<p>也就是说：<strong>你在流媒体听到的「全景声」，码率很可能比同平台的「无损立体声」低。</strong></p>
+<p>但它听起来「信息更多」，因为：</p>
+<ul>
+<li>它多了高度信息、多了环绕信息</li>
+<li>它做了针对耳机的双耳渲染（binaural rendering）</li>
+</ul>
+<p>这两点带来的听感差异，远大于 320kbps vs 无损的差异。</p>
+<h3 id="10-4-耳机上怎么听到「头顶的声音」"><a href="#10-4-耳机上怎么听到「头顶的声音」" class="headerlink" title="10.4 耳机上怎么听到「头顶的声音」"></a>10.4 耳机上怎么听到「头顶的声音」</h3><p>耳机只有两个喇叭，却要模拟「声音来自头顶后方」。核心技术是 <strong>HRTF（Head-Related Transfer Function，头相关传输函数）</strong>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">声音源在空间某点 (θ, φ, r)</span><br><span class="line">        ↓  HRTF（包含耳廓、头部、躯干的滤波特性）</span><br><span class="line">        ↓  加上极小的双耳时间差（ITD）和强度差（ILD）</span><br><span class="line">        ↓</span><br><span class="line">左右耳两个信号 → 你的大脑判定「声音在头顶后方」</span><br></pre></td></tr></table></figure>
+
+<p>难点在于：</p>
+<ul>
+<li>HRTF 因人而异（每个人的耳廓形状不同），通用 HRTF 只能「大致像」。</li>
+<li>容易产生<strong>前后混淆（front-back confusion）<strong>和</strong>头中效应（in-head localization）</strong>。</li>
+<li>头部追踪（AirPods 的空间音频）会实时更新 HRTF，效果明显更好。</li>
+</ul>
+<p>所以「空间音频」的效果高度依赖：</p>
+<ol>
+<li>内容是不是真的多声道&#x2F;对象音频（而不是把立体声加个混响假装环绕）</li>
+<li>渲染算法质量</li>
+<li>有没有头部追踪</li>
+<li>耳机本身的素质</li>
+</ol>
+<h3 id="10-5-空间音频值得开吗？"><a href="#10-5-空间音频值得开吗？" class="headerlink" title="10.5 空间音频值得开吗？"></a>10.5 空间音频值得开吗？</h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>听专门为 Atmos 混音的新歌（流行、电子、影视原声）</td>
+<td>值得，听感提升明显</td>
+</tr>
+<tr>
+<td>听老歌的「Atmos 重制」</td>
+<td>谨慎，很多是「加混响 + 拉宽」的伪环绕</td>
+</tr>
+<tr>
+<td>古典&#x2F;爵士原声录音</td>
+<td>通常立体声版本更自然</td>
+</tr>
+<tr>
+<td>通勤嘈杂环境</td>
+<td>收益有限，还费流量</td>
+</tr>
+<tr>
+<td>有 5.1.4 家庭影院</td>
+<td>必须开，这才是全景声的正确打开方式</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="十一、别忽略链路的短板：蓝牙与设备"><a href="#十一、别忽略链路的短板：蓝牙与设备" class="headerlink" title="十一、别忽略链路的短板：蓝牙与设备"></a>十一、别忽略链路的短板：蓝牙与设备</h2><p>再高的音质，出不了蓝牙这一关也是白搭。</p>
+<h3 id="11-1-蓝牙音频编码对比"><a href="#11-1-蓝牙音频编码对比" class="headerlink" title="11.1 蓝牙音频编码对比"></a>11.1 蓝牙音频编码对比</h3><table>
+<thead>
+<tr>
+<th>编码</th>
+<th>最高码率</th>
+<th>延迟</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SBC</td>
+<td>~328 kbps</td>
+<td>高（150~250ms）</td>
+<td>蓝牙强制支持，质量最差</td>
+</tr>
+<tr>
+<td>AAC</td>
+<td>~256 kbps</td>
+<td>中</td>
+<td>Apple 生态默认，iOS 上表现好</td>
+</tr>
+<tr>
+<td>aptX</td>
+<td>~352 kbps</td>
+<td>低</td>
+<td>高通，Android 常见</td>
+</tr>
+<tr>
+<td>aptX HD</td>
+<td>~576 kbps</td>
+<td>低</td>
+<td>接近 CD 的一半</td>
+</tr>
+<tr>
+<td>aptX Adaptive</td>
+<td>279~420 kbps</td>
+<td>低</td>
+<td>动态调整，兼顾延迟</td>
+</tr>
+<tr>
+<td>LDAC</td>
+<td>330&#x2F;660&#x2F;990 kbps</td>
+<td>中</td>
+<td>索尼，理论最高，但 990 模式极不稳定</td>
+</tr>
+<tr>
+<td>LHDC &#x2F; LHDC 5.0</td>
+<td>400~900 kbps</td>
+<td>低</td>
+<td>国产方案，小米&#x2F;OPPO 常用</td>
+</tr>
+<tr>
+<td>LC3（LE Audio）</td>
+<td>160~320 kbps</td>
+<td>极低</td>
+<td>新一代标准，低码率高效</td>
+</tr>
+</tbody></table>
+<h3 id="11-2-蓝牙能做到无损吗"><a href="#11-2-蓝牙能做到无损吗" class="headerlink" title="11.2 蓝牙能做到无损吗"></a>11.2 蓝牙能做到无损吗</h3><p><strong>CD 无损需要 1411 kbps。蓝牙 A2DP 的实际可用带宽上限就在 990kbps 左右（LDAC 最佳情况）。</strong></p>
+<p>所以：</p>
+<ul>
+<li>传统蓝牙<strong>物理上无法传输 CD 无损</strong>（除非用 aptX Lossless 这类新方案，需要特定芯片和极佳信号）。</li>
+<li>而且蓝牙在信号差时会<strong>动态降码率</strong>：LDAC 标称 990，实际走动两米可能掉到 330。</li>
+<li>还有一层：手机 → 蓝牙编码 → 耳机解码 → 耳机内部 DAC，中间任何一环都可能做重采样。</li>
+</ul>
+<p>结论：<strong>蓝牙耳机的音质瓶颈在蓝牙链路，不在音源格式。</strong> 用蓝牙耳机纠结 320kbps 还是 Hi-Res，基本没有意义。</p>
+<h3 id="11-3-有线链路的隐藏问题：系统重采样（SRC）"><a href="#11-3-有线链路的隐藏问题：系统重采样（SRC）" class="headerlink" title="11.3 有线链路的隐藏问题：系统重采样（SRC）"></a>11.3 有线链路的隐藏问题：系统重采样（SRC）</h3><p>即使是有线，也可能被系统坑：</p>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>默认行为</th>
+<th>解决方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Android</td>
+<td>系统混音器统一重采样到 48kHz</td>
+<td>用支持独占输出的播放器（UAPP、海贝、Poweramp）</td>
+</tr>
+<tr>
+<td>Windows</td>
+<td>共享模式走系统混音器</td>
+<td>播放器开 WASAPI 独占 &#x2F; ASIO</td>
+</tr>
+<tr>
+<td>macOS</td>
+<td>需要手动匹配采样率</td>
+<td>「音频 MIDI 设置」里改，或用 Audirvana、Roon</td>
+</tr>
+<tr>
+<td>iOS</td>
+<td>系统自动匹配（配合外接 DAC）</td>
+<td>一般无需处理</td>
+</tr>
+</tbody></table>
+<p>重采样本身不是灾难（现代 SRC 算法很好），但<strong>多次转换</strong>会累积损失。理想情况下全链路保持同一采样率、一次都不转。</p>
+<h3 id="11-4-真正的大头：换耳机"><a href="#11-4-真正的大头：换耳机" class="headerlink" title="11.4 真正的大头：换耳机"></a>11.4 真正的大头：换耳机</h3><p>给一个直观的量级对比：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">从 128kbps 换到无损        → 改善约 5~10%</span><br><span class="line">从手机自带耳机换到 500 元档 → 改善约 30~50%</span><br><span class="line">从 500 元档换到 2000 元档   → 改善约 15~25%</span><br><span class="line">从耳机换到音箱（房间）      → 完全是另一个量级</span><br></pre></td></tr></table></figure>
+
+<p><strong>先投资换能器（耳机&#x2F;音箱），再考虑格式。</strong> 这是音响圈最不缺共识的一条建议。</p>
+<hr>
+<h2 id="十二、怎么验证你听到的到底是什么"><a href="#十二、怎么验证你听到的到底是什么" class="headerlink" title="十二、怎么验证你听到的到底是什么"></a>十二、怎么验证你听到的到底是什么</h2><h3 id="12-1-用工具查看真实参数"><a href="#12-1-用工具查看真实参数" class="headerlink" title="12.1 用工具查看真实参数"></a>12.1 用工具查看真实参数</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看音频文件的真实编码参数</span></span><br><span class="line">ffprobe -v error -show_streams -select_streams a:0 song.flac</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只看关键信息</span></span><br><span class="line">ffprobe -v error -select_streams a:0 \</span><br><span class="line">  -show_entries stream=codec_name,sample_rate,channels,bits_per_raw_sample,bit_rate \</span><br><span class="line">  -of default=noprint_wrappers=1 song.flac</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用 sox 查看（Linux/macOS）</span></span><br><span class="line">soxi song.flac</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用 mediainfo 查看</span></span><br><span class="line">mediainfo song.flac</span><br></pre></td></tr></table></figure>
+
+<p>输出里要重点看：</p>
+<ul>
+<li><code>codec_name</code>：是 <code>flac</code> 还是 <code>mp3</code>（有些「假无损」是把 mp3 转成 flac 容器）</li>
+<li><code>sample_rate</code>：44100 &#x2F; 48000 &#x2F; 96000</li>
+<li><code>bits_per_raw_sample</code>：16 还是 24</li>
+<li><code>bit_rate</code>：无损的码率一般是 700~1000kbps（44.1&#x2F;16），如果只有 320kbps 就非常可疑</li>
+</ul>
+<h3 id="12-2-用频谱图识别假无损"><a href="#12-2-用频谱图识别假无损" class="headerlink" title="12.2 用频谱图识别假无损"></a>12.2 用频谱图识别假无损</h3><p>这是最直观的方法。用 <strong>Spek</strong>（免费软件）或 Audacity &#x2F; Adobe Audition 看频谱：</p>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>判断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>22kHz 附近自然滚降，20kHz 以上有零星真实信号</td>
+<td>真无损（44.1kHz）</td>
+</tr>
+<tr>
+<td>20kHz 处出现<strong>陡峭的「悬崖」</strong>（一片漆黑）</td>
+<td>大概率是 320kbps MP3 转的</td>
+</tr>
+<tr>
+<td>16kHz 处出现陡峭截止</td>
+<td>大概率是 128kbps MP3 转的</td>
+</tr>
+<tr>
+<td>有规律的「台阶」或整段空洞</td>
+<td>多次转码</td>
+</tr>
+</tbody></table>
+<p>原理很简单：有损编码把高频的比特「省」掉了，频谱上就留下一道平直的切口。真正的模拟录音在 20kHz 以上是自然衰减的，不会突然断掉。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用 Audacity 生成频谱：选中音轨 → Analyze → Plot Spectrum</span></span><br><span class="line"><span class="comment"># 或用 sox 直接画图</span></span><br><span class="line">sox song.flac -n spectrogram -o spectrogram.png</span><br></pre></td></tr></table></figure>
+
+<h3 id="12-3-自己做-ABX-测试"><a href="#12-3-自己做-ABX-测试" class="headerlink" title="12.3 自己做 ABX 测试"></a>12.3 自己做 ABX 测试</h3><p>想验证「我到底听不听得出」？用 <strong>foobar2000 + ABX Comparator 插件</strong>（Windows）或 <strong>abxpy &#x2F; lac</strong>（macOS&#x2F;Linux）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">盲测流程：</span><br><span class="line">  1. 准备 A（320kbps）和 B（无损）两个文件，音量对齐</span><br><span class="line">  2. 工具随机播放 X = A 或 B</span><br><span class="line">  3. 你听 X，判断它像 A 还是 B</span><br><span class="line">  4. 重复 10~20 次，统计正确率</span><br><span class="line">  5. 正确率接近 50% → 你听不出</span><br></pre></td></tr></table></figure>
+
+<p>注意事项：</p>
+<ul>
+<li>音量必须<strong>严格对齐</strong>（哪怕 0.5dB 的差异都会让人「听出区别」，其实是响度差异）</li>
+<li>用你<strong>最熟悉</strong>的曲目</li>
+<li>在<strong>安静环境</strong>、用<strong>最好的设备</strong></li>
+<li>一次不要测太多次，听觉疲劳会掩盖差异</li>
+</ul>
+<p>绝大多数人在这个测试里会发现：自己高估了耳朵。</p>
+<hr>
+<h2 id="十三、实用建议：按场景选音质"><a href="#十三、实用建议：按场景选音质" class="headerlink" title="十三、实用建议：按场景选音质"></a>十三、实用建议：按场景选音质</h2><h3 id="13-1-分场景推荐"><a href="#13-1-分场景推荐" class="headerlink" title="13.1 分场景推荐"></a>13.1 分场景推荐</h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>通勤、背景音、蓝牙耳机</td>
+<td><strong>320kbps &#x2F; HQ</strong></td>
+<td>环境噪声和蓝牙链路吃掉所有差异</td>
+</tr>
+<tr>
+<td>家用、有线耳机、认真听</td>
+<td><strong>无损 SQ</strong></td>
+<td>心理满足 + 潜在收益，存储成本可接受</td>
+</tr>
+<tr>
+<td>极致发烧、有好 DAC + 好耳机</td>
+<td><strong>Hi-Res</strong>（可选）</td>
+<td>收益极小，但设备允许时无妨</td>
+</tr>
+<tr>
+<td>影视、游戏、需要空间感</td>
+<td><strong>Spatial &#x2F; Atmos</strong></td>
+<td>效果明显，前提是内容真的多声道</td>
+</tr>
+<tr>
+<td>手机流量有限</td>
+<td><strong>320kbps</strong></td>
+<td>无损流量是它的 4~5 倍</td>
+</tr>
+<tr>
+<td>本地存储有限</td>
+<td><strong>320kbps</strong> 或 <strong>FLAC（有损转无损没意义）</strong></td>
+<td>一平均 23MB vs 9.6MB</td>
+</tr>
+<tr>
+<td>做混音&#x2F;母带参考</td>
+<td><strong>无损 + 24bit</strong></td>
+<td>需要 headroom 和完整信息</td>
+</tr>
+</tbody></table>
+<h3 id="13-2-一个务实的配置"><a href="#13-2-一个务实的配置" class="headerlink" title="13.2 一个务实的配置"></a>13.2 一个务实的配置</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">手机 + 真无线耳机（通勤）：</span><br><span class="line">  320kbps 足够，别开 Hi-Res，省流量也省电量</span><br><span class="line"></span><br><span class="line">电脑 + USB DAC + 开放大耳（家里）：</span><br><span class="line">  无损 FLAC（44.1/16 为主），关键曲目收 24bit</span><br><span class="line"></span><br><span class="line">家庭影院：</span><br><span class="line">  Atmos 内容（最好蓝光原盘，流媒体的 E-AC-3 版本也行）</span><br><span class="line"></span><br><span class="line">车上：</span><br><span class="line">  320kbps，路噪下什么格式都一样</span><br></pre></td></tr></table></figure>
+
+<h3 id="13-3-别为这些花钱"><a href="#13-3-别为这些花钱" class="headerlink" title="13.3 别为这些花钱"></a>13.3 别为这些花钱</h3><ul>
+<li><strong>「Hi-Res 认证」贴纸</strong>：多数是营销。</li>
+<li><strong>「192kHz&#x2F;24bit 重制」老歌</strong>：先查查是不是真的从模拟母带重新采样，很多只是把 44.1&#x2F;16 升频 + 加 EQ。</li>
+<li><strong>「量子&#x2F;晶体&#x2F;纳米」音频配件</strong>：与音质无关。</li>
+<li><strong>超高码率蓝牙</strong>：信号一差就打回原形。</li>
+</ul>
+<h3 id="13-4-值得花钱的地方"><a href="#13-4-值得花钱的地方" class="headerlink" title="13.4 值得花钱的地方"></a>13.4 值得花钱的地方</h3><ol>
+<li><strong>换耳机&#x2F;音箱</strong>（最大收益）</li>
+<li><strong>改善声学环境</strong>（房间处理、耳机套、佩戴）</li>
+<li><strong>安静的聆听环境</strong></li>
+<li><strong>一个干净的 DAC&#x2F;耳放</strong>（如果要推高阻耳机）</li>
+<li>最后才是格式和采样率</li>
+</ol>
+<hr>
+<h2 id="十四、常见误区-FAQ"><a href="#十四、常见误区-FAQ" class="headerlink" title="十四、常见误区 FAQ"></a>十四、常见误区 FAQ</h2><p><strong>Q1：24bit 一定比 16bit 好听？</strong><br>A：在成品音乐里几乎听不出。24bit 的价值在录音&#x2F;混音阶段的余量，以及「避免降位深」这个理论优势。播放端环境噪声早就超过这个差异了。</p>
+<p><strong>Q2：Hi-Res 是智商税吗？</strong><br>A：不完全是，但它卖的更多是「母带质量」和「制作工艺」，而不是「96kHz&#x2F;24bit 这个参数本身」。如果一首歌有专门的 Hi-Res 母带，它可能确实比 CD 版好听——但那是因为<strong>母带不同</strong>，不是因为采样率高。</p>
+<p><strong>Q3：无损一定比有损好听？</strong><br>A：不一定。320kbps 以上的有损在多数情况下已经透明。而且「假无损」（低码率转码）到处都是，反而不如老老实实的 320kbps。</p>
+<p><strong>Q4：空间音频是音质提升吗？</strong><br>A：不是。它是<strong>内容和渲染方式</strong>的变化。它可能让你觉得「更好听」，但那是因为空间感，不是因为保真度。有时它甚至会牺牲保真度（流媒体 Atmos 是有损编码）。</p>
+<p><strong>Q5：为什么我的无损文件只有 700kbps，不是 1411kbps？</strong><br>A：FLAC 是压缩格式，码率会低于原始 PCM 的 1411kbps，这是正常的（压缩率 50~60%）。解码后完全还原。</p>
+<p><strong>Q6：为什么我下载的「Hi-Res」听起来和 CD 版一样？</strong><br>A：可能它就是从 CD 母带升频来的，也可能是你的播放链路（蓝牙、系统重采样、耳机）把它降到了 CD 水平。检查一下链路。</p>
+<p><strong>Q7：手机厂商宣传的「Hi-Fi 芯片」有用吗？</strong><br>A：有，但作用有限。真正决定听感的是耳机和录音质量。独立的 DAC&#x2F;耳放芯片主要改善的是「推得动」和「底噪低」，对已经推到位的耳机提升不大。</p>
+<p><strong>Q8：DSD 比 PCM 好吗？</strong><br>A：这是另一个宗教话题。技术上 DSD（1bit 高采样率）在极高频有独特特性，但成品音乐的差异主要来自母带。而且 DSD 转 PCM 需要滤波，多数播放链路最终还是有 PCM 转换。听感上没有普适结论。</p>
+<p><strong>Q9：为什么感觉 Apple Music 的无损比别的平台好听？</strong><br>A：可能因为它的母带来源（Apple Digital Masters）、响度归一化策略（Sound Check）或者你用的设备。<strong>平台间的差异主要是母带和处理的差异，不是格式的差异。</strong></p>
+<hr>
+<h2 id="十五、名词速查表"><a href="#十五、名词速查表" class="headerlink" title="十五、名词速查表"></a>十五、名词速查表</h2><table>
+<thead>
+<tr>
+<th>名词</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>PCM</strong></td>
+<td>脉冲编码调制，最原始的数字音频表示</td>
+</tr>
+<tr>
+<td><strong>比特率（kbps）</strong></td>
+<td>每秒数据量，衡量有损压缩质量的核心指标</td>
+</tr>
+<tr>
+<td><strong>采样率（Hz&#x2F;kHz）</strong></td>
+<td>每秒采样次数，决定频率上限（采样率&#x2F;2）</td>
+</tr>
+<tr>
+<td><strong>位深（bit）</strong></td>
+<td>每个采样点的精度，决定动态范围（约 6.02×N dB）</td>
+</tr>
+<tr>
+<td><strong>奈奎斯特定理</strong></td>
+<td>采样率必须 &gt; 2×最高频率，才能无失真重建</td>
+</tr>
+<tr>
+<td><strong>量化噪声</strong></td>
+<td>振幅对齐到整数刻度产生的误差</td>
+</tr>
+<tr>
+<td><strong>Dither</strong></td>
+<td>量化前加入的极低电平噪声，把相关失真变成白噪声</td>
+</tr>
+<tr>
+<td><strong>Noise Shaping</strong></td>
+<td>把量化噪声推到人耳不敏感频段的技术</td>
+</tr>
+<tr>
+<td><strong>掩蔽效应</strong></td>
+<td>强音会让附近频率&#x2F;时间的弱音听不见</td>
+</tr>
+<tr>
+<td><strong>ABX 测试</strong></td>
+<td>双盲听测方法，用于验证「能否听出差异」</td>
+</tr>
+<tr>
+<td><strong>透明（Transparent）</strong></td>
+<td>听不出与原版差异</td>
+</tr>
+<tr>
+<td><strong>Headroom</strong></td>
+<td>录音&#x2F;混音时预留的电平余量，避免削波</td>
+</tr>
+<tr>
+<td><strong>LUFS</strong></td>
+<td>响度单位，流媒体响度归一化的标准</td>
+</tr>
+<tr>
+<td><strong>SRC</strong></td>
+<td>采样率转换（Sample Rate Conversion）</td>
+</tr>
+<tr>
+<td><strong>HRTF</strong></td>
+<td>头相关传输函数，耳机模拟空间感的核心技术</td>
+</tr>
+<tr>
+<td><strong>对象音频</strong></td>
+<td>存「声音对象+位置」而非固定声道，播放端渲染</td>
+</tr>
+<tr>
+<td><strong>ADM&#x2F;BWF</strong></td>
+<td>广播波形格式，专业多声道&#x2F;全景声的交收格式</td>
+</tr>
+<tr>
+<td><strong>JOC</strong></td>
+<td>Joint Object Coding，把 Atmos 对象压进 E-AC-3 的技术</td>
+</tr>
+<tr>
+<td><strong>LFE</strong></td>
+<td>低频效果声道（.1）</td>
+</tr>
+<tr>
+<td><strong>7.1.4</strong></td>
+<td>7 主声道 + 1 低频 + 4 高度声道</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="十六、总结"><a href="#十六、总结" class="headerlink" title="十六、总结"></a>十六、总结</h2><p>回到最开始的问题：</p>
+<p><strong>这些数字到底什么意思？</strong></p>
+<ul>
+<li><strong>比特率</strong>：有损格式的「数据预算」，决定丢多少。</li>
+<li><strong>采样率</strong>：每秒采样次数，决定频率上限（采样率 ÷ 2）。</li>
+<li><strong>位深</strong>：每个采样的精度，决定动态范围（6.02 × N dB）。</li>
+<li><strong>声道数</strong>：空间信息量，7.1.4 &#x3D; 7 主 + 1 低频 + 4 顶部。</li>
+</ul>
+<p><strong>有损和无损差别大吗？</strong></p>
+<ul>
+<li>128kbps vs 无损：差别明显，大多数人能听出。</li>
+<li>320kbps vs 无损：差别极小，多数人听不出。</li>
+<li>16bit vs 24bit：几乎听不出（成品音乐）。</li>
+<li>44.1k vs 96k&#x2F;192k：几乎听不出（成品音乐）。</li>
+</ul>
+<p><strong>什么才是真正重要的？</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">母带与混音  &gt;  耳机/音箱/房间  &gt;  有损码率  &gt;  空间音频形态  &gt;  无损 vs 320k  &gt;  采样率/位深</span><br></pre></td></tr></table></figure>
+
+<p><strong>一句话建议：</strong></p>
+<blockquote>
+<p>把音质开到 <strong>320kbps（HQ）或无损 SQ</strong>，就已经覆盖了可感知的绝大部分差别。想再提升，去换耳机、改善环境、找好母带，而不是去追 192kHz&#x2F;24bit 的数字。</p>
+</blockquote>
+<p>音质参数看起来复杂，核心其实就两点：</p>
+<p><strong>有损看比特率，决定丢了多少；无损看采样率和位深，决定原始有多精细。</strong></p>
+<p>而决定「好不好听」的，往往不在参数表里。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io">Quanwei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://tangquanwei.github.io/2026/11/07/%E9%9F%B3%E4%B9%90%E9%9F%B3%E8%B4%A8%E9%82%A3%E4%BA%9B%E4%BA%8B/">http://tangquanwei.github.io/2026/11/07/%E9%9F%B3%E4%B9%90%E9%9F%B3%E8%B4%A8%E9%82%A3%E4%BA%9B%E4%BA%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://tangquanwei.github.io" target="_blank">QUANWEI</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%9F%B3%E4%B9%90/">音乐</a><a class="post-meta__tags" href="/tags/%E9%9F%B3%E9%A2%91/">音频</a></div><div class="post-share"><div class="social-share" data-image="/images/maomi.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/11/03/%E4%BB%8E%E7%A5%9E%E7%BB%8F%E5%85%83%E5%88%B0Pre-Post-Norm-LayerNorm%E7%9A%84%E5%AE%8C%E6%95%B4%E9%80%BB%E8%BE%91%E9%93%BE/" title="从神经元到 Pre/Post-Norm：LayerNorm 的完整逻辑链"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">从神经元到 Pre/Post-Norm：LayerNorm 的完整逻辑链</div></div><div class="info-2"><div class="info-item-1">引言LayerNorm 的公式只有四行，但围绕它有一连串容易混淆的问题：它为什么叫 “Layer”？和 BatchNorm 到底差在哪？语音特征 [B, F, T] 上该归一化 F 还是 T？Pre-Norm 和 Post-Norm 又有什么区别？为什么 Post-Norm 需要 Warmup 而 Pre-Norm 不需要？ 这些问题看似分散，其实是一条逻辑链：从”神经元和 layer 是什么”出发，到”LayerNorm 归一化的是谁”，再到”LayerNorm 放在残差连接的哪里”，最后到”这个位置如何决定梯度流和训练稳定性”。 本文按这条链一步步展开。  第一部分：神经元与 Layer —— 归一化对象的定义要理解 LayerNorm，先要搞清楚它归一化的”对象”是什么。 1.1 神经元：最小的计算单元一个神经元做三件事：  接收一组输入 $x_1, \dots, x_n$ 加权求和：$z &#x3D; \sum_i w_i x_i + b$ 过激活函数：$a &#x3D; \sigma(z)$  输出一个标量 $a$。 1.2 Layer：一组并排的神经元把 $m$ 个神...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/maomi.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Quanwei</div><div class="author-info-description">幸得识卿桃花面，从此阡陌多暖春 </div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">101</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">61</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tangquanwei"><i class="fab fa-github"></i><span>Follow Quanwei</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/tangquanwei" target="_blank" title="fab fa-github"><i class="GitHub"></i></a><a class="social-icon" href="https://gitee.com/quanw20" target="_blank" title="fab fa-git"><i class="Gitee"></i></a><a class="social-icon" href="mailto:1076451802@qq.com" target="_blank" title="fa fa-envelope"><i class="E-Mail"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Quanwei's Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9F%B3%E4%B9%90%E9%9F%B3%E8%B4%A8%E9%82%A3%E4%BA%9B%E4%BA%8B%EF%BC%9A%E4%BB%8E%E6%AF%94%E7%89%B9%E7%8E%87%E5%88%B0%E5%85%A8%E6%99%AF%E5%A3%B0"><span class="toc-number">1.</span> <span class="toc-text">音乐音质那些事：从比特率到全景声</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81%EF%BC%9A%E5%85%88%E7%BB%99%E7%BB%93%E8%AE%BA"><span class="toc-number">1.1.</span> <span class="toc-text">摘要：先给结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%B8%B8%E8%A7%81%E9%9F%B3%E8%B4%A8%E9%80%89%E9%A1%B9%E4%B8%80%E8%A7%88"><span class="toc-number">1.2.</span> <span class="toc-text">一、常见音质选项一览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%9B%9B%E4%B8%AA%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0"><span class="toc-number">1.3.</span> <span class="toc-text">二、四个核心参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E6%AF%94%E7%89%B9%E7%8E%87%EF%BC%88kbps%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">2.1 比特率（kbps）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E9%87%87%E6%A0%B7%E7%8E%87%EF%BC%88kHz%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.2 采样率（kHz）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E4%BD%8D%E6%B7%B1%EF%BC%88bit%EF%BC%89"><span class="toc-number">1.3.3.</span> <span class="toc-text">2.3 位深（bit）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E5%A3%B0%E9%81%93%E6%95%B0%EF%BC%88%E5%A6%82-7-1-4%EF%BC%89"><span class="toc-number">1.3.4.</span> <span class="toc-text">2.4 声道数（如 7.1.4）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%95%B0%E5%AD%97%E9%9F%B3%E9%A2%91%E7%9A%84%E5%BA%95%E5%B1%82%EF%BC%9APCM%E3%80%81%E9%87%87%E6%A0%B7%E3%80%81%E9%87%8F%E5%8C%96"><span class="toc-number">1.4.</span> <span class="toc-text">三、数字音频的底层：PCM、采样、量化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E4%BB%8E%E7%A9%BA%E6%B0%94%E6%8C%AF%E5%8A%A8%E5%88%B0%E4%B8%80%E4%B8%B2%E6%95%B0%E5%AD%97"><span class="toc-number">1.4.1.</span> <span class="toc-text">3.1 从空气振动到一串数字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-PCM%EF%BC%9A%E6%9C%80%E6%9C%B4%E7%B4%A0%E7%9A%84%E5%AD%98%E6%B3%95"><span class="toc-number">1.4.2.</span> <span class="toc-text">3.2 PCM：最朴素的存法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E9%87%8F%E5%8C%96%E5%99%AA%E5%A3%B0%E4%B8%8E-dither"><span class="toc-number">1.4.3.</span> <span class="toc-text">3.3 量化噪声与 dither</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%9C%89%E6%8D%9F%E5%8E%8B%E7%BC%A9%EF%BC%9A%E9%AD%94%E6%B3%95%E5%9C%A8%E5%BF%83%E7%90%86%E5%A3%B0%E5%AD%A6"><span class="toc-number">1.5.</span> <span class="toc-text">四、有损压缩：魔法在心理声学</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%BF%83%E7%90%86%E5%A3%B0%E5%AD%A6%E4%B8%89%E4%B8%AA%E5%9F%BA%E6%9C%AC%E4%BA%8B%E5%AE%9E"><span class="toc-number">1.5.1.</span> <span class="toc-text">4.1 心理声学三个基本事实</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E7%BC%96%E7%A0%81%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BB%A5-MP3-AAC-%E4%B8%BA%E4%BE%8B%EF%BC%89"><span class="toc-number">1.5.2.</span> <span class="toc-text">4.2 编码流程（以 MP3&#x2F;AAC 为例）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E6%9C%89%E6%8D%9F%E5%8E%8B%E7%BC%A9%E7%9A%84%E5%85%B8%E5%9E%8B%E7%91%95%E7%96%B5"><span class="toc-number">1.5.3.</span> <span class="toc-text">4.3 有损压缩的典型瑕疵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E5%90%84%E7%A0%81%E7%8E%87%E7%9A%84%E4%B8%BB%E8%A7%82%E6%84%9F%E5%8F%97"><span class="toc-number">1.5.4.</span> <span class="toc-text">4.4 各码率的主观感受</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-%E7%BC%96%E7%A0%81%E5%99%A8%E6%A8%AA%E5%90%91%E5%AF%B9%E6%AF%94"><span class="toc-number">1.5.5.</span> <span class="toc-text">4.5 编码器横向对比</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%97%A0%E6%8D%9F%E5%8E%8B%E7%BC%A9%EF%BC%9A%E5%8F%AA%E6%98%AF%E3%80%8C%E6%89%93%E5%8C%85%E6%96%B9%E5%BC%8F%E3%80%8D%E4%B8%8D%E5%90%8C"><span class="toc-number">1.6.</span> <span class="toc-text">五、无损压缩：只是「打包方式」不同</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E6%97%A0%E6%8D%9F%E6%98%AF%E6%80%8E%E4%B9%88%E5%8E%8B%E7%BC%A9%E7%9A%84"><span class="toc-number">1.6.1.</span> <span class="toc-text">5.1 无损是怎么压缩的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E5%B8%B8%E8%A7%81%E6%97%A0%E6%8D%9F%E6%A0%BC%E5%BC%8F%E5%AF%B9%E6%AF%94"><span class="toc-number">1.6.2.</span> <span class="toc-text">5.2 常见无损格式对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E4%B8%80%E4%B8%AA%E5%B8%B8%E8%A7%81%E8%AF%AF%E5%8C%BA"><span class="toc-number">1.6.3.</span> <span class="toc-text">5.3 一个常见误区</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E6%8D%9F%E7%9C%8B%E6%AF%94%E7%89%B9%E7%8E%87%EF%BC%8C%E6%97%A0%E6%8D%9F%E7%9C%8B%E9%87%87%E6%A0%B7%E7%8E%87%EF%BC%9F"><span class="toc-number">1.7.</span> <span class="toc-text">六、为什么有损看比特率，无损看采样率？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E6%9C%89%E6%8D%9F%EF%BC%9A%E5%9C%A8%E9%A2%84%E7%AE%97%E5%86%85%E5%81%9A%E5%8F%96%E8%88%8D"><span class="toc-number">1.7.1.</span> <span class="toc-text">6.1 有损：在预算内做取舍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E6%97%A0%E6%8D%9F%EF%BC%9A%E5%AE%8C%E6%95%B4%E4%BF%9D%E5%AD%98%EF%BC%8C%E5%8F%AA%E5%81%9A%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9"><span class="toc-number">1.7.2.</span> <span class="toc-text">6.2 无损：完整保存，只做数据压缩</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-%E4%B8%80%E5%BC%A0%E5%9B%BE%E8%AF%B4%E6%B8%85"><span class="toc-number">1.7.3.</span> <span class="toc-text">6.3 一张图说清</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%8144-1kHz-%E5%92%8C-48kHz-%E5%88%B0%E5%BA%95%E5%B7%AE%E5%9C%A8%E5%93%AA"><span class="toc-number">1.8.</span> <span class="toc-text">七、44.1kHz 和 48kHz 到底差在哪</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-44-1kHz-%E7%9A%84%E7%94%B1%E6%9D%A5%EF%BC%9A%E8%A2%AB%E5%BD%95%E5%83%8F%E6%9C%BA%E9%80%BC%E5%87%BA%E6%9D%A5%E7%9A%84"><span class="toc-number">1.8.1.</span> <span class="toc-text">7.1 44.1kHz 的由来：被录像机逼出来的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-48kHz-%E7%9A%84%E7%94%B1%E6%9D%A5%EF%BC%9A%E4%B8%BA%E8%A7%86%E9%A2%91%E8%80%8C%E7%94%9F"><span class="toc-number">1.8.2.</span> <span class="toc-text">7.2 48kHz 的由来：为视频而生</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-%E5%B7%A5%E7%A8%8B%E4%B8%8A%E7%9A%84%E7%9C%9F%E6%AD%A3%E5%B7%AE%E5%BC%82%EF%BC%9A%E6%8A%97%E6%B7%B7%E5%8F%A0%E6%BB%A4%E6%B3%A2%E5%99%A8%E7%9A%84%E8%BF%87%E6%B8%A1%E5%B8%A6"><span class="toc-number">1.8.3.</span> <span class="toc-text">7.3 工程上的真正差异：抗混叠滤波器的过渡带</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-4-%E9%82%A3-96kHz-192kHz-%E5%91%A2%EF%BC%9F"><span class="toc-number">1.8.4.</span> <span class="toc-text">7.4 那 96kHz &#x2F; 192kHz 呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-5-%E5%8D%87%E9%A2%91%E6%98%AF%E6%B2%A1%E6%9C%89%E6%84%8F%E4%B9%89%E7%9A%84"><span class="toc-number">1.8.5.</span> <span class="toc-text">7.5 升频是没有意义的</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%8116bit-%E5%92%8C-24bit-%E5%90%AC%E8%B5%B7%E6%9D%A5%E6%9C%89%E5%B7%AE%E5%88%AB%E5%90%97%EF%BC%9F"><span class="toc-number">1.9.</span> <span class="toc-text">八、16bit 和 24bit 听起来有差别吗？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4%E7%9A%84%E7%89%A9%E7%90%86%E6%84%8F%E4%B9%89"><span class="toc-number">1.9.1.</span> <span class="toc-text">8.1 动态范围的物理意义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-%E9%82%A3-24bit-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%87%8D%E8%A6%81%EF%BC%9F"><span class="toc-number">1.9.2.</span> <span class="toc-text">8.2 那 24bit 为什么重要？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-32bit-float-%E6%98%AF%E5%8F%A6%E4%B8%80%E5%9B%9E%E4%BA%8B"><span class="toc-number">1.9.3.</span> <span class="toc-text">8.3 32bit float 是另一回事</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E6%9C%89%E6%8D%9F-vs-%E6%97%A0%E6%8D%9F%EF%BC%8C%E5%88%B0%E5%BA%95%E5%B7%AE%E5%A4%9A%E5%B0%91%EF%BC%9F"><span class="toc-number">1.10.</span> <span class="toc-text">九、有损 vs 无损，到底差多少？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-ABX-%E7%9B%B2%E6%B5%8B%E7%9A%84%E5%85%AC%E5%BC%80%E7%BB%93%E8%AE%BA"><span class="toc-number">1.10.1.</span> <span class="toc-text">9.1 ABX 盲测的公开结论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-%E4%B8%BA%E4%BB%80%E4%B9%88-128-%E2%86%92-320-%E8%BF%99%E4%B9%88%E5%A4%A7%EF%BC%8C320-%E2%86%92-%E6%97%A0%E6%8D%9F%E8%BF%99%E4%B9%88%E5%B0%8F"><span class="toc-number">1.10.2.</span> <span class="toc-text">9.2 为什么 128 → 320 这么大，320 → 无损这么小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-3-%E7%9C%9F%E6%AD%A3%E7%9A%84%E5%B7%AE%E8%B7%9D%E5%9C%A8%E6%AF%8D%E5%B8%A6%EF%BC%8C%E4%B8%8D%E5%9C%A8%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.10.3.</span> <span class="toc-text">9.3 真正的差距在母带，不在格式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E3%80%81%E7%A9%BA%E9%97%B4%E9%9F%B3%E9%A2%91%E4%B8%8E%E5%85%A8%E6%99%AF%E5%A3%B0%EF%BC%9A%E6%8D%A2%E4%BA%86%E4%B8%AA%E7%BB%B4%E5%BA%A6"><span class="toc-number">1.11.</span> <span class="toc-text">十、空间音频与全景声：换了个维度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#10-1-%E4%BB%8E%E5%A3%B0%E9%81%93%E5%88%B0%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.11.1.</span> <span class="toc-text">10.1 从声道到对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-2-%E4%B8%BB%E6%B5%81%E5%85%A8%E6%99%AF%E5%A3%B0%E6%A0%87%E5%87%86%E5%AF%B9%E6%AF%94"><span class="toc-number">1.11.2.</span> <span class="toc-text">10.2 主流全景声标准对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-3-Dolby-Atmos-%E9%9F%B3%E4%B9%90%E7%9A%84%E7%9C%9F%E5%AE%9E%E8%A7%84%E6%A0%BC"><span class="toc-number">1.11.3.</span> <span class="toc-text">10.3 Dolby Atmos 音乐的真实规格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-4-%E8%80%B3%E6%9C%BA%E4%B8%8A%E6%80%8E%E4%B9%88%E5%90%AC%E5%88%B0%E3%80%8C%E5%A4%B4%E9%A1%B6%E7%9A%84%E5%A3%B0%E9%9F%B3%E3%80%8D"><span class="toc-number">1.11.4.</span> <span class="toc-text">10.4 耳机上怎么听到「头顶的声音」</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-5-%E7%A9%BA%E9%97%B4%E9%9F%B3%E9%A2%91%E5%80%BC%E5%BE%97%E5%BC%80%E5%90%97%EF%BC%9F"><span class="toc-number">1.11.5.</span> <span class="toc-text">10.5 空间音频值得开吗？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%88%AB%E5%BF%BD%E7%95%A5%E9%93%BE%E8%B7%AF%E7%9A%84%E7%9F%AD%E6%9D%BF%EF%BC%9A%E8%93%9D%E7%89%99%E4%B8%8E%E8%AE%BE%E5%A4%87"><span class="toc-number">1.12.</span> <span class="toc-text">十一、别忽略链路的短板：蓝牙与设备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#11-1-%E8%93%9D%E7%89%99%E9%9F%B3%E9%A2%91%E7%BC%96%E7%A0%81%E5%AF%B9%E6%AF%94"><span class="toc-number">1.12.1.</span> <span class="toc-text">11.1 蓝牙音频编码对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11-2-%E8%93%9D%E7%89%99%E8%83%BD%E5%81%9A%E5%88%B0%E6%97%A0%E6%8D%9F%E5%90%97"><span class="toc-number">1.12.2.</span> <span class="toc-text">11.2 蓝牙能做到无损吗</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11-3-%E6%9C%89%E7%BA%BF%E9%93%BE%E8%B7%AF%E7%9A%84%E9%9A%90%E8%97%8F%E9%97%AE%E9%A2%98%EF%BC%9A%E7%B3%BB%E7%BB%9F%E9%87%8D%E9%87%87%E6%A0%B7%EF%BC%88SRC%EF%BC%89"><span class="toc-number">1.12.3.</span> <span class="toc-text">11.3 有线链路的隐藏问题：系统重采样（SRC）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11-4-%E7%9C%9F%E6%AD%A3%E7%9A%84%E5%A4%A7%E5%A4%B4%EF%BC%9A%E6%8D%A2%E8%80%B3%E6%9C%BA"><span class="toc-number">1.12.4.</span> <span class="toc-text">11.4 真正的大头：换耳机</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E6%80%8E%E4%B9%88%E9%AA%8C%E8%AF%81%E4%BD%A0%E5%90%AC%E5%88%B0%E7%9A%84%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.13.</span> <span class="toc-text">十二、怎么验证你听到的到底是什么</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#12-1-%E7%94%A8%E5%B7%A5%E5%85%B7%E6%9F%A5%E7%9C%8B%E7%9C%9F%E5%AE%9E%E5%8F%82%E6%95%B0"><span class="toc-number">1.13.1.</span> <span class="toc-text">12.1 用工具查看真实参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-2-%E7%94%A8%E9%A2%91%E8%B0%B1%E5%9B%BE%E8%AF%86%E5%88%AB%E5%81%87%E6%97%A0%E6%8D%9F"><span class="toc-number">1.13.2.</span> <span class="toc-text">12.2 用频谱图识别假无损</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-3-%E8%87%AA%E5%B7%B1%E5%81%9A-ABX-%E6%B5%8B%E8%AF%95"><span class="toc-number">1.13.3.</span> <span class="toc-text">12.3 自己做 ABX 测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E5%AE%9E%E7%94%A8%E5%BB%BA%E8%AE%AE%EF%BC%9A%E6%8C%89%E5%9C%BA%E6%99%AF%E9%80%89%E9%9F%B3%E8%B4%A8"><span class="toc-number">1.14.</span> <span class="toc-text">十三、实用建议：按场景选音质</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#13-1-%E5%88%86%E5%9C%BA%E6%99%AF%E6%8E%A8%E8%8D%90"><span class="toc-number">1.14.1.</span> <span class="toc-text">13.1 分场景推荐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#13-2-%E4%B8%80%E4%B8%AA%E5%8A%A1%E5%AE%9E%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-number">1.14.2.</span> <span class="toc-text">13.2 一个务实的配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#13-3-%E5%88%AB%E4%B8%BA%E8%BF%99%E4%BA%9B%E8%8A%B1%E9%92%B1"><span class="toc-number">1.14.3.</span> <span class="toc-text">13.3 别为这些花钱</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#13-4-%E5%80%BC%E5%BE%97%E8%8A%B1%E9%92%B1%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="toc-number">1.14.4.</span> <span class="toc-text">13.4 值得花钱的地方</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E5%B8%B8%E8%A7%81%E8%AF%AF%E5%8C%BA-FAQ"><span class="toc-number">1.15.</span> <span class="toc-text">十四、常见误区 FAQ</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E5%90%8D%E8%AF%8D%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="toc-number">1.16.</span> <span class="toc-text">十五、名词速查表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-number">1.17.</span> <span class="toc-text">十六、总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/11/07/%E9%9F%B3%E4%B9%90%E9%9F%B3%E8%B4%A8%E9%82%A3%E4%BA%9B%E4%BA%8B/" title="音乐音质那些事：从比特率到全景声">音乐音质那些事：从比特率到全景声</a><time datetime="2026-11-07T07:00:00.000Z" title="发表于 2026-11-07 15:00:00">2026-11-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/11/03/%E4%BB%8E%E7%A5%9E%E7%BB%8F%E5%85%83%E5%88%B0Pre-Post-Norm-LayerNorm%E7%9A%84%E5%AE%8C%E6%95%B4%E9%80%BB%E8%BE%91%E9%93%BE/" title="从神经元到 Pre/Post-Norm：LayerNorm 的完整逻辑链">从神经元到 Pre/Post-Norm：LayerNorm 的完整逻辑链</a><time datetime="2026-11-03T08:10:00.000Z" title="发表于 2026-11-03 16:10:00">2026-11-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/11/03/LayerNorm-%E8%AF%AD%E9%9F%B3%E7%89%B9%E5%BE%81-BFT-%E8%AF%A5%E5%BD%92%E4%B8%80%E5%8C%96%E5%93%AA%E4%B8%AA%E7%BB%B4%E5%BA%A6/" title="LayerNorm 在语音特征 [B, F, T] 上该归一化哪个维度">LayerNorm 在语音特征 [B, F, T] 上该归一化哪个维度</a><time datetime="2026-11-03T07:00:00.000Z" title="发表于 2026-11-03 15:00:00">2026-11-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale-Clash-Coexistence-SOP/" title="Tailscale 与 Clash 共存排查 SOP">Tailscale 与 Clash 共存排查 SOP</a><time datetime="2026-10-26T06:00:00.000Z" title="发表于 2026-10-26 14:00:00">2026-10-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/26/Tailscale%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88-%E4%BB%8EWireGuard%E5%88%B0NAT%E7%A9%BF%E9%80%8F%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/" title="Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理">Tailscale 能做什么？从 WireGuard、NAT 穿透到中继的运行原理</a><time datetime="2026-10-25T16:35:00.000Z" title="发表于 2026-10-26 00:35:00">2026-10-26</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2002 - 2026 By Quanwei</span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022026768号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
